@@ -14,9 +14,7 @@ execute:
   message: false
   fig.with: 9
 server: shiny
-
 ---
-
 
 ```{r package}
 
@@ -24,11 +22,13 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 ```
+
 # Data Preparation
 
 -   In order to analyze trends of sale between several fiscal years, historical daily PL needs to be combined.
 
 -   The combined data consists of P&L data from X Department between FY2021 and FY2024.
+
 ```{r}
 sliderInput("bins", "Number of bins:", 
             min = 1, max = 50, value = 30)
@@ -45,7 +45,7 @@ output$distPlot <- renderPlot({
 ```
 
 ```{r}
-df <- read.csv("~/GitHub/AnnualMobilityReport/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
+df <- read.csv("~/GitHub/amr_2024/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
 ```
 
 ```{r}
