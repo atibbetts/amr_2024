@@ -1,8 +1,0 @@
-project:
-  type: website
-  
-website:
-  title: "Amy's Quarto Project"
-  navbar:
-    left: 
-      - amr2024.qmd
