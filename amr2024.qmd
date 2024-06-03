@@ -1,0 +1,62 @@
+---
+title: "Annual Mobility Report 2024"
+format: 
+  html:
+      toc: true
+      toc_float: true
+      toc-title: Contents
+      toc_location: left
+editor: visual
+number-sections: true
+execute: 
+  echo: false
+  warning: false
+  message: false
+  fig.with: 9
+title-block-banner: "#f0f3f5"
+title-block-banner-color: "black"
+date: today
+theme:
+  light: flatly
+  dark: solar
+---
+
+```{=html}
+<style>
+figcaption {
+  text-align: center;
+}
+</style>
+```
+```{r package}
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+```
+
+# Data Preparation
+
+-   In order to analyze trends of sale between several fiscal years, historical daily PL needs to be combined.
+
+-   The combined data consists of P&L data from X Department between FY2021 and FY2024.
+
+
+```{r}
+df <- read.csv("~/GitHub/amr_2024/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
+```
+
+# Plot with data
+
+This plot shows fatality data
+
+```{r}
+p <- ggplot(df, aes(x = Year, y = PedFatal, fill = County)) +
+  geom_bar(stat = "identity") +
+  theme_minimal()
+
+# Convert to an interactive plotly object
+p_interactive <- ggplotly(p, tooltip = c("PedFatal","County"))
+
+p_interactive
+```
