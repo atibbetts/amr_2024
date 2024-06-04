@@ -2,7 +2,7 @@ project:
   type: website
   
 website:
-  title: "Annual Mobility Report"
+  title: 'North Florida TPO'
   navbar:
     left:
       - amr2024.qmd

@@ -63,7 +63,7 @@ p_interactive <- ggplotly(p, tooltip = c("PedFatal","County")) %>%
 p_interactive
 ```
 
-##Bicyclist Fatalities
+## Bicyclist Fatalities
 
 ```{r}
 # Filter data for PedFatal > 0
@@ -95,6 +95,8 @@ p_interactive
 ```
 
 ## Fatality Totals
+
+Pedestrian fatalities are on the rise while bicyclist fatalities have fallen.
 ```{r}
 fig <- plot_ly(df_totals, x = ~Year, y = ~Total_PedFatal, name = "Total Pedestrian Fatalities", type = 'scatter', mode = 'lines') 
 fig <- fig %>% add_trace(y = ~Total_BikeFatal, name = 'Total Bicycle Fatalities')
@@ -103,6 +105,8 @@ fig
 ```
 
 ## Fatality Percent Changes 
+
+The following summarizes the percent change in fatalities for pedestrians and cyclists since 2019.
 ```{r}
 fig <- plot_ly(df_totals, x = ~Year, y = ~Ped_PC, name = "Pedestrian Fatalities Percent Change Since 2019", type = 'bar') 
 fig <- fig %>% add_trace(y = ~Bike_PC, name = 'Bicycle Fatalities Percent Change Since 2019')
