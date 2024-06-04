@@ -13,7 +13,6 @@ execute:
   warning: false
   message: false
   fig.with: 9
-server: shiny
 ---
 
 ```{r package}
@@ -30,25 +29,13 @@ library(plotly)
 -   The combined data consists of P&L data from X Department between FY2021 and FY2024.
 
 ```{r}
-sliderInput("bins", "Number of bins:", 
-            min = 1, max = 50, value = 30)
-plotOutput("distPlot")
-```
-
-```{r}
-#| context: server
-output$distPlot <- renderPlot({
-  x <- faithful[, 2]  # Old Faithful Geyser data
-  bins <- seq(min(x), max(x), length.out = input$bins + 1)
-  hist(x, breaks = bins, col = 'darkgray', border = 'white')
-})
-```
-
-```{r}
 df <- read.csv("~/GitHub/amr_2024/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
 ```
-# Plot with data 
+
+# Plot with data
+
 This plot shows fatality data
+
 ```{r}
 p <- ggplot(df, aes(x = Year, y = PedFatal, fill = County)) +
   geom_bar(stat = "identity") +
