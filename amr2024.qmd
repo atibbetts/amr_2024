@@ -20,6 +20,7 @@ execute:
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(dplyr)
 ```
 
 # Data Preparation
@@ -38,11 +39,69 @@ This plot shows fatality data
 
 ```{r}
 p <- ggplot(df, aes(x = Year, y = PedFatal, fill = County)) +
-  geom_bar(stat = "identity") +
-  theme_minimal()
+  geom_col() +
+  theme_minimal()+
+  geom_text(aes(label = PedFatal),  # Add text labels
+            size = 5,# Adjust vertical position (above bars)
+            hjust = .5,                # Adjust horizontal position (center)
+            position=position_stack(vjust=.5),
+            check_overlap=TRUE) 
 
 # Convert to an interactive plotly object
-p_interactive <- ggplotly(p, tooltip = c("PedFatal","County"))
+p_interactive <- ggplotly(p, tooltip = c("PedFatal","County")) %>%
+  layout(yaxis = list(title = "Pedestrian Fatalities", zeroline = FALSE, 
+                      showline = FALSE), barmode = 'stack',
+         hoverlabel = list(bgcolor= 'white')) 
 
 p_interactive
+```
+```{r}
+p <- ggplot(df, aes(x = Year, y = BikeFatal, fill = County)) +
+  geom_col() +
+  theme_minimal()+
+  geom_text(aes(label = BikeFatal),  # Add text labels
+            size = 5,# Adjust vertical position (above bars)
+            hjust = .5,                # Adjust horizontal position (center)
+            position=position_stack(vjust=.5),
+            check_overlap=TRUE) 
+
+# Convert to an interactive plotly object
+p_interactive <- ggplotly(p, tooltip = c("BikeFatal","County")) %>%
+  layout(yaxis = list(title = "Bicyclist Fatalities", zeroline = FALSE, 
+                      showline = FALSE), barmode = 'stack',
+         hoverlabel = list(bgcolor= 'white')) 
+
+p_interactive
+```
+
+
+```{r}
+library(plotly)
+df <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv")
+df$hover <- with(df, paste(state, '<br>', "Beef", beef, "Dairy", dairy, "<br>",
+                           "Fruits", total.fruits, "Veggies", total.veggies,
+                           "<br>", "Wheat", wheat, "Corn", corn))
+# give state boundaries a white border
+l <- list(color = toRGB("white"), width = 2)
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+fig <- plot_geo(df, locationmode = 'USA-states')
+fig <- fig %>% add_trace(
+    z = ~total.exports, text = ~hover, locations = ~code,
+    color = ~total.exports, colors = 'Purples'
+  )
+fig <- fig %>% colorbar(title = "Millions USD")
+fig <- fig %>% layout(
+    title = '2011 US Agriculture Exports by State<br>(Hover for breakdown)',
+    geo = g
+  )
+
+fig
+
 ```
