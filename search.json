@@ -1,30 +1,107 @@
 [
   {
-    "objectID": "amr2024.html",
-    "href": "amr2024.html",
+    "objectID": "amr2024.html#transit-accessibility",
+    "href": "amr2024.html#transit-accessibility",
     "title": "Annual Mobility Report 2024",
-    "section": "",
-    "text": "Crash data was compiled from several sources including the FDOT safety office, signal four analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Highway Safety and Motor Vehicles, there were a total of 31,964 crashes that occurred over the four North Florida TPO counties. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.\n\n\nThis plot shows fatality data\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPedestrian fatalities are on the rise while bicyclist fatalities have fallen.\n\n\n\n\n\n\n\n\n\nThe following summarizes the percent change in fatalities for pedestrians and cyclists since 2019."
+    "section": "2.1 Transit Accessibility",
+    "text": "2.1 Transit Accessibility"
+  },
+  {
+    "objectID": "amr2024.html#bicyclist-and-pedestrian-quality-of-service",
+    "href": "amr2024.html#bicyclist-and-pedestrian-quality-of-service",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.2 Bicyclist and Pedestrian Quality of Service",
+    "text": "2.2 Bicyclist and Pedestrian Quality of Service"
+  },
+  {
+    "objectID": "amr2024.html#impacts-of-investments-on-the-natural-environment",
+    "href": "amr2024.html#impacts-of-investments-on-the-natural-environment",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.3 Impacts of Investments on the Natural Environment",
+    "text": "2.3 Impacts of Investments on the Natural Environment"
+  },
+  {
+    "objectID": "amr2024.html#emissions",
+    "href": "amr2024.html#emissions",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.4 Emissions",
+    "text": "2.4 Emissions"
+  },
+  {
+    "objectID": "amr2024.html#regional-evacuation-routes",
+    "href": "amr2024.html#regional-evacuation-routes",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.5 Regional Evacuation Routes",
+    "text": "2.5 Regional Evacuation Routes"
+  },
+  {
+    "objectID": "amr2024.html#trail-connectivity",
+    "href": "amr2024.html#trail-connectivity",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.6 Trail Connectivity",
+    "text": "2.6 Trail Connectivity"
+  },
+  {
+    "objectID": "amr2024.html#pedestrian-connectivity",
+    "href": "amr2024.html#pedestrian-connectivity",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.7 Pedestrian Connectivity",
+    "text": "2.7 Pedestrian Connectivity"
   },
   {
     "objectID": "amr2024.html#pedestrian-fatalities",
     "href": "amr2024.html#pedestrian-fatalities",
     "title": "Annual Mobility Report 2024",
-    "section": "",
-    "text": "This plot shows fatality data"
+    "section": "3.1 Pedestrian Fatalities",
+    "text": "3.1 Pedestrian Fatalities\nThis plot shows fatality data"
+  },
+  {
+    "objectID": "amr2024.html#bicyclist-fatalities",
+    "href": "amr2024.html#bicyclist-fatalities",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.2 Bicyclist Fatalities",
+    "text": "3.2 Bicyclist Fatalities"
   },
   {
     "objectID": "amr2024.html#fatality-totals",
     "href": "amr2024.html#fatality-totals",
     "title": "Annual Mobility Report 2024",
-    "section": "",
-    "text": "Pedestrian fatalities are on the rise while bicyclist fatalities have fallen."
+    "section": "3.3 Fatality Totals",
+    "text": "3.3 Fatality Totals\nPedestrian fatalities are on the rise while bicyclist fatalities have fallen."
   },
   {
     "objectID": "amr2024.html#fatality-percent-changes",
     "href": "amr2024.html#fatality-percent-changes",
     "title": "Annual Mobility Report 2024",
-    "section": "",
-    "text": "The following summarizes the percent change in fatalities for pedestrians and cyclists since 2019."
+    "section": "3.4 Fatality Percent Changes",
+    "text": "3.4 Fatality Percent Changes\nThe following summarizes the percent change in fatalities for pedestrians and cyclists since 2019."
+  },
+  {
+    "objectID": "amr2024.html#quantity-of-travel",
+    "href": "amr2024.html#quantity-of-travel",
+    "title": "Annual Mobility Report 2024",
+    "section": "4.1 Quantity of Travel",
+    "text": "4.1 Quantity of Travel"
+  },
+  {
+    "objectID": "amr2024.html#quality-of-travel",
+    "href": "amr2024.html#quality-of-travel",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.1 Quality of Travel",
+    "text": "5.1 Quality of Travel"
+  },
+  {
+    "objectID": "amr2024.html#accessibility-and-firstlast-mile-options",
+    "href": "amr2024.html#accessibility-and-firstlast-mile-options",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.2 Accessibility and First/Last Mile Options",
+    "text": "5.2 Accessibility and First/Last Mile Options"
+  },
+  {
+    "objectID": "amr2024.html#utilization",
+    "href": "amr2024.html#utilization",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.3 Utilization",
+    "text": "5.3 Utilization"
   }
 ]
