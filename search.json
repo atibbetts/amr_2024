@@ -74,7 +74,7 @@
     "href": "amr2024.html#pedestrian-connectivity",
     "title": "Annual Mobility Report 2024",
     "section": "2.7 Pedestrian Connectivity",
-    "text": "2.7 Pedestrian Connectivity\n\n\nReading layer `Sidewalks_and_Gaps_NF' from data source \n  `C:\\Users\\Amy.Tibbetts\\Documents\\GitHub\\amr_2024\\data\\Sidewalks_and_Gaps_NF.geojson' \n  using driver `GeoJSON'\nSimple feature collection with 561 features and 17 fields\nGeometry type: LINESTRING\nDimension:     XY\nBounding box:  xmin: 398644.1 ymin: 3280219 xmax: 479306.8 ymax: 3405317\nProjected CRS: NAD83 / UTM zone 17N"
+    "text": "2.7 Pedestrian Connectivity"
   },
   {
     "objectID": "amr2024.html#pedestrian-fatalities",
