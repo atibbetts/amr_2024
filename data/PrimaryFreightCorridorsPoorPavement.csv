@@ -1,0 +1,7 @@
+﻿Index,Road Type,Condition,% of Interstate pavements in,% of Interstate lane miles with MISSING Data,% of Interstate lane miles with INVALID Data
+1,Interstate NHS,Good,58.40%,0.00%,0.00%
+2,Non-Interstate NHS,Good,42.10%,0.00%,1.20%
+3,Interstate NHS,Fair,41.40%,0.00%,0.00%
+4,Non-Interstate NHS,Fair,56.30%,0.00%,1.20%
+5,Interstate NHS,Poor,0.20%,0.00%,0.00%
+6,Non-Interstate NHS,Poor,1.60%,0.00%,1.20%
