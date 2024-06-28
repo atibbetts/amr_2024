@@ -1,0 +1,9 @@
+﻿index,Year,% of NHS Bridge Deck Area in GOOD Condition,% of NHS Bridge Deck Area in POOR Condition
+0,2015,-,-
+1,2016,-,-
+2,2017,0.521,0
+3,2018,0.515,0.007
+4,2019,0.512,0.009
+5,2020,0.522,0.009
+6,2021,0.522,0.009
+7,Target,Greater Than or Equal To 50%,Less Than or Equal To 10%

@@ -83,6 +83,7 @@ datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
 The maximum Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022
 
 ```{r}
+
 # Load your GeoJSON file
 geojson_data <- st_read("~/GitHub/amr_2024/data/NFTPO_SegmentData.geojson", quiet = TRUE)  %>% 
   st_transform(crs = 4326)
@@ -107,7 +108,7 @@ leaflet() %>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(LOTTRM22), opacity = 0.8)%>%
   addEasyButton(
   easyButton(
-    icon = "glyphicon-home",
+    icon = 'glyphicon glyphicon-home',
     title = "Zoom to Jacksonville",
     onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
   )
@@ -199,6 +200,36 @@ datatable(df_c02,options = c(table_options(), list(pageLength = 4)))
 ```
 
 ## Trail Connectivity
+
+```{r}
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/nftpo_trails.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+
+# Create a custom color generating function
+# Continuous palette
+pal <- colorFactor(palette = "PiYG", domain = geojson_data$Scale)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~pal(Scale), popup = ~paste(Scale), opacity = 0.8)%>%
+  addLegend("topright", 
+            colors = pal(unique(geojson_data$Scale)), 
+            labels = unique(geojson_data$Scale),
+            opacity = 1.0,
+            title = "Scale") %>% 
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+)
+```
 
 ## Pedestrian Connectivity
 
@@ -513,15 +544,128 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
 
 ```
 
-## Accessibility and First/Last Mile Options
+## Transit Routes
 
-## Utilization
+```{r}
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/TransitAll_Routes.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+
+# Create a custom color generating function
+# Continuous palette
+pal <- colorFactor(palette = "viridis", domain = geojson_data$Admin)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.855651, lat = 30.132184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~pal(Admin), popup = ~paste(Admin), opacity = 0.8)%>%
+  addLegend("bottomleft", 
+            colors = pal(unique(geojson_data$Admin)), 
+            labels = unique(geojson_data$Admin),
+            opacity = 1.0,
+            title = "Roadway Side") %>% 
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
+  )
+)
+```
 
 # Equity
 
 # Preserve and Maintain
 
-# Reliable and Resilient Infrastructure
+## Pavement Conditions
+```{r}
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+        ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
+        )
+        ),
+    deferRender = TRUE,
+    searching = FALSE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+df_lottr <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
+datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+```
+## Bridge Conditions
+```{r}
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+        ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
+        )
+        ),
+    deferRender = TRUE,
+    searching = FALSE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+df_lottr <- read.csv("~/GitHub/amr_2024/data/bridgeconditions.csv", check.names=FALSE, row.names=1) 
+datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+```
 
 # Tourism
 

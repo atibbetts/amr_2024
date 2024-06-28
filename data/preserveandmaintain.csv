@@ -1,0 +1,9 @@
+﻿index,Year,% of Interstate in GOOD Condition,% of Interstate in POOR Condition,% of Non-Interstate NHS in GOOD Condition,% of Non-Interstate NHS Pavements in POOR Condition
+0,2015,0.68,0,0.372,0.005
+1,2016,0.663,0.001,0.326,0.005
+2,2017,0.575,0,0.362,0.006
+3,2018,0.353,0.005,0.315,0.004
+4,2019,0.47,0.004,0.31,0.006
+5,2020,0.494,0.006,-,-
+6,2021,0.496,0.003,0.421,0.016
+7,Target,Greater Than or Equal To 60%,Less Than or Equal To 5%,Greater Than or Equal To 40%,Less Than or Equal To 5%
