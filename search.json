@@ -11,7 +11,7 @@
     "href": "amr2024.html#travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "1.1 Travel Time Reliability",
-    "text": "1.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022\n\nMapTTR Segment TableTruck TTR Segment Table"
+    "text": "1.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022\n\nMapTTR Segment Table\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n1.1.0.1 Truck TTR Segment Table"
   },
   {
     "objectID": "amr2024.html#pavement-condition-on-primary-freight-corridors",
@@ -63,18 +63,53 @@
     "text": "2.6 Pedestrian Connectivity\nFDOT Sidewalks and Gaps TDA"
   },
   {
+    "objectID": "amr2024.html#total-crashes",
+    "href": "amr2024.html#total-crashes",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.1 Total Crashes",
+    "text": "3.1 Total Crashes"
+  },
+  {
+    "objectID": "amr2024.html#fatalities",
+    "href": "amr2024.html#fatalities",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.2 Fatalities",
+    "text": "3.2 Fatalities"
+  },
+  {
+    "objectID": "amr2024.html#injury-crashes",
+    "href": "amr2024.html#injury-crashes",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.3 Injury Crashes",
+    "text": "3.3 Injury Crashes"
+  },
+  {
+    "objectID": "amr2024.html#crash-rates",
+    "href": "amr2024.html#crash-rates",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.4 Crash Rates",
+    "text": "3.4 Crash Rates"
+  },
+  {
     "objectID": "amr2024.html#pedestrian-fatalities",
     "href": "amr2024.html#pedestrian-fatalities",
     "title": "Annual Mobility Report 2024",
-    "section": "3.1 Pedestrian Fatalities",
-    "text": "3.1 Pedestrian Fatalities\nThis plot shows fatality data"
+    "section": "3.5 Pedestrian Fatalities",
+    "text": "3.5 Pedestrian Fatalities\nThis plot shows fatality data"
   },
   {
     "objectID": "amr2024.html#bicyclist-fatalities",
     "href": "amr2024.html#bicyclist-fatalities",
     "title": "Annual Mobility Report 2024",
-    "section": "3.2 Bicyclist Fatalities",
-    "text": "3.2 Bicyclist Fatalities"
+    "section": "3.6 Bicyclist Fatalities",
+    "text": "3.6 Bicyclist Fatalities"
+  },
+  {
+    "objectID": "amr2024.html#impaired-driving",
+    "href": "amr2024.html#impaired-driving",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.7 Impaired Driving",
+    "text": "3.7 Impaired Driving"
   },
   {
     "objectID": "amr2024.html#quantity-of-travel",
@@ -116,13 +151,20 @@
     "href": "amr2024.html#population",
     "title": "Annual Mobility Report 2024",
     "section": "10.1 Population",
-    "text": "10.1 Population\nNorth Florida’s population grew by 10.2%, or 173,000 persons, between 2019 and 2023. This growth outpaced the growth statewide (6.3%). Growth in population places a higher demand for mobility. North Florida’s strong growth outpacing population gains statewide is anticipated to continue through 2024.\nThe population grew by 0.5% nationally from 2022 to 2023. North Florida grew by 2.7% outpacing the nation and Florida at 1.58%.\nThere is no benchmark for population growth. Increases impact the demand for mobility.\nOffice of Economic and Demographic Research"
+    "text": "10.1 Population\nNorth Florida’s population grew by 10.2%, or 173,000 persons, between 2019 and 2023. This growth outpaced the growth statewide (6.3%). Growth in population places a higher demand for mobility. North Florida’s strong growth outpacing population gains statewide is anticipated to continue through 2024.\nThe population grew by 0.5% nationally from 2022 to 2023. North Florida grew by 2.7% outpacing the nation and Florida at 1.58%.\nThere is no benchmark for population growth. Increases impact the demand for mobility."
   },
   {
     "objectID": "amr2024.html#licensed-drivers",
     "href": "amr2024.html#licensed-drivers",
     "title": "Annual Mobility Report 2024",
     "section": "10.2 Licensed Drivers",
-    "text": "10.2 Licensed Drivers\nThere are 111,100 (or 8.5%) more drivers in North Florida in 2023 than 2019. About 77% of the population in the region is a licensed driver.\nThere is no benchmark for licensed drivers. Increases impact the demand for mobility.\nFlorida Highway Safety and Motor Vehicles"
+    "text": "10.2 Licensed Drivers\nThere are 111,100 (or 8.5%) more drivers in North Florida in 2023 than 2019. About 77% of the population in the region is a licensed driver.\nThere is no benchmark for licensed drivers. Increases impact the demand for mobility."
+  },
+  {
+    "objectID": "amr2024.html#employment",
+    "href": "amr2024.html#employment",
+    "title": "Annual Mobility Report 2024",
+    "section": "11.1 Employment",
+    "text": "11.1 Employment"
   }
 ]
