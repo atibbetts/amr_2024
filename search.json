@@ -11,7 +11,7 @@
     "href": "amr2024.html#travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "1.1 Travel Time Reliability",
-    "text": "1.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022\n\nMapTTR Segment Table\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n1.1.0.1 Truck TTR Segment Table"
+    "text": "1.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022\n\nMapTTR Segment TableTruck TTR Segment Table"
   },
   {
     "objectID": "amr2024.html#pavement-condition-on-primary-freight-corridors",
@@ -91,39 +91,32 @@
     "text": "3.4 Crash Rates"
   },
   {
-    "objectID": "amr2024.html#pedestrian-fatalities",
-    "href": "amr2024.html#pedestrian-fatalities",
+    "objectID": "amr2024.html#pedestrian-and-bicyclist-fatalities",
+    "href": "amr2024.html#pedestrian-and-bicyclist-fatalities",
     "title": "Annual Mobility Report 2024",
-    "section": "3.5 Pedestrian Fatalities",
-    "text": "3.5 Pedestrian Fatalities\nThis plot shows fatality data"
-  },
-  {
-    "objectID": "amr2024.html#bicyclist-fatalities",
-    "href": "amr2024.html#bicyclist-fatalities",
-    "title": "Annual Mobility Report 2024",
-    "section": "3.6 Bicyclist Fatalities",
-    "text": "3.6 Bicyclist Fatalities"
+    "section": "3.5 Pedestrian and Bicyclist Fatalities",
+    "text": "3.5 Pedestrian and Bicyclist Fatalities\nThis plot shows fatality data"
   },
   {
     "objectID": "amr2024.html#impaired-driving",
     "href": "amr2024.html#impaired-driving",
     "title": "Annual Mobility Report 2024",
-    "section": "3.7 Impaired Driving",
-    "text": "3.7 Impaired Driving"
+    "section": "3.6 Impaired Driving",
+    "text": "3.6 Impaired Driving"
   },
   {
     "objectID": "amr2024.html#quantity-of-travel",
     "href": "amr2024.html#quantity-of-travel",
     "title": "Annual Mobility Report 2024",
     "section": "4.1 Quantity of Travel",
-    "text": "4.1 Quantity of Travel\nFDOT Sourcebook VMT"
+    "text": "4.1 Quantity of Travel"
   },
   {
     "objectID": "amr2024.html#quality-of-travel",
     "href": "amr2024.html#quality-of-travel",
     "title": "Annual Mobility Report 2024",
     "section": "5.1 Quality of Travel",
-    "text": "5.1 Quality of Travel\n\n5.1.1 Average Vehicle Delay\nFDOT Sourcebook Vehicle Hours of Delay"
+    "text": "5.1 Quality of Travel\n\n5.1.1 Average Vehicle Delay"
   },
   {
     "objectID": "amr2024.html#transit-routes",
