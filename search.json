@@ -123,35 +123,42 @@
     "href": "amr2024.html#travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "5.1 Travel Time Reliability",
-    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022\n\nMapTTR Segment TableTruck TTR Segment Table"
+    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023\n\nLOTTR MapTTR Segment Table"
+  },
+  {
+    "objectID": "amr2024.html#truck-travel-time-reliability",
+    "href": "amr2024.html#truck-travel-time-reliability",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.2 Truck Travel Time Reliability",
+    "text": "5.2 Truck Travel Time Reliability\nTruck Travel Time Reliability (TTTR)\n\nTruck TTTR MapTruck TTR Segment Table"
   },
   {
     "objectID": "amr2024.html#level-of-service",
     "href": "amr2024.html#level-of-service",
     "title": "Annual Mobility Report 2024",
-    "section": "5.2 Level of Service",
-    "text": "5.2 Level of Service\nFDOT District Two, Jacksonville Urban Office"
+    "section": "5.3 Level of Service",
+    "text": "5.3 Level of Service\nFDOT District Two, Jacksonville Urban Office"
   },
   {
     "objectID": "amr2024.html#average-vehicle-delay",
     "href": "amr2024.html#average-vehicle-delay",
     "title": "Annual Mobility Report 2024",
-    "section": "5.3 Average Vehicle Delay",
-    "text": "5.3 Average Vehicle Delay"
+    "section": "5.4 Average Vehicle Delay",
+    "text": "5.4 Average Vehicle Delay"
   },
   {
     "objectID": "amr2024.html#incident-clearance-times",
     "href": "amr2024.html#incident-clearance-times",
     "title": "Annual Mobility Report 2024",
-    "section": "5.4 2023 Incident Clearance Times",
-    "text": "5.4 2023 Incident Clearance Times"
+    "section": "5.5 2023 Incident Clearance Times",
+    "text": "5.5 2023 Incident Clearance Times"
   },
   {
     "objectID": "amr2024.html#incident-event-types",
     "href": "amr2024.html#incident-event-types",
     "title": "Annual Mobility Report 2024",
-    "section": "5.5 2023 Incident Event Types",
-    "text": "5.5 2023 Incident Event Types"
+    "section": "5.6 2023 Incident Event Types",
+    "text": "5.6 2023 Incident Event Types"
   },
   {
     "objectID": "amr2024.html#transit-accessibility",
@@ -263,7 +270,7 @@
     "href": "amr2024.html#pm2-bridge-and-pavement",
     "title": "Annual Mobility Report 2024",
     "section": "9.2 PM2 Bridge and Pavement",
-    "text": "9.2 PM2 Bridge and Pavement\nFlorida Department of Transportation Forecasting and Trends Office\n\n\n\n\n\n\n9.2.1 NHS Bridges\n\n\n\n\n\n\n\n\n9.2.2 Interstate Pavement\n\n\n\n\n\n\n9.2.3 Non-Interstate Pavement\n\n\n\n\n\n\n\n\n9.2.4 State Targets"
+    "text": "9.2 PM2 Bridge and Pavement\nFlorida Department of Transportation Forecasting and Trends Office\n\nBridge Condition MapNHS Bridges\n\n\nFederal Highway Administration National Bridge Inventory\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n9.2.1 Interstate Pavement\n\n\n\n\n\n\n9.2.2 Non-Interstate Pavement\n\n\n\n\n\n\n\n\n9.2.3 State Targets"
   },
   {
     "objectID": "amr2024.html#pm3-system-performance",
