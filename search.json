@@ -60,7 +60,7 @@
     "href": "amr2024.html#fatal-and-serious-injury-crash-map",
     "title": "Annual Mobility Report 2024",
     "section": "3.2 Fatal and Serious Injury Crash Map",
-    "text": "3.2 Fatal and Serious Injury Crash Map\nThe following data is showing fatal and serious injury crashes from 2023. Signal 4 Analytics"
+    "text": "3.2 Fatal and Serious Injury Crash Map\nSignal 4 Analytics\nThe following data is showing fatal and serious injury crashes from 2023."
   },
   {
     "objectID": "amr2024.html#fatalities",
@@ -164,15 +164,15 @@
     "objectID": "amr2024.html#incident-clearance-times",
     "href": "amr2024.html#incident-clearance-times",
     "title": "Annual Mobility Report 2024",
-    "section": "5.6 2023 Incident Clearance Times",
-    "text": "5.6 2023 Incident Clearance Times"
+    "section": "5.6 Incident Clearance Times",
+    "text": "5.6 Incident Clearance Times\n2023 Data"
   },
   {
     "objectID": "amr2024.html#incident-event-types",
     "href": "amr2024.html#incident-event-types",
     "title": "Annual Mobility Report 2024",
-    "section": "5.7 2023 Incident Event Types",
-    "text": "5.7 2023 Incident Event Types"
+    "section": "5.7 Incident Event Types",
+    "text": "5.7 Incident Event Types\n2023 Data"
   },
   {
     "objectID": "amr2024.html#transit-accessibility",
@@ -189,39 +189,46 @@
     "text": "6.2 Transit Routes\nFlorida Transit Data Exchange"
   },
   {
-    "objectID": "amr2024.html#bicyclist-and-pedestrian-quality-of-service",
-    "href": "amr2024.html#bicyclist-and-pedestrian-quality-of-service",
+    "objectID": "amr2024.html#bicyclist-level-of-traffic-stress",
+    "href": "amr2024.html#bicyclist-level-of-traffic-stress",
     "title": "Annual Mobility Report 2024",
-    "section": "6.3 Bicyclist and Pedestrian Quality of Service",
-    "text": "6.3 Bicyclist and Pedestrian Quality of Service\nFDOT LOS Ped/Bike"
+    "section": "6.3 Bicyclist Level of Traffic Stress",
+    "text": "6.3 Bicyclist Level of Traffic Stress\nFDOT LOS Ped/Bike"
+  },
+  {
+    "objectID": "amr2024.html#pedestrian-level-of-traffic-stress",
+    "href": "amr2024.html#pedestrian-level-of-traffic-stress",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.4 Pedestrian Level of Traffic Stress",
+    "text": "6.4 Pedestrian Level of Traffic Stress\nFDOT LOS Ped/Bike"
   },
   {
     "objectID": "amr2024.html#impacts-of-investments-on-the-natural-environment",
     "href": "amr2024.html#impacts-of-investments-on-the-natural-environment",
     "title": "Annual Mobility Report 2024",
-    "section": "6.4 Impacts of Investments on the Natural Environment",
-    "text": "6.4 Impacts of Investments on the Natural Environment\nEnvironmental Screening Tool\nFDOT 5 Year Work Program Meta Data"
+    "section": "6.5 Impacts of Investments on the Natural Environment",
+    "text": "6.5 Impacts of Investments on the Natural Environment\nEnvironmental Screening Tool\nFDOT 5 Year Work Program Meta Data"
   },
   {
     "objectID": "amr2024.html#emissions",
     "href": "amr2024.html#emissions",
     "title": "Annual Mobility Report 2024",
-    "section": "6.5 Emissions",
-    "text": "6.5 Emissions"
+    "section": "6.6 Emissions",
+    "text": "6.6 Emissions"
   },
   {
     "objectID": "amr2024.html#trail-connectivity",
     "href": "amr2024.html#trail-connectivity",
     "title": "Annual Mobility Report 2024",
-    "section": "6.6 Trail Connectivity",
-    "text": "6.6 Trail Connectivity\nSource: NFTPO Regional Multi-use Trail Master Plan"
+    "section": "6.7 Trail Connectivity",
+    "text": "6.7 Trail Connectivity\nSource: NFTPO Regional Multi-use Trail Master Plan"
   },
   {
     "objectID": "amr2024.html#pedestrian-connectivity",
     "href": "amr2024.html#pedestrian-connectivity",
     "title": "Annual Mobility Report 2024",
-    "section": "6.7 Pedestrian Connectivity",
-    "text": "6.7 Pedestrian Connectivity\nFDOT Sidewalks and Gaps TDA"
+    "section": "6.8 Pedestrian Connectivity",
+    "text": "6.8 Pedestrian Connectivity\nFDOT Sidewalks and Gaps TDA"
   },
   {
     "objectID": "amr2024.html#pavement-condition-on-primary-freight-corridors",
@@ -291,6 +298,6 @@
     "href": "amr2024.html#pm3-system-performance",
     "title": "Annual Mobility Report 2024",
     "section": "9.3 PM3 System Performance",
-    "text": "9.3 PM3 System Performance\nFlorida Department of Transportation Forecasting and Trends Office"
+    "text": "9.3 PM3 System Performance"
   }
 ]
