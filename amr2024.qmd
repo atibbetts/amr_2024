@@ -27,7 +27,6 @@ library(leaflet)
 library(sf)
 library(RColorBrewer)
 library(scales)
-library(reactablefmtr)
 library(sparkline)
 library(htmlwidgets)
 library(data.table)
@@ -1984,7 +1983,6 @@ datatable(df_targets,options = c(table_options(), list(pageLength = 9)))
 
 ## PM3 System Performance
 
-
 ```{r}
 table_options <- function() {
   list(
@@ -2000,9 +1998,6 @@ table_options <- function() {
     )
       )
 }
-
-#label = lapply(labs, htmltools::HTML)
-
 
 df_sysperf <- read.csv("~/GitHub/amr_2024/data/pm3_sysperf.csv", check.names=FALSE, row.names=1) 
 colnames(df_sysperf) <- c('Performance Measure','% of Person Miles Traveled on the Interstate that are Reliable',
