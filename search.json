@@ -4,118 +4,300 @@
     "href": "amr2024.html",
     "title": "Annual Mobility Report 2024",
     "section": "",
-    "text": "Understanding the trends and conditions occurring in the North Florida will allow planners and engineers to prioritize resources more effectively as part of the North Florida Transportation Planning Organization’s (TPO) Congestion Management Process. The data presented are an essential part of making evidence-based decisions for the investment in mobility in North Florida. The data presented focuses on Clay, Duval, Nassau and St. Johns counties for the years 2017-2022 and 2023 when available. This report summarizes trends in the following topics:"
+    "text": "Understanding the trends and conditions occurring in the North Florida will allow planners and engineers to prioritize resources more effectively as part of the North Florida Transportation Planning Organization’s (TPO) Congestion Management Process. The data presented are an essential part of making evidence-based decisions for the investment in mobility in North Florida. The data presented focuses on Clay, Duval, Nassau and St. Johns counties for the years 2018-2022 and 2019-2023 when available. This report summarizes trends in the following topics:"
   },
   {
-    "objectID": "amr2024.html#level-of-travel-time-reliability",
-    "href": "amr2024.html#level-of-travel-time-reliability",
+    "objectID": "amr2024.html#population",
+    "href": "amr2024.html#population",
     "title": "Annual Mobility Report 2024",
-    "section": "1.1 Level of Travel Time Reliability",
-    "text": "1.1 Level of Travel Time Reliability\n\n\n\n\n\n\nThe maximum Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022"
+    "section": "1.1 Population",
+    "text": "1.1 Population\nNorth Florida’s population grew by 10.2%, or 173,000 persons, between 2019 and 2023. This growth outpaced the growth statewide (6.3%). Growth in population places a higher demand for mobility. North Florida’s strong growth outpacing population gains statewide is anticipated to continue through 2024.\nThe population grew by 0.5% nationally from 2022 to 2023. North Florida grew by 2.7% outpacing the nation and Florida at 1.58%.\nThere is no benchmark for population growth. Increases impact the demand for mobility."
+  },
+  {
+    "objectID": "amr2024.html#licensed-drivers",
+    "href": "amr2024.html#licensed-drivers",
+    "title": "Annual Mobility Report 2024",
+    "section": "1.2 Licensed Drivers",
+    "text": "1.2 Licensed Drivers\nThere are 111,100 (or 8.5%) more drivers in North Florida in 2023 than 2019. About 77% of the population in the region is a licensed driver.\nThere is no benchmark for licensed drivers. Increases impact the demand for mobility."
+  },
+  {
+    "objectID": "amr2024.html#underserved-populations",
+    "href": "amr2024.html#underserved-populations",
+    "title": "Annual Mobility Report 2024",
+    "section": "1.3 Underserved Populations",
+    "text": "1.3 Underserved Populations\nTransportation barriers are the third leading cause of missing a medical appointment for older adults across the country. Medically Underserved Areas/Populations are areas or populations designated by the U.S. Department of Health Resources and Services Administration as having too few primary care providers, high infant mortality, high poverty or a high elderly population. Nearly 370,000 persons in North Florida live in medically underserved areas. There are no benchmarks for population in underserved areas. It is desirable to ensure the population is adequately served.\nAccessing affordable and nutritious food was a challenge for nearly 800,000 persons in North Florida in 2015 (the latest date statistics are available). The US Economic Research Service of the Department of Agriculture identifies populations whose food security is at risk if they live in low-income areas and do not have a grocery store within 1 mile in an urban area and 10 miles in a rural area. There are no benchmarks for population living with food uncertainty. It is desirable to ensure the population is adequately served.\nThe following map highlights areas designated as medically underserved in 2019 and areas without reliable access to healthy foods in 2015 (the latest date statistics are available)."
+  },
+  {
+    "objectID": "amr2024.html#gross-domestic-product",
+    "href": "amr2024.html#gross-domestic-product",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.1 Gross Domestic Product",
+    "text": "2.1 Gross Domestic Product\nBureau of Economic Analysis"
+  },
+  {
+    "objectID": "amr2024.html#employment",
+    "href": "amr2024.html#employment",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.2 Employment",
+    "text": "2.2 Employment"
+  },
+  {
+    "objectID": "amr2024.html#tourism",
+    "href": "amr2024.html#tourism",
+    "title": "Annual Mobility Report 2024",
+    "section": "2.3 Tourism",
+    "text": "2.3 Tourism"
+  },
+  {
+    "objectID": "amr2024.html#total-crashes",
+    "href": "amr2024.html#total-crashes",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.1 Total Crashes",
+    "text": "3.1 Total Crashes"
+  },
+  {
+    "objectID": "amr2024.html#fatal-and-serious-injury-crash-map",
+    "href": "amr2024.html#fatal-and-serious-injury-crash-map",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.2 Fatal and Serious Injury Crash Map",
+    "text": "3.2 Fatal and Serious Injury Crash Map\nSignal 4 Analytics\nThe following data is showing fatal and serious injury crashes from 2023."
+  },
+  {
+    "objectID": "amr2024.html#fatalities",
+    "href": "amr2024.html#fatalities",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.3 Fatalities",
+    "text": "3.3 Fatalities"
+  },
+  {
+    "objectID": "amr2024.html#injury-crashes",
+    "href": "amr2024.html#injury-crashes",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.4 Injury Crashes",
+    "text": "3.4 Injury Crashes"
+  },
+  {
+    "objectID": "amr2024.html#crash-rates",
+    "href": "amr2024.html#crash-rates",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.5 Crash Rates",
+    "text": "3.5 Crash Rates"
+  },
+  {
+    "objectID": "amr2024.html#pedestrian-and-bicyclist-fatalities",
+    "href": "amr2024.html#pedestrian-and-bicyclist-fatalities",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.6 Pedestrian and Bicyclist Fatalities",
+    "text": "3.6 Pedestrian and Bicyclist Fatalities\nThis plot shows fatality data"
+  },
+  {
+    "objectID": "amr2024.html#impaired-driving",
+    "href": "amr2024.html#impaired-driving",
+    "title": "Annual Mobility Report 2024",
+    "section": "3.7 Impaired Driving",
+    "text": "3.7 Impaired Driving"
+  },
+  {
+    "objectID": "amr2024.html#vehicles-miles-traveled",
+    "href": "amr2024.html#vehicles-miles-traveled",
+    "title": "Annual Mobility Report 2024",
+    "section": "4.1 Vehicles Miles Traveled",
+    "text": "4.1 Vehicles Miles Traveled"
+  },
+  {
+    "objectID": "amr2024.html#transit-ridership",
+    "href": "amr2024.html#transit-ridership",
+    "title": "Annual Mobility Report 2024",
+    "section": "4.2 Transit Ridership",
+    "text": "4.2 Transit Ridership"
+  },
+  {
+    "objectID": "amr2024.html#sea-travel-and-freight",
+    "href": "amr2024.html#sea-travel-and-freight",
+    "title": "Annual Mobility Report 2024",
+    "section": "4.3 Sea Travel and Freight",
+    "text": "4.3 Sea Travel and Freight"
+  },
+  {
+    "objectID": "amr2024.html#air-travel-and-freight",
+    "href": "amr2024.html#air-travel-and-freight",
+    "title": "Annual Mobility Report 2024",
+    "section": "4.4 Air Travel and Freight",
+    "text": "4.4 Air Travel and Freight"
+  },
+  {
+    "objectID": "amr2024.html#travel-time-reliability",
+    "href": "amr2024.html#travel-time-reliability",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.1 Travel Time Reliability",
+    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023\n\nLOTTR MapTTR Segment Table"
   },
   {
     "objectID": "amr2024.html#truck-travel-time-reliability",
     "href": "amr2024.html#truck-travel-time-reliability",
     "title": "Annual Mobility Report 2024",
-    "section": "1.2 Truck Travel Time Reliability",
-    "text": "1.2 Truck Travel Time Reliability"
+    "section": "5.2 Truck Travel Time Reliability",
+    "text": "5.2 Truck Travel Time Reliability\nTruck Travel Time Reliability (TTTR)\n\nTruck TTR MapTruck TTR Segment Table"
   },
   {
-    "objectID": "amr2024.html#primary-freight-corridors-with-poor-pavement",
-    "href": "amr2024.html#primary-freight-corridors-with-poor-pavement",
+    "objectID": "amr2024.html#level-of-service",
+    "href": "amr2024.html#level-of-service",
     "title": "Annual Mobility Report 2024",
-    "section": "1.3 Primary Freight Corridors with Poor Pavement",
-    "text": "1.3 Primary Freight Corridors with Poor Pavement"
+    "section": "5.3 Level of Service",
+    "text": "5.3 Level of Service\nFDOT District Two, Jacksonville Urban Office"
+  },
+  {
+    "objectID": "amr2024.html#average-vehicle-delay",
+    "href": "amr2024.html#average-vehicle-delay",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.4 Average Vehicle Delay",
+    "text": "5.4 Average Vehicle Delay"
+  },
+  {
+    "objectID": "amr2024.html#travel-speeds",
+    "href": "amr2024.html#travel-speeds",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.5 Travel Speeds",
+    "text": "5.5 Travel Speeds"
+  },
+  {
+    "objectID": "amr2024.html#incident-clearance-times",
+    "href": "amr2024.html#incident-clearance-times",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.6 Incident Clearance Times",
+    "text": "5.6 Incident Clearance Times\n2023 Data"
+  },
+  {
+    "objectID": "amr2024.html#incident-event-types",
+    "href": "amr2024.html#incident-event-types",
+    "title": "Annual Mobility Report 2024",
+    "section": "5.7 Incident Event Types",
+    "text": "5.7 Incident Event Types\n2023 Data"
   },
   {
     "objectID": "amr2024.html#transit-accessibility",
     "href": "amr2024.html#transit-accessibility",
     "title": "Annual Mobility Report 2024",
-    "section": "2.1 Transit Accessibility",
-    "text": "2.1 Transit Accessibility\nJTA Park n’ Ride Locations"
-  },
-  {
-    "objectID": "amr2024.html#bicyclist-and-pedestrian-quality-of-service",
-    "href": "amr2024.html#bicyclist-and-pedestrian-quality-of-service",
-    "title": "Annual Mobility Report 2024",
-    "section": "2.2 Bicyclist and Pedestrian Quality of Service",
-    "text": "2.2 Bicyclist and Pedestrian Quality of Service\nFDOT LOS Ped/Bike"
-  },
-  {
-    "objectID": "amr2024.html#impacts-of-investments-on-the-natural-environment",
-    "href": "amr2024.html#impacts-of-investments-on-the-natural-environment",
-    "title": "Annual Mobility Report 2024",
-    "section": "2.3 Impacts of Investments on the Natural Environment",
-    "text": "2.3 Impacts of Investments on the Natural Environment\nEnvironmental Screening Tool"
-  },
-  {
-    "objectID": "amr2024.html#emissions",
-    "href": "amr2024.html#emissions",
-    "title": "Annual Mobility Report 2024",
-    "section": "2.4 Emissions",
-    "text": "2.4 Emissions"
-  },
-  {
-    "objectID": "amr2024.html#trail-connectivity",
-    "href": "amr2024.html#trail-connectivity",
-    "title": "Annual Mobility Report 2024",
-    "section": "2.5 Trail Connectivity",
-    "text": "2.5 Trail Connectivity"
-  },
-  {
-    "objectID": "amr2024.html#pedestrian-connectivity",
-    "href": "amr2024.html#pedestrian-connectivity",
-    "title": "Annual Mobility Report 2024",
-    "section": "2.6 Pedestrian Connectivity",
-    "text": "2.6 Pedestrian Connectivity\nFDOT Sidewalks and Gaps TDA"
-  },
-  {
-    "objectID": "amr2024.html#pedestrian-fatalities",
-    "href": "amr2024.html#pedestrian-fatalities",
-    "title": "Annual Mobility Report 2024",
-    "section": "3.1 Pedestrian Fatalities",
-    "text": "3.1 Pedestrian Fatalities\nThis plot shows fatality data"
-  },
-  {
-    "objectID": "amr2024.html#bicyclist-fatalities",
-    "href": "amr2024.html#bicyclist-fatalities",
-    "title": "Annual Mobility Report 2024",
-    "section": "3.2 Bicyclist Fatalities",
-    "text": "3.2 Bicyclist Fatalities"
-  },
-  {
-    "objectID": "amr2024.html#quantity-of-travel",
-    "href": "amr2024.html#quantity-of-travel",
-    "title": "Annual Mobility Report 2024",
-    "section": "4.1 Quantity of Travel",
-    "text": "4.1 Quantity of Travel\nFDOT Sourcebook VMT"
-  },
-  {
-    "objectID": "amr2024.html#quality-of-travel",
-    "href": "amr2024.html#quality-of-travel",
-    "title": "Annual Mobility Report 2024",
-    "section": "5.1 Quality of Travel",
-    "text": "5.1 Quality of Travel\n\n5.1.1 Average Vehicle Delay\nFDOT Sourcebook Vehicle Hours of Delay"
+    "section": "6.1 Transit Accessibility",
+    "text": "6.1 Transit Accessibility\nJTA Park n’ Ride Locations"
   },
   {
     "objectID": "amr2024.html#transit-routes",
     "href": "amr2024.html#transit-routes",
     "title": "Annual Mobility Report 2024",
-    "section": "5.2 Transit Routes",
-    "text": "5.2 Transit Routes"
+    "section": "6.2 Transit Routes",
+    "text": "6.2 Transit Routes\nFlorida Transit Data Exchange"
+  },
+  {
+    "objectID": "amr2024.html#bicyclist-level-of-traffic-stress",
+    "href": "amr2024.html#bicyclist-level-of-traffic-stress",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.3 Bicyclist Level of Traffic Stress",
+    "text": "6.3 Bicyclist Level of Traffic Stress\nFDOT LOS Ped/Bike"
+  },
+  {
+    "objectID": "amr2024.html#pedestrian-level-of-traffic-stress",
+    "href": "amr2024.html#pedestrian-level-of-traffic-stress",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.4 Pedestrian Level of Traffic Stress",
+    "text": "6.4 Pedestrian Level of Traffic Stress\nFDOT LOS Ped/Bike"
+  },
+  {
+    "objectID": "amr2024.html#impacts-of-investments-on-the-natural-environment",
+    "href": "amr2024.html#impacts-of-investments-on-the-natural-environment",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.5 Impacts of Investments on the Natural Environment",
+    "text": "6.5 Impacts of Investments on the Natural Environment\nEnvironmental Screening Tool\nFDOT 5 Year Work Program Meta Data"
+  },
+  {
+    "objectID": "amr2024.html#emissions",
+    "href": "amr2024.html#emissions",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.6 Emissions",
+    "text": "6.6 Emissions"
+  },
+  {
+    "objectID": "amr2024.html#trail-connectivity",
+    "href": "amr2024.html#trail-connectivity",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.7 Trail Connectivity",
+    "text": "6.7 Trail Connectivity\nSource: NFTPO Regional Multi-use Trail Master Plan"
+  },
+  {
+    "objectID": "amr2024.html#pedestrian-connectivity",
+    "href": "amr2024.html#pedestrian-connectivity",
+    "title": "Annual Mobility Report 2024",
+    "section": "6.8 Pedestrian Connectivity",
+    "text": "6.8 Pedestrian Connectivity\nFDOT Sidewalks and Gaps TDA"
+  },
+  {
+    "objectID": "amr2024.html#pavement-condition-on-primary-freight-corridors",
+    "href": "amr2024.html#pavement-condition-on-primary-freight-corridors",
+    "title": "Annual Mobility Report 2024",
+    "section": "7.1 Pavement Condition on Primary Freight Corridors",
+    "text": "7.1 Pavement Condition on Primary Freight Corridors"
   },
   {
     "objectID": "amr2024.html#pavement-conditions",
     "href": "amr2024.html#pavement-conditions",
     "title": "Annual Mobility Report 2024",
-    "section": "7.1 Pavement Conditions",
-    "text": "7.1 Pavement Conditions"
+    "section": "7.2 Pavement Conditions",
+    "text": "7.2 Pavement Conditions"
   },
   {
     "objectID": "amr2024.html#bridge-conditions",
     "href": "amr2024.html#bridge-conditions",
     "title": "Annual Mobility Report 2024",
-    "section": "7.2 Bridge Conditions",
-    "text": "7.2 Bridge Conditions"
+    "section": "7.3 Bridge Conditions",
+    "text": "7.3 Bridge Conditions"
+  },
+  {
+    "objectID": "amr2024.html#transit-vehicles",
+    "href": "amr2024.html#transit-vehicles",
+    "title": "Annual Mobility Report 2024",
+    "section": "7.4 Transit Vehicles",
+    "text": "7.4 Transit Vehicles"
+  },
+  {
+    "objectID": "amr2024.html#cost-of-congestion",
+    "href": "amr2024.html#cost-of-congestion",
+    "title": "Annual Mobility Report 2024",
+    "section": "8.1 Cost of Congestion",
+    "text": "8.1 Cost of Congestion"
+  },
+  {
+    "objectID": "amr2024.html#cost-of-crashes",
+    "href": "amr2024.html#cost-of-crashes",
+    "title": "Annual Mobility Report 2024",
+    "section": "8.2 Cost of Crashes",
+    "text": "8.2 Cost of Crashes"
+  },
+  {
+    "objectID": "amr2024.html#return-on-investment",
+    "href": "amr2024.html#return-on-investment",
+    "title": "Annual Mobility Report 2024",
+    "section": "8.3 Return on Investment",
+    "text": "8.3 Return on Investment"
+  },
+  {
+    "objectID": "amr2024.html#pm1-safety-all-public-roads",
+    "href": "amr2024.html#pm1-safety-all-public-roads",
+    "title": "Annual Mobility Report 2024",
+    "section": "9.1 PM1 Safety (All Public Roads)",
+    "text": "9.1 PM1 Safety (All Public Roads)\nFlorida Department of Transportation Forecasting and Trends Office"
+  },
+  {
+    "objectID": "amr2024.html#pm2-bridge-and-pavement",
+    "href": "amr2024.html#pm2-bridge-and-pavement",
+    "title": "Annual Mobility Report 2024",
+    "section": "9.2 PM2 Bridge and Pavement",
+    "text": "9.2 PM2 Bridge and Pavement\nFlorida Department of Transportation Forecasting and Trends Office Federal Highway Administration National Bridge Inventory\n\nBridge Condition MapNHS Bridge Decks\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n9.2.1 Interstate Pavement\n\n\n\n\n\n\n9.2.2 Non-Interstate Pavement\n\n\n\n\n\n\n\n\n9.2.3 State Targets"
+  },
+  {
+    "objectID": "amr2024.html#pm3-system-performance",
+    "href": "amr2024.html#pm3-system-performance",
+    "title": "Annual Mobility Report 2024",
+    "section": "9.3 PM3 System Performance",
+    "text": "9.3 PM3 System Performance"
   }
 ]
