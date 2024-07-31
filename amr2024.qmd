@@ -16,7 +16,6 @@ execute:
 ---
 
 ```{r package}
-
 library(tidyverse)
 library(ggplot2)
 library(plotly)
@@ -28,13 +27,926 @@ library(leaflet)
 library(sf)
 library(RColorBrewer)
 library(scales)
+library(reactablefmtr)
+library(sparkline)
+library(htmlwidgets)
+library(data.table)
 ```
 
-Understanding the trends and conditions occurring in the North Florida will allow planners and engineers to prioritize resources more effectively as part of the North Florida Transportation Planning Organization’s (TPO) Congestion Management Process. The data presented are an essential part of making evidence-based decisions for the investment in mobility in North Florida. The data presented focuses on Clay, Duval, Nassau and St. Johns counties for the years 2017-2022 and 2023 when available. This report summarizes trends in the following topics:
+Understanding the trends and conditions occurring in the North Florida will allow planners and engineers to prioritize resources more effectively as part of the North Florida Transportation Planning Organization’s (TPO) Congestion Management Process. The data presented are an essential part of making evidence-based decisions for the investment in mobility in North Florida. The data presented focuses on Clay, Duval, Nassau and St. Johns counties for the years 2018-2022 and 2019-2023 when available. This report summarizes trends in the following topics:
 
-# Economic Competitiveness
+# People
 
-## Level of Travel Time Reliability
+## Population
+
+North Florida’s population grew by 10.2%, or 173,000 persons, between 2019 and 2023. This growth outpaced the growth statewide (6.3%). Growth in population places a higher demand for mobility. North Florida’s strong growth outpacing population gains statewide is anticipated to continue through 2024.
+
+The population grew by 0.5% nationally from 2022 to 2023. North Florida grew by 2.7% outpacing the nation and Florida at 1.58%.  
+
+There is no benchmark for population growth. Increases impact the demand for mobility.
+
+```{r}
+
+# Filter data for PedFatal > 0
+df_pop <- read.csv("~/GitHub/amr_2024/data/population.csv")
+
+# Define your custom colors
+custom_colors <- c("#DEF9C4","#D6EFD8","#80AF81","#508D4E","#1A5319")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    #stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')
+    ),
+    title = list(text = "Population"),
+    min = 0
+  ) %>%
+  hc_title(text = "Populations by County and Year") %>%
+  hc_subtitle(text = '<a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank">Source: <b>Office of Economic and Demographic Research</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+
+## Licensed Drivers
+
+There are 111,100 (or 8.5%) more drivers in North Florida in 2023 than 2019. About 77% of the population in the region is a licensed driver.
+
+There is no benchmark for licensed drivers. Increases impact the demand for mobility.
+
+```{r}
+# Load data
+df_drivers <- read.csv("~/GitHub/amr_2024/data/drivers.csv")
+
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+    }"))
+    ),
+    title = list(text = "Licensed Drivers"),
+    min = 0
+  ) %>%
+  hc_title(text = "Licensed Drivers by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank">Source: <b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+## Underserved Populations
+
+Transportation barriers are the third leading cause of missing a medical appointment for older adults across the country. Medically Underserved Areas/Populations are areas or populations designated by the U.S. Department of Health Resources and Services Administration as having too few primary care providers, high infant mortality, high poverty or a high elderly population. Nearly 370,000 persons in North Florida live in medically underserved areas. There are no benchmarks for population in  underserved areas. It is desirable to ensure the population is adequately served.
+
+Accessing affordable and nutritious food was a challenge for nearly 800,000 persons in North Florida in 2015 (the latest date statistics are available). The US Economic Research Service of the Department of Agriculture identifies populations whose food security is at risk if they live in low-income areas and do not have a grocery store within 1 mile in an urban area and 10 miles in a rural area. There are no benchmarks for population living with food uncertainty. It is desirable to ensure the population is adequately served.
+
+The following map highlights areas designated as medically underserved in 2019 and areas without reliable access to healthy foods in 2015 (the latest date statistics are available).
+
+```{r}
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/underserved.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+
+# Create a custom color
+pal <- colorFactor(palette = c("red", "orange", "gray"), 
+                   domain = c("No Data", "Medically Underserved Areas", "Food Deserts"))
+
+labs <- as.list(geojson_data$Metric)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
+  addPolygons(data = geojson_data, color = ~pal(Metric), popup = ~paste(Metric), opacity = 0.8, label = labs)%>%
+  addLegend("topright", 
+            colors = pal(unique(geojson_data$Metric)), 
+            labels = unique(geojson_data$Metric),
+            opacity = 1.0,
+            title = "Metric") %>% 
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+)
+```
+
+# Economy
+
+## Gross Domestic Product
+
+[Bureau of Economic Analysis](https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=)
+
+```{r}
+df_gdp <- read.csv("~/GitHub/amr_2024/data/GDP.csv")
+# Create a Highchart object with data labels and stack totals
+hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS(paste0("function() {
+      return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
+    }")) # Use the custom formatter for data labels
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "GDP"),
+    min = 0
+  ) %>%
+  hc_title(text = "Gross Domestic Product by County and Year") %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+
+```
+
+## Employment
+
+``` {r}
+
+# Data
+# Load data
+df_emp <- read.csv("~/GitHub/amr_2024/data/employment.csv")
+
+# Create highchart
+highchart() %>%
+  hc_title(text = "Employment (Jobs) and Unemployment Rate (%) by Month") %>%
+  hc_subtitle(text = '<a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank">Source: <b>Bureau of Labor Statistics</b></a>') %>%
+  hc_xAxis(categories = df_emp$Date, crosshair = TRUE) %>%
+  hc_yAxis_multiples(
+    list(title = list(text = "Employment"), opposite = FALSE),
+    list(title = list(text = "Unemployment Rate"), opposite = TRUE)
+  ) %>%
+  hc_add_series(name = "Employment", type = "column", data = df_emp$Employment) %>%
+  hc_add_series(name = "Unemployment Rate", type = "spline", data = df_emp$Unemployment.Rate, yAxis = 1) %>%
+  hc_tooltip(shared = TRUE) %>%
+  hc_legend(align = 'left', verticalAlign = 'top', backgroundColor = 'rgba(255,255,255,0.25)') %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Tourism
+
+```{r}
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+        ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
+        )
+        ),
+    deferRender = TRUE,
+    searching = FALSE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+df_lottr <- read.csv("~/GitHub/amr_2024/data/tourism.csv", check.names=FALSE, row.names=1) 
+datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+```
+
+# Safe and Secure Travel
+
+Crash data was compiled from several sources including the FDOT safety office, signal four analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Highway Safety and Motor Vehicles, there were a total of 31,964 crashes that occurred over the four North Florida TPO counties. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.
+
+## Total Crashes
+
+```{r}
+df_tot_crash <- read.csv("~/GitHub/amr_2024/data/total_crashes.csv")
+
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_tot_crash, "column", hcaes(x = year, y = crashes, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+    }"))
+    ),
+    title = list(text = "Total"),
+    min = 0
+  ) %>%
+  hc_title(text = "Total Crashes by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+
+## Fatal and Serious Injury Crash Map
+
+[Signal 4 Analytics](https://signal4analytics.com/)
+
+The following data is showing fatal and serious injury crashes from 2023.
+
+
+```{r, message=FALSE}
+
+df_fatalserious <- read.csv("~/GitHub/amr_2024/data/fatalseriouscrashes.csv")
+
+point_data <- data.frame(
+  name = df_fatalserious$S4_CRASH_SEVERITY,
+  lat = df_fatalserious$LATITUDE,
+  lon = df_fatalserious$LONGITUDE
+)
+
+# Continuous palette
+ord <- factor(df_fatalserious$S4_CRASH_SEVERITY, levels = c('Fatality', 'Serious Injury'))
+pal <- colorFactor(palette = c('darkorange',"red"), levels = ord, ordered = TRUE)
+labs <- paste("<b>Severity:</b> ", df_fatalserious$S4_CRASH_SEVERITY)
+
+# Create the Leaflet map
+leaflet(data = df_fatalserious) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addCircleMarkers(~LONGITUDE, ~LATITUDE, # Use the Longitude and Latitude columns
+                   popup = ~paste0("<b>Crash Severity: </b>", S4_CRASH_SEVERITY), 
+                   radius=5,label = lapply(labs, htmltools::HTML), color = ~pal(S4_CRASH_SEVERITY), weight = 1, 
+                   fillOpacity = 0.8) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
+  addEasyButton(
+  easyButton(
+    icon = "glyphicon-home",
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+)%>%
+  addLegend(df_fatalserious,
+            position = "bottomright",
+            pal = pal, values = ord,
+            title = "Severity",
+            opacity = 1) 
+
+```
+
+## Fatalities
+
+```{r}
+df_tot_fat <- read.csv("~/GitHub/amr_2024/data/total_fatalities.csv")
+
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_tot_fat, "column", hcaes(x = year, y = crashes, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray'
+    ),
+    title = list(text = "Total"),
+    min = 0
+  )) %>%
+  hc_title(text = "Total Fatalities by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Injury Crashes
+
+```{r}
+df_tot_inj <- read.csv("~/GitHub/amr_2024/data/total_injuries.csv")
+
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+    }")
+    ),
+    title = list(text = "Total"),
+    min = 0
+  )) %>%
+  hc_title(text = "Total Injuries by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Crash Rates
+
+```{r}
+
+# Filter data for PedFatal > 0
+df_crash_rates <- read.csv("~/GitHub/amr_2024/data/crash_rates.csv")
+
+# Define your custom colors
+custom_colors <- c("#DEF9C4","#D6EFD8","#80AF81","#508D4E","#1A5319")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    #stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1, 1) ;}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')
+    ),
+    title = list(text = "Population"),
+    min = 0
+  ) %>%
+  hc_title(text = "Florida Crash Rates by Severity and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/crashreports/crash_facts_2022.pdf" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b><br>Rate is determined per 100 million vehicle miles of travel annually.</a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Pedestrian and Bicyclist Fatalities
+
+This plot shows fatality data
+
+::: {layout="[ [1,1] ]"}
+
+```{r}
+df_bike_ped <- read.csv("~/GitHub/amr_2024/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
+
+# Calculate year totals
+df_totals <- df_bike_ped %>%
+  group_by(Year) %>%
+  summarise(Total_PedFatal = mean(PedTotals),Total_BikeFatal = mean(BikeTotals),
+            Ped_PC = mean(Ped_PC),Bike_PC = mean(Bike_PC))
+
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Filter data for PedFatal > 0
+df_filtered <- df_bike_ped[df_bike_ped$PedFatal > 0, ]
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_filtered, "column", hcaes(x = Year, y = PedFatal, group = County)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(enabled = TRUE, format = '{point.y}') # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')
+    ),
+    title = list(text = "Pedestrian Fatalities"),
+    min = 0
+  ) %>%
+  hc_title(text = "Pedestrian Fatalities by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+```{r}
+
+# Filter data for PedFatal > 0
+df_filtered <- df_bike_ped[df_bike_ped$BikeFatal > 0, ]
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(enabled = TRUE, format = '{point.y}') # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')
+    ),
+    title = list(text = "Bicyclist Fatalities"),
+    min = 0
+  ) %>%
+  hc_title(text = "Bicyclist Fatalities by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+:::
+
+
+## Impaired Driving
+
+```{r}
+df_tot_imp <- read.csv("~/GitHub/amr_2024/data/total_impaired.csv")
+
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_tot_imp, "column", hcaes(x = year, y = crashes, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray'
+    ),
+    title = list(text = "Total"),
+    min = 0
+  )) %>%
+  hc_title(text = "Total Fatalities by County and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+# Quantity of Travel
+
+## Vehicles Miles Traveled
+
+::: {layout="[ [1,1] ]"}
+
+```{r}
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+df_vmt <- read.csv("~/GitHub/amr_2024/data/vmt.csv")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_vmt, "column", hcaes(x = Year, y = TotalSHSVMT, group = County)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "VMT"),
+    min = 0
+  ) %>%
+  hc_title(text = "State Highway System Vehicle Miles Traveled by County and Year") %>%
+  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+```{r}
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "VMT"),
+    min = 0
+  ) %>%
+  hc_title(text = "National Highway System Vehicle Miles Traveled by County and Year") %>%
+  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+
+```
+
+:::
+
+## Transit Ridership
+
+```{r}
+df_transit <- read.csv("~/GitHub/amr_2024/data/transit_ridership.csv")
+
+df_transit$Agency <- factor(df_transit$Agency, levels = rev(sort(unique(df_transit$Agency))))
+colors <- c("#C8ACD6","#694F8E")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_transit, "column", hcaes(x = Year, y = Totals, group = Agency)) %>%
+  hc_colors(colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "Ridership Count"),
+    min = 0
+  ) %>%
+  hc_title(text = "Transit Ridership by County and Year") %>%
+  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/transit/passenger-trips#" target="_blank">Source: <b>FDOT Sourcebook Transit Ridership</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Sea Travel and Freight
+
+::: {layout="[ [1,1] ]"}
+
+```{r}
+df_cruise <- read.csv("~/GitHub/amr_2024/data/cruise_passengers.csv")
+
+custom_colors <- c("#3ABEF9")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_cruise, "column", hcaes(x = year, y = passengers)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+  ))) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = FALSE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')),
+    title = list(text = "Passengers"),
+    min = 0
+  ) %>%
+  hc_title(text = "Cruise Passengers by Year") %>%
+  hc_subtitle(text = '<a href="https://www.jaxport.com/media/statistics/" target="_blank">Source: <b>Jacksonville Port Authority</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+```{r}
+df_ton_ship <- read.csv("~/GitHub/amr_2024/data/tons_shipped.csv")
+
+df_ton_ship$port <- factor(df_ton_ship$port, levels = rev(sort(unique(df_ton_ship$port))))
+colors <- c("#C8ACD6","#694F8E")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_ton_ship, "column", hcaes(x = year, y = tons, group = port)) %>%
+  hc_colors(colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "Tons"),
+    min = 0
+  ) %>%
+  hc_title(text = "Tonnage Shipped by Port and Year") %>%
+  hc_subtitle(text = '<a href="https://www.jaxport.com/media/statistics/" target="_blank">Source: <b>Jacksonville Port Authority</b></a><a href="https://www.portoffernandina.org/_files/ugd/e5fb15_182f6f5831d34269a9dedf674412ea63.pdf" target="_blank"> and <b>Ocean Highway and Port Authority</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+:::
+
+```{r}
+# Load data
+df_item_ship <- read.csv("~/GitHub/amr_2024/data/autos_containers_shipped.csv")
+
+# Define your custom colors
+custom_colors <- c("#DEF9C4","#D6EFD8","#80AF81","#508D4E","#1A5319")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_item_ship, "column", hcaes(x = item, y = count, group = year)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    #stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil' ;}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    title = list(text = "Total"),
+    min = 0
+  ) %>%
+  hc_title(text = "Automobiles and Containers Shipped by Year") %>%
+  hc_subtitle(text = '<a href="https://www.jaxport.com/media/statistics/" target="_blank">Source: <b>Jacksonville Port Authority</b></a>') %>%
+  hc_xAxis(title = list(text = "Item")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Air Travel and Freight
+
+```{r}
+
+# Filter data for PedFatal > 0
+df_air_pass <- read.csv("~/GitHub/amr_2024/data/air_passengers.csv")
+
+# Define your custom colors
+colors <- c("#C8ACD6","#694F8E")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_air_pass, "column", hcaes(x = Month, y = Count, group = Type)) %>%
+  hc_colors(colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = FALSE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1, 1) ;}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = FALSE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')
+    ),
+    title = list(text = "Passengers"),
+    min = 0
+  ) %>%
+  hc_title(text = "Air Passengers by Month and Year") %>%
+  hc_subtitle(text = '<a href="https://www.flyjacksonville.com/PDFs/enplanements.pdf" target="_blank">Source: <b>Jacksonville Aviation Authority</b></a>') %>%
+  hc_xAxis(title = list(text = "Month")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+```{r}
+df_cargo <- read.csv("~/GitHub/amr_2024/data/air_cargo.csv")
+
+custom_colors <- c("#3ABEF9")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  ))) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = FALSE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')),
+    title = list(text = "Pounds"),
+    min = 0
+  ) %>%
+  hc_title(text = "Air Cargo Weight (lbs) by Year") %>%
+  hc_subtitle(text = '<a href="https://www.faa.gov/sites/faa.gov/files/2023-08/CY2022-All-Cargo-airports.pdf" target="_blank">Source: <b>Federal Aviation Administration</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+# Quality of Travel
+
+## Travel Time Reliability
+
+[Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).
+
+The map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023
+
+::: {.panel-tabset .nav-pills}
+
+### LOTTR Map
+
+```{r}
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/Florida_TMC_LOTTR23.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+
+# Create a custom color generating function
+generateColor <- function(value) {
+  ifelse(value < 1.15, 'darkgreen',
+         ifelse(value < 1.3, 'lightgreen',
+                ifelse(value < 1.4, 'yellow',
+                       ifelse(value < 1.6, 'orange',
+                              ifelse(value < 2, 'red', 'black')))))
+}
+
+# Apply the custom color function to your data
+geojson_data$colors <- sapply(geojson_data$lottr, generateColor)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~colors,popup = ~paste(lottr), opacity = 0.8)%>%
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+) %>%
+  addLegend(
+    position = "bottomright",
+    colors = c('darkgreen', 'lightgreen', 'yellow', 'orange', 'red', 'black'),
+    labels = c('< 1.1', '1.1 - 1.2', '1.2 - 1.3', '1.3 - 1.6', '1.6 - 2', '> 2'),
+    title = "Level of Travel<br>Time Reliability<br>(Max)"
+  )
+```
+
+### TTR Segment Table
 
 ```{r}
 table_options <- function() {
@@ -80,57 +992,312 @@ datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
 
 ```
 
-The maximum Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2022
+:::
+
+## Truck Travel Time Reliability
+
+[Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/) 
+
+::: {.panel-tabset .nav-pills}
+
+### Truck TTR Map
 
 ```{r}
 
 # Load your GeoJSON file
-geojson_data <- st_read("~/GitHub/amr_2024/data/NFTPO_SegmentData.geojson", quiet = TRUE)  %>% 
+geojson_data <- st_read("~/GitHub/amr_2024/data/Florida_TMC_TTTR23.geojson", quiet = TRUE)  %>% 
   st_transform(crs = 4326)
 
 # Create a custom color generating function
 generateColor <- function(value) {
-  ifelse(value < 1.1, 'darkgreen',
-         ifelse(value < 1.2, 'lightgreen',
-                ifelse(value < 1.3, 'yellow',
+  ifelse(value < 1.15, 'darkgreen',
+         ifelse(value < 1.3, 'lightgreen',
+                ifelse(value < 1.4, 'yellow',
                        ifelse(value < 1.6, 'orange',
                               ifelse(value < 2, 'red', 'black')))))
 }
 
 # Apply the custom color function to your data
-geojson_data$colors <- sapply(geojson_data$LOTTRM22, generateColor)
+geojson_data$colors <- sapply(geojson_data$tttr, generateColor)
 
 # Create the Leaflet map
 leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
-  addPolylines(data = geojson_data, color = ~colors,popup = ~paste(LOTTRM22), opacity = 0.8)%>%
+  addPolylines(data = geojson_data, color = ~colors,popup = ~paste(tttr), opacity = 0.8)%>%
   addEasyButton(
   easyButton(
     icon = 'glyphicon glyphicon-home',
     title = "Zoom to Jacksonville",
     onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
   )
-)
+) %>%
+  addLegend(
+    position = "bottomright",
+    colors = c('darkgreen', 'lightgreen', 'yellow', 'orange', 'red', 'black'),
+    labels = c('< 1.1', '1.1 - 1.2', '1.2 - 1.3', '1.3 - 1.6', '1.6 - 2', '> 2'),
+    title = "Truck Travel<br>Time Reliability<br>(Max)"
+  )
 ```
 
-
-## Truck Travel Time Reliability
+### Truck TTR Segment Table
 
 ```{r}
 df_tttr <- read.csv("~/GitHub/amr_2024/data/TTTR.csv", check.names=FALSE, row.names=1) 
 datatable(df_tttr,options = c(table_options(), list(pageLength = 5)))
 ```
 
-## Primary Freight Corridors with Poor Pavement
+:::
+
+## Level of Service
+
+[FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/)
 
 ```{r}
-df_pfc <- read.csv("~/GitHub/amr_2024/data/PrimaryFreightCorridorsPoorPavement.csv", check.names=FALSE, row.names=1) 
-datatable(df_pfc,options = c(table_options(), list(pageLength = 6)))
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/MajorRoads_LOS.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+geojson_data <- geojson_data[!is.na(geojson_data$LOS_Peak_H), ]
+geojson_data <- geojson_data[geojson_data$LOS_Peak_H != "-", ]
+geojson_data <- geojson_data[order(geojson_data$LOS_Peak_H), ]
+
+geojson_data$LOS_Peak_H <- factor(geojson_data$LOS_Peak_H, levels = unique(geojson_data$LOS_Peak_H))
+
+
+# Create a custom color
+pal <- colorFactor(palette = c('darkgreen','forestgreen',"orange", 'red','darkred'), 
+                   domain = c("B", "C", "D","E","F"))
+
+# Apply the custom color function to your data
+geojson_data$colors <- sapply(geojson_data$LOS_Peak_H, pal)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~colors,popup = ~paste(LOS_Peak_H), opacity = 0.8)%>%
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+) %>% 
+  addLegend("topright", 
+            colors = pal(unique(geojson_data$LOS_Peak_H)), 
+            labels = unique(geojson_data$LOS_Peak_H),
+            opacity = 1.0,
+            title = "LOS Peak Hour 2022")
 ```
 
-# Sustainable Communities
+## Average Vehicle Delay
+
+::: {layout="[ [1,1] ]"}
+
+```{r}
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+df_vhd <- read.csv("~/GitHub/amr_2024/data/vehicle_delay.csv")
+# Create a Highchart object with data labels and stack totals
+hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "VHD"),
+    min = 0
+  ) %>%
+  hc_title(text = "State Highway System Vehicle Hours of Delay by County and Year") %>%
+  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+
+```
+
+```{r}
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
+      formatter = JS(paste0("function() {
+      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    }"))
+    ),
+    title = list(text = "VHD"),
+    min = 0
+  ) %>%
+  hc_title(text = "National Highway System Vehicle Hours of Delay by County and Year") %>%
+  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+
+```
+
+:::
+
+## Travel Speeds
+
+```{r}
+df_travel_speeds <- read.csv("~/GitHub/amr_2024/data/travel_speeds2.csv")
+colnames(df_travel_speeds) <- c("County", "Travel Speeds by Year")
+
+colDefs <- list(list(className = 'dt-center',
+                     targets = c(1:2), 
+                     render = JS("function(data, type, full){ return '<span class=spark>' + data + '</span>' }")))
+
+line_string <- "type: 'line',width: 250, height: 30, lineWidth: 2, highlightColor: 'orange', tooltipFormat: '{{offset:levels}} : {{y}} MPH', tooltipValueLookups: { levels: { '0': '2016', '1': '2017', '2': '2018', '3': '2019', '4': '2020', '5': '2021' }}"  
+
+sl_line <- JS(sprintf("function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', {%s})}", line_string)) 
+
+spark_table <- datatable(data.table(df_travel_speeds), 
+  rownames = FALSE, 
+  options = list(columnDefs = colDefs, 
+  fnDrawCallback = sl_line,
+  lengthChange = FALSE))
+
+spark_table$dependencies <- append(spark_table$dependencies, htmlwidgets:::getDependency("sparkline"))
+
+spark_table 
+
+```
+
+## Incident Clearance Times
+
+2023 Data 
+
+```{r}
+df_inc_all <- read.csv("~/GitHub/amr_2024/data/incident_clearance_all.csv")
+
+# Define your custom colors
+custom_colors <- c("#FF6B6B","#FFD93D","#6BCB77","#4D96FF")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(bar = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray'
+    ),
+    title = list(text = "Minutes"),
+    min = 0
+  )) %>%
+  hc_title(text = "2023 Incident Clearance Duration") %>%
+  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_xAxis(title = list(text = "Quarter")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y} Mins</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+```{r}
+# Load data
+df_duration <- read.csv("~/GitHub/amr_2024/data/road_duration_all.csv")
+
+# Define your custom colors
+custom_colors <- c("#DEF9C4","#9CDBA6","#50B498","#468585")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    #stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1, 1) + ' Mins' ;}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    title = list(text = "Minutes"),
+    min = 0
+  ) %>%
+  hc_title(text = "2023 Open Roads and Roadway Clearance Durations by Quarter") %>%
+  hc_subtitle(text = "Source: <a href='https://sunguide.info/'>FDOT SunGuide</a>") %>%
+  hc_xAxis(title = list(text = "Item")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Incident Event Types
+
+2023 Data
+
+```{r}
+df_events <- read.csv("~/GitHub/amr_2024/data/event_types_all.csv")
+
+hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
+  hc_title(text = "2023 Incident Event Totals") %>%
+  hc_subtitle(text = "Source: <a href='https://sunguide.info/'>FDOT SunGuide</a>") %>%
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.y}</b>') %>%
+  hc_plotOptions(
+    pie = list(
+      allowPointSelect = TRUE,
+      cursor = 'pointer',
+    dataLabels = list(
+      enabled = TRUE, format = '{point.name} {point.percentage:.0f}%'
+    ),
+      dataLabels = list(
+        list(enabled = TRUE, format = '{point.name}'),
+        list(enabled = TRUE, format = '{point.percentage:.0f}%', style = list(fontSize = '0.9em'))
+      ),
+      showInLegend = TRUE
+    )
+  )
+
+```
+
+# Access and Sustainability
 
 ## Transit Accessibility
 
@@ -147,7 +1314,7 @@ point_data <- data.frame(
 
 # Continuous palette
 pal <- colorFactor(palette = "viridis", domain = df_pnr$Location_Name)
-
+labs <- as.list(df_pnr$Location_Name)
 
 # Create the Leaflet map
 leaflet(data = df_pnr) %>%
@@ -158,13 +1325,13 @@ leaflet(data = df_pnr) %>%
              fillColor = "#0078FF", fillOpacity = 0.25) %>%  # Add the default OpenStreetMap tiles
   addCircleMarkers(~Longitude, ~Latitude, # Use the Longitude and Latitude columns
                    popup = ~paste(Location_Name), # Replace 'name' with the column name you want to display in the popup
-                   radius = 5, color = ~pal(Location_Name), weight = 1, 
+                   radius = 5, label = labs, color = ~pal(Location_Name), weight = 1, 
                    fillOpacity = 0.8) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>%
   addLegend(df_pnr,
             position = "bottomright",
             pal = pal, values = ~Location_Name,
-            title = "Legend",
+            title = "Location",
             opacity = 1) %>% 
   addEasyButton(
   easyButton(
@@ -176,20 +1343,161 @@ leaflet(data = df_pnr) %>%
 
 ```
 
-## Bicyclist and Pedestrian Quality of Service
+## Transit Routes
+
+[Florida Transit Data Exchange](https://ftis.org/Posts.aspx)
+
+```{r}
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/TransitAll_Routes.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+
+# Create a custom color
+pal <- colorFactor(palette = "viridis", domain = geojson_data$Admin)
+labs <- as.list(geojson_data$Admin)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.855651, lat = 30.132184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~pal(Admin), popup = ~paste(Admin), opacity = 0.8, label = labs)%>%
+  addLegend("bottomleft", 
+            colors = pal(unique(geojson_data$Admin)), 
+            labels = unique(geojson_data$Admin),
+            opacity = 1.0,
+            title = "Agency") %>% 
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
+  )
+)
+```
+
+## Bicyclist Level of Traffic Stress
 
 [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+
 ```{r}
-knitr::include_graphics("~/GitHub/amr_2024/data/PedLTS.png")
-knitr::include_graphics("~/GitHub/amr_2024/data/BikeLTS.png")
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/LTS_Bike_Ped.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326) %>%
+  drop_na(Bike_LTS)
+
+# Create a custom color generating function
+generateColor <- function(value) {
+  ifelse(value == '1', 'darkgreen',
+                ifelse(value == '2', 'yellow',
+                       ifelse(value == '3', 'orange',
+                              ifelse(value == '4', 'red', 'gray'))))
+}
+
+# Apply the custom color function to your data
+geojson_data$colors <- sapply(geojson_data$Bike_LTS, generateColor)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Bike_LTS), opacity = 0.8)%>%
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+) %>%
+  addLegend(
+    position = "bottomright",
+    colors = c('darkgreen', 'yellow', 'orange', 'red'),
+    labels = c('1', '2', '3', '4'),
+    title = "Bicycle Level of<br>Traffic Stress"
+  )
+```
+
+## Pedestrian Level of Traffic Stress
+
+[FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+
+```{r}
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/LTS_Bike_Ped.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+geojson_data <- geojson_data %>% mutate(Ped_LTS = replace(Ped_LTS, Ped_LTS == " ", '4'))
+
+# Create a custom color generating function
+generateColor <- function(value) {
+  ifelse(value == '1', 'darkgreen',
+                ifelse(value == '2', 'yellow',
+                       ifelse(value == '3', 'orange',
+                              ifelse(value == '4', 'red', 'gray'))))
+}
+
+# Apply the custom color function to your data
+geojson_data$colors <- sapply(geojson_data$Ped_LTS, generateColor)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Ped_LTS), opacity = 0.8)%>%
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+) %>%
+  addLegend(
+    position = "bottomright",
+    colors = c('darkgreen', 'yellow', 'orange', 'red'),
+    labels = c('1', '2', '3', '4'),
+    title = "Pedestrian Level of<br>Traffic Stress"
+  )
 ```
 
 ## Impacts of Investments on the Natural Environment
 
-[Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#)
+[Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#)  
+[FDOT 5 Year Work Program Meta Data](https://fgdl.org/meta/FDOT_WP_2023.xml)
 
 ```{r}
-knitr::include_graphics("~/GitHub/amr_2024/data/ETDM.png")
+# knitr::include_graphics("~/GitHub/amr_2024/data/ETDM.png")
+
+# Load your GeoJSON file
+geojson_data <- st_read("~/GitHub/amr_2024/data/fdot_wp.geojson", quiet = TRUE)  %>% 
+  st_transform(crs = 4326)
+
+# Create a custom color generating function
+# Continuous palette
+pal <- colorFactor(palette = "viridis", domain = geojson_data$DESCRIPT)
+labs <- as.list(geojson_data$DESCRIPT)
+
+# Create the Leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = -82.055651, lat = 30.232184, zoom = 9)%>%
+  addPolylines(data = geojson_data, color = ~pal(DESCRIPT), popup = ~paste(DESCRIPT), opacity = 0.8, label = labs)%>%
+  addLegend("bottomleft", 
+            colors = pal(unique(geojson_data$DESCRIPT)), 
+            labels = unique(geojson_data$DESCRIPT),
+            opacity = 1.0,
+            title = "Description") %>% 
+  addEasyButton(
+  easyButton(
+    icon = 'glyphicon glyphicon-home',
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -82.055651], 9); }")
+  )
+)
 ```
 
 ## Emissions
@@ -200,6 +1508,8 @@ datatable(df_c02,options = c(table_options(), list(pageLength = 4)))
 ```
 
 ## Trail Connectivity
+
+Source: [NFTPO Regional Multi-use Trail Master Plan](https://northfloridatpo.com/uploads/Studies/2018-19-Regional-Multi-use-Trail-Master-Plan-Final21.pdf)
 
 ```{r}
 
@@ -236,25 +1546,24 @@ leaflet() %>%
 [FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76)
 
 ```{r, message=FALSE}
-
 # Load your GeoJSON file
 geojson_data <- st_read("~/GitHub/amr_2024/data/Sidewalks_and_Gaps_NF.geojson", quiet = TRUE)  %>% 
   st_transform(crs = 4326)
 
-# Define a color palette
-colorPalette <- colorFactor(
-  palette = brewer.pal(4, "Set1"),  # You can choose any palette and number of bins
-  domain = geojson_data$RDWYSIDE_LNG
-)
+# Create a custom color
+pal <- colorFactor(palette = c("darkgreen","red", "gold", "gold"), 
+                   domain = c("Gap", "Left", "Right","Composite"))
+
+labs <- as.list(geojson_data$RDWYSIDE_LNG)
 
 # Create the Leaflet map
 leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
-  addPolylines(data = geojson_data, color = ~colorPalette(RDWYSIDE_LNG),popup = ~paste(RDWYSIDE_LNG), opacity = 0.8)%>%
+  addPolylines(data = geojson_data, color = ~pal(RDWYSIDE_LNG),popup = ~paste(RDWYSIDE_LNG), opacity = 0.8,label = labs)%>%
   addLegend("bottomright", 
-            colors = colorPalette(unique(geojson_data$RDWYSIDE_LNG)), 
+            colors = pal(unique(geojson_data$RDWYSIDE_LNG)), 
             labels = unique(geojson_data$RDWYSIDE_LNG),
             opacity = 1.0,
             title = "Roadway Side") %>% 
@@ -268,319 +1577,17 @@ leaflet() %>%
 
 ```
 
-# Safe and Secure Travel
+# Preservation and Maintanence
 
-Crash data was compiled from several sources including the FDOT safety office, signal four analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Highway Safety and Motor Vehicles, there were a total of 31,964 crashes that occurred over the four North Florida TPO counties. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present. 
-
-```{r}
-df_bike_ped <- read.csv("~/GitHub/amr_2024/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
-
-# Calculate year totals
-df_totals <- df_bike_ped %>%
-  group_by(Year) %>%
-  summarise(Total_PedFatal = mean(PedTotals),Total_BikeFatal = mean(BikeTotals),
-            Ped_PC = mean(Ped_PC),Bike_PC = mean(Bike_PC))
-```
-
-## Pedestrian Fatalities
-
-This plot shows fatality data
+## Pavement Condition on Primary Freight Corridors
 
 ```{r}
-
-# Define your custom colors
-custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
-
-# Filter data for PedFatal > 0
-df_filtered <- df_bike_ped[df_bike_ped$PedFatal > 0, ]
-
-# Create a Highchart object with data labels and stack totals
-hchart(df_filtered, "column", hcaes(x = Year, y = PedFatal, group = County)) %>%
-  hc_colors(custom_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(enabled = TRUE, format = '{point.y}') # Enable data labels
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      style = list(fontWeight = 'bold', color = 'gray')
-    ),
-    title = list(text = "Pedestrian Fatalities"),
-    min = 0
-  ) %>%
-  hc_title(text = "Pedestrian Fatalities by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
+df_pfc <- read.csv("~/GitHub/amr_2024/data/PrimaryFreightCorridorsPoorPavement.csv", check.names=FALSE, row.names=1) 
+datatable(df_pfc,options = c(table_options(), list(pageLength = 6)))
 ```
-
-
-## Bicyclist Fatalities
-
-```{r}
-
-# Filter data for PedFatal > 0
-df_filtered <- df_bike_ped[df_bike_ped$BikeFatal > 0, ]
-
-# Create a Highchart object with data labels and stack totals
-hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>%
-  hc_colors(custom_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(enabled = TRUE, format = '{point.y}') # Enable data labels
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      style = list(fontWeight = 'bold', color = 'gray')
-    ),
-    title = list(text = "Bicyclist Fatalities"),
-    min = 0
-  ) %>%
-  hc_title(text = "Bicyclist Fatalities by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
-```
-
-
-```{r}
-# Fatality Percent Changes 
-
-# The following summarizes the percent change in fatalities for pedestrians and cyclists since 2019.
-# fig <- plot_ly(df_totals, x = ~Year, y = ~Ped_PC, name = "Pedestrian Fatalities Percent Change Since 2019", type = 'bar') 
-# fig <- fig %>% add_trace(y = ~Bike_PC, name = 'Bicycle Fatalities Percent Change Since 2019')
-# fig
-
-```
-
-# Mobility and Accesibility
-
-## Quantity of Travel
-
-[FDOT Sourcebook VMT](https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#)
-
-```{r}
-
-df_vmt <- read.csv("~/GitHub/amr_2024/data/vmt.csv")
-
-# Create a Highchart object with data labels and stack totals
-hchart(df_vmt, "column", hcaes(x = Year, y = TotalSHSVMT, group = County)) %>%
-  hc_colors(custom_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(
-      enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-    )
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
-      formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
-    ),
-    title = list(text = "VMT"),
-    min = 0
-  ) %>%
-  hc_title(text = "State Highway System Vehicle Miles Traveled by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
-```
-
-
-```{r}
-
-# Create a Highchart object with data labels and stack totals
-hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
-  hc_colors(custom_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(
-      enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-    )
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
-      formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
-    ),
-    title = list(text = "VMT"),
-    min = 0
-  ) %>%
-  hc_title(text = "National Highway System Vehicle Miles Traveled by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
-
-```
-# Vehicle Occupancy and Transit Ridership
-
-[FDOT Sourcebook Transit Ridership](https://fdotsourcebook.com/performance-measures/transit/passenger-trips#)
-
-```{r}
-df_transit <- read.csv("~/GitHub/amr_2024/data/transit_ridership.csv")
-
-df_transit$Agency <- factor(df_transit$Agency, levels = rev(sort(unique(df_transit$Agency))))
-transit_colors <- c("#3572EF","#050C9C")
-
-# Create a Highchart object with data labels and stack totals
-hchart(df_transit, "column", hcaes(x = Year, y = Totals, group = Agency)) %>%
-  hc_colors(transit_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(
-      enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-    )
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
-      formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
-    ),
-    title = list(text = "Ridership Count"),
-    min = 0
-  ) %>%
-  hc_title(text = "Transit Ridership by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
-
-```
-
-## Quality of Travel
-
-### Average Vehicle Delay
-
-[FDOT Sourcebook Vehicle Hours of Delay](https://fdotsourcebook.com/performance-measures/auto/delay#)
-
-```{r}
-df_vhd <- read.csv("~/GitHub/amr_2024/data/vehicle_delay.csv")
-# Create a Highchart object with data labels and stack totals
-hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
-  hc_colors(custom_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(
-      enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-    )
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
-      formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
-    ),
-    title = list(text = "VHD"),
-    min = 0
-  ) %>%
-  hc_title(text = "State Highway System Vehicle Hours of Delay by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
-
-```
-
-```{r}
-# Create a Highchart object with data labels and stack totals
-hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
-  hc_colors(custom_colors) %>%
-  hc_plotOptions(column = list(
-    stacking = "normal",
-    dataLabels = list(
-      enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-    )
-  )) %>%
-  hc_yAxis(
-    stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
-      formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
-    ),
-    title = list(text = "VHD"),
-    min = 0
-  ) %>%
-  hc_title(text = "National Highway System Vehicle Hours of Delay by County and Year") %>%
-  hc_xAxis(title = list(text = "Year")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
-  hc_legend(enabled = TRUE) %>%
-  hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
-
-```
-
-## Transit Routes
-
-```{r}
-
-# Load your GeoJSON file
-geojson_data <- st_read("~/GitHub/amr_2024/data/TransitAll_Routes.geojson", quiet = TRUE)  %>% 
-  st_transform(crs = 4326)
-
-# Create a custom color generating function
-# Continuous palette
-pal <- colorFactor(palette = "viridis", domain = geojson_data$Admin)
-
-# Create the Leaflet map
-leaflet() %>%
-  addTiles() %>%  # Add default OpenStreetMap map tiles
-  addProviderTiles(providers$CartoDB.Positron) %>%
-  setView(lng = -81.855651, lat = 30.132184, zoom = 9)%>%
-  addPolylines(data = geojson_data, color = ~pal(Admin), popup = ~paste(Admin), opacity = 0.8)%>%
-  addLegend("bottomleft", 
-            colors = pal(unique(geojson_data$Admin)), 
-            labels = unique(geojson_data$Admin),
-            opacity = 1.0,
-            title = "Roadway Side") %>% 
-  addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
-  )
-)
-```
-
-# Equity
-
-# Preserve and Maintain
 
 ## Pavement Conditions
+
 ```{r}
 table_options <- function() {
   list(
@@ -620,42 +1627,20 @@ table_options <- function() {
     )
       )
 }
-df_lottr <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+df_pavement <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
+datatable(df_pavement,options = c(table_options(), list(pageLength = 11)))
 ```
+
 ## Bridge Conditions
+
 ```{r}
 table_options <- function() {
   list(
-    dom = 'Bfrtip',
-    #Bfrtip
-    buttons = list(
-      c('copy', 'csv', 'excel', 'pdf', 'print'),
-      list(
-        extend = "collection",
-        text = 'Show All',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(-1);
-          dt.ajax.reload();}"
-        )
-        ),
-      list(
-        extend = "collection",
-        text = 'Show Less',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(10);
-          dt.ajax.reload();}"
-        )
-        )
-        ),
     deferRender = TRUE,
-    searching = FALSE,
-    editable = TRUE,
+    searching = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
-    ,
+    lengthChange = FALSE,
+    paginate=FALSE,
     initComplete = JS(
       "function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
@@ -667,24 +1652,137 @@ df_lottr <- read.csv("~/GitHub/amr_2024/data/bridgeconditions.csv", check.names=
 datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
 ```
 
-# Tourism
-
-# GDP
-
-[Bureau of Economic Analysis](https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=)
+## Transit Vehicles
 
 ```{r}
-df_gdp <- read.csv("~/GitHub/amr_2024/data/GDP.csv")
+
+# Filter data for PedFatal > 0
+df_transit_age <- read.csv("~/GitHub/amr_2024/data/transit_age.csv")
+
+# Define your custom colors
+custom_colors <- c("#DEF9C4","#D6EFD8","#80AF81","#508D4E","#1A5319")
+
 # Create a Highchart object with data labels and stack totals
-hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
+hchart(df_transit_age, "column", hcaes(x = Agency, y = Age, group = Year)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    #stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y/1,1);}")
+    ) # Enable data labels
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')
+    ),
+    title = list(text = "Age (Years)"),
+    min = 0
+  ) %>%
+  hc_title(text = "Average Transit Vehicle Age by Agency and Year") %>%
+  hc_subtitle(text = '<a href="https://www.transit.dot.gov/ntd/ntd-data?field_data_categories_target_id%5B2516%5D=2516&field_product_type_target_id=All&year=all&combine&page=0" target="_blank">Source: <b>Federal Transit Administration</b></a>') %>%
+  hc_xAxis(title = list(text = "Agency")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+# Economic Impacts
+
+## Cost of Congestion
+
+```{r}
+df_cost_con <- read.csv("~/GitHub/amr_2024/data/cost_congestion.csv")
+
+custom_colors <- c("#3ABEF9")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_cost_con, "column", hcaes(x = year, y = dollars)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return '$'+Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  ))) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = FALSE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')),
+    title = list(text = "Cost (Dollars)"),
+    min = 0
+  ) %>%
+  hc_title(text = "Cost of Congestion by Year") %>%
+  hc_subtitle(text = '<a href="https://static.tti.tamu.edu/tti.tamu.edu/documents/mobility-report-2023.pdf" target="_blank">Source: <b>Texas A&M Transportation Institute</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+## Cost of Crashes
+
+::: {layout="[ [1,1] ]"}
+
+```{r}
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+df_cost_fatal <- read.csv("~/GitHub/amr_2024/data/cost_fatal.csv")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_cost_fatal, "column", hcaes(x = year, y = cost, group = county)) %>%
   hc_colors(custom_colors) %>%
   hc_plotOptions(column = list(
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+      formatter = JS("function() {
+  return '$' + Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+    )
+  )) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = TRUE, # Enable stack totals
+      #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
-    }")) # Use the custom formatter for data labels
+      return '$' + Highcharts.numberFormat(this.total / 1e9, 1) + ' Bil';
+    }"))
+    ),
+    title = list(text = "Cost (Dollars)"),
+    min = 0
+  ) %>%
+  hc_title(text = "Cost of Fatal Crashes by Year") %>%
+  hc_subtitle(text = '<a href="https://signal4analytics.com/" target="_blank">Source: <b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
+  hc_xAxis(title = list(text = "Year")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+```{r}
+# Define your custom colors
+custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
+
+df_cost_injury <- read.csv("~/GitHub/amr_2024/data/cost_serious_injury.csv")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    stacking = "normal",
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
     )
   )) %>%
   hc_yAxis(
@@ -695,14 +1793,224 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
       return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
     }"))
     ),
-    title = list(text = "GDP"),
+    title = list(text = "Cost (Dollars)"),
     min = 0
   ) %>%
-  hc_title(text = "Gross Domestic Product by County and Year") %>%
+  hc_title(text = "Cost of Serious Injury Crashes by Year") %>%
+  hc_subtitle(text = '<a href="https://signal4analytics.com/" target="_blank">Source: <b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
   hc_add_theme(hc_theme_smpl()) %>%
-  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }")))
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+:::
+
+## Return on Investment
+
+```{r}
+df_roi <- read.csv("~/GitHub/amr_2024/data/roi.csv")
+
+custom_colors <- c("#3ABEF9")
+
+# Create a Highchart object with data labels and stack totals
+hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
+  hc_colors(custom_colors) %>%
+  hc_plotOptions(column = list(
+    dataLabels = list(
+      enabled = TRUE,
+      formatter = JS("function() {
+  return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+  ))) %>%
+  hc_yAxis(
+    stackLabels = list(
+      enabled = FALSE, # Enable stack totals
+      style = list(fontWeight = 'bold', color = 'gray')),
+    title = list(text = "Cost (Dollars)"),
+    min = 0
+  ) %>%
+  hc_title(text = "Benefit in Dollars by Mode") %>%
+  hc_subtitle(text = '<a href="http://edr.state.fl.us/content/returnoninvestment/ROI_Transportation.pdf" target="_blank">Source: <b>Florida Department of Transportation Office of Economic & Demographic Research</b></a>') %>%
+  hc_xAxis(title = list(text = "Mode")) %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_legend(enabled = TRUE) %>%
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
+  hc_exporting(enabled = TRUE)  # Enable the exporting button
+```
+
+# MAP-21 Performance Measures
+
+## PM1 Safety (All Public Roads)
+
+[Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm1-safety-fact-sheet-(feb23).pdf)
+
+```{r}
+table_options <- function() {
+  list(
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+df_pm1 <- read.csv("~/GitHub/amr_2024/data/pm1_safety.csv", check.names=FALSE) 
+colnames(df_pm1) <- c('Year','Fatalities (total)','Fatalities per 100 million VMT','Serious Injuries','Serious Injuries per 100 million VMT','Non-motorized Fatalities and Serious Injuries') 
+datatable(df_pm1,options = c(table_options(), list(pageLength = 7)))
+```
+
+## PM2 Bridge and Pavement
+
+[Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf)
+[Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
+
+::: {.panel-tabset .nav-pills}
+
+### Bridge Condition Map
+
+```{r, message=FALSE}
+
+df_bridge <- read.csv("~/GitHub/amr_2024/data/National_Bridge_NF.csv")
+df_bridge <- df_bridge[df_bridge$DECK_CON != "N/A",]
+point_data <- data.frame(
+  name = df_bridge$DECK_CON,
+  lat = df_bridge$LATDD,
+  lon = df_bridge$LONGDD
+)
+
+# Continuous palette
+ord <- factor(df_bridge$DECK_CON, levels = c('Good', 'Fair', 'Poor'))
+pal <- colorFactor(palette = c("limegreen","darkgreen",'darkorange'), levels = ord, ordered = TRUE)
+labs <- paste("<b>Deck Condition:</b> ", df_bridge$DECK_CON, "<br><b>Bridge Condition:</b>", df_bridge$BRIDGE_CON)
+
+# Create the Leaflet map
+leaflet(data = df_bridge) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addCircleMarkers(~LONGDD, ~LATDD, # Use the Longitude and Latitude columns
+                   popup = ~paste0("<b>Deck Condition: </b>", DECK_CON, "<br><b>Bridge Condition: </b>",BRIDGE_CON), 
+                   radius=5,label = lapply(labs, htmltools::HTML), color = ~pal(DECK_CON), weight = 1, 
+                   fillOpacity = 0.8) %>%
+  setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
+  addEasyButton(
+  easyButton(
+    icon = "glyphicon-home",
+    title = "Zoom to Jacksonville",
+    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+  )
+)%>%
+  addLegend(df_bridge,
+            position = "bottomright",
+            pal = pal, values = ord,
+            title = "Bridge Deck Condition",
+            opacity = 1) 
+
+```
+
+### NHS Bridge Decks  
+
+```{r}
+table_options <- function() {
+  list(
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+df_nhs <- read.csv("~/GitHub/amr_2024/data/nhs_bridges.csv", check.names=FALSE, row.names=1) 
+colnames(df_nhs) <- c('Year','Good Condition','Poor Condition') 
+datatable(df_nhs,options = c(table_options(), list(pageLength = 6)))
+```
+
+:::
+
+::: {layout="[ [1,1] ]"}
+
+### Interstate Pavement  
+
+```{r}
+df_inter_pave <- read.csv("~/GitHub/amr_2024/data/inter_pavements.csv", check.names=FALSE, row.names=1) 
+colnames(df_inter_pave) <- c('Year','Good Condition','Poor Condition') 
+datatable(df_inter_pave,options = c(table_options(), list(pageLength = 5)))
+```
+
+### Non-Interstate Pavement  
+
+```{r}
+df_noninter_pave <- read.csv("~/GitHub/amr_2024/data/noninter_pavements.csv", check.names=FALSE, row.names=1) 
+colnames(df_noninter_pave) <- c('Year','Good Condition','Poor Condition') 
+datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)))
+```
+
+:::
+
+### State Targets
+
+```{r}
+table_options <- function() {
+  list(
+    deferRender = TRUE,
+    searching = TRUE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+df_targets <- read.csv("~/GitHub/amr_2024/data/state_targets.csv", check.names=FALSE, row.names=1) 
+colnames(df_targets) <- c('Performance Measure','2023 Target','2025 Target') 
+datatable(df_targets,options = c(table_options(), list(pageLength = 9)))
+
+```
+
+## PM3 System Performance
+
+
+```{r}
+table_options <- function() {
+  list(
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
+
+#label = lapply(labs, htmltools::HTML)
+
+
+df_sysperf <- read.csv("~/GitHub/amr_2024/data/pm3_sysperf.csv", check.names=FALSE, row.names=1) 
+colnames(df_sysperf) <- c('Performance Measure','% of Person Miles Traveled on the Interstate that are Reliable',
+                          '% of Person Miles Traveled on the Non-Interstate NHS Reliable','Truck Travel Time Reliability (TTTR) Index') 
+datatable(df_sysperf,
+  caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://performance-data-integration-space-fdot.hub.arcgis.com/pages/mpo-performance-resources" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
+    options = c(table_options(), list(pageLength = 8)))
 
 ```
