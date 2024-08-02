@@ -58,8 +58,20 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
     #stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+  #     formatter = JS("function() {
+  # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+  
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        return num.toFixed(0) + unit;
+      }")
+  
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -68,7 +80,23 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
       style = list(fontWeight = 'bold', color = 'gray')
     ),
     title = list(text = "Population"),
-    min = 0
+    min = 0,
+   labels = list(
+      formatter = JS("function() {
+        var units = ['', 'k', 'M', 'B'];
+        var order = Math.floor(Math.log(this.value) / Math.log(1000));
+        var unit = units[order];
+        var num = this.value / Math.pow(1000, order);
+        if (order >= 2){
+          return num.toFixed(2) + unit;
+        }
+        else{
+          return num.toFixed(0) + unit;
+        }
+        
+      }")
+    )
+    
   ) %>%
   hc_title(text = "Populations by County and Year") %>%
   hc_subtitle(text = '<a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank">Source: <b>Office of Economic and Demographic Research</b></a>') %>%
