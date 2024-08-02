@@ -58,6 +58,7 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
     #stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+      
   #     formatter = JS("function() {
   # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
   
@@ -83,12 +84,15 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
     min = 0,
    labels = list(
       formatter = JS("function() {
-        var units = ['', 'k', 'M', 'B'];
+        var units = ['', 'K', 'M', 'B'];
         var order = Math.floor(Math.log(this.value) / Math.log(1000));
         var unit = units[order];
         var num = this.value / Math.pow(1000, order);
         if (order >= 2){
           return num.toFixed(2) + unit;
+        }
+        else if (this.value == 0){
+          return 0;
         }
         else{
           return num.toFixed(0) + unit;
@@ -117,10 +121,8 @@ There is no benchmark for licensed drivers. Increases impact the demand for mobi
 ```{r}
 # Load data
 df_drivers <- read.csv("~/GitHub/amr_2024/data/drivers.csv")
-
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
-
 # Create a Highchart object with data labels and stack totals
 hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
   hc_colors(custom_colors) %>%
@@ -128,20 +130,43 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+      
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+  return Highcharts.numberFormat(this.y / 1e3, 1) + ' aaa';}")
+      
     ) # Enable data labels
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
+
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+      return Highcharts.numberFormat(this.total / 1e3, 1) + ' ddd';
     }"))
+      
     ),
     title = list(text = "Licensed Drivers"),
     min = 0
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return 0;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+      
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Licensed Drivers by County and Year") %>%
   hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank">Source: <b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
