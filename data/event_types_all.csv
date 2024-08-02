@@ -1,0 +1,27 @@
+﻿Index,Event,1st Quarter,2nd Quarter,3rd Quarter,4th Quarter,Total
+0,Abandoned Vehicle,553,609,796,858,2816
+1,Bridge Closed,0,6,0,4,10
+2,Bridge Up,323,454,277,347,1401
+3,Bridge Work,0,2,0,0,2
+4,Congestion,1997,1908,1662,1794,7361
+5,Crash,3136,3433,3172,3323,13064
+6,Debris on Roadway,1043,1243,1218,876,4380
+7,Disabled Vehicle,6857,7288,7934,8976,31055
+8,Emergency Road Work,11,19,16,8,54
+9,Emergency Vehicles,189,202,214,223,828
+10,FDLE Alert,81,65,74,59,279
+11,Flooding,2,7,11,6,26
+12,Interagency Coord,12,19,18,17,66
+13,Other,9,9,10,3,31
+14,Pedestrian,6,7,4,5,22
+15,Police Activity,50,59,79,93,281
+16,PSA,5,8,11,8,32
+17,Scheduled Road Work,892,991,1025,926,3834
+18,Special Event,19,36,27,31,113
+19,Traffic Signal Dark,2,3,0,0,5
+20,Traffic Signal Flash,1,8,2,0,11
+21,Vehicle Fire,58,56,56,50,220
+22,Visibility,223,159,81,69,532
+23,Weather,2,7,2,0,11
+24,Wildfire,4,2,2,3,11
+25,Wrong Way Driver,10,9,8,7,34

@@ -1,0 +1,21 @@
+﻿index,county,year,crashes
+0,Clay,2019,26
+1,Duval,2019,158
+2,Nassau,2019,17
+3,St. Johns,2019,31
+4,Clay,2020,24
+5,Duval,2020,187
+6,Nassau,2020,16
+7,St. Johns,2020,39
+8,Clay,2021,27
+9,Duval,2021,192
+10,Nassau,2021,11
+11,St. Johns,2021,36
+12,Clay,2022,34
+13,Duval,2022,151
+14,Nassau,2022,14
+15,St. Johns,2022,34
+16,Clay,2023,31
+17,Duval,2023,155
+18,Nassau,2023,15
+19,St. Johns,2023,37

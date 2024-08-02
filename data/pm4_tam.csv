@@ -1,0 +1,21 @@
+Index,Agency,Asset Class,Performance Measure,Asset Class,FY 2021,FY 2021 Target
+0,JTA,Equipment,"% of non-revenue service vehicles exceeds UL of 4 years or 100,000 miles",Automobile,95%,100%
+1,JTA,Equipment,"% of non-revenue service vehicles exceeds UL of 4 years or 100,000 miles",Trucks and Other Rubber Tire Vehicles (Total),57%,66%
+2,JTA,Equipment,"% of non-revenue service vehicles exceeds UL of 4 years or 100,000 miles",SUVs,38%,48%
+3,JTA,Equipment,"% of non-revenue service vehicles exceeds UL of 4 years or 100,000 miles",Trucks,76%,85%
+4,JTA,Equipment,"% of non-revenue service vehicles exceeds UL of 4 years or 100,000 miles",Vans,100%,100%
+5,JTA,Equipment,% of non-revenue service vehicles exceeds UL of 18 years,Boats,0%,100%
+6,JTA,Rolling Stock,"% of fleet exceeds UL of 12 years or 500,000 miles",Buses,22%,23%
+7,JTA,Rolling Stock,"% of fleet exceeds UL of 5 years or 150,000 miles",Cutaways,71%,55%
+8,JTA,Rolling Stock,"% of fleet exceeds UL of 4 years or 100,000 miles",Vans,15%,57%
+9,JTA,Rolling Stock,% of fleet exceeds UL of 25 years,Automated Guideway Vehicle,0%,0%
+10,JTA,Rolling Stock,% of fleet exceeds UL of 25 years,Ferryboat,0%,0%
+11,JTA,Infrastructure,% of track segments under performance restriction,Rail Fixed Guideway,0%,8%
+12,JTA,Facilities,% of facilities rated under 3.0 on TERM scale,Admin/Maintenance Facilities,6%,3%
+13,JTA,Facilities,% of facilities rated under 3.0 on TERM scale,Passenger/Parking Facilities (Total),3%,3%
+14,JTA,Facilities,% of facilities rated under 3.0 on TERM scale,Passenger Facilities,0%,0%
+15,JTA,Facilities,% of facilities rated under 3.0 on TERM scale,Parking Facilities,4%,4%
+16,Sunshine Bus,Rolling Stock,% of fleet exceeds ULB,Cutaways,13%,65%
+17,Sunshine Bus,Rolling Stock,% of fleet exceeds ULB,Minivans,57%,66%
+18,Sunshine Bus,Equipment,% of non-revenue service vehicles meet ULB,Trucks and Other Rubber Tire Vehicles (Total),100%,100%
+19,Sunshine Bus,Facilities,% of facilities rated under 3.0 on TERM scale,Admin/Maintenance Facilities,0%,0%
