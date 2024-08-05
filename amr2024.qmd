@@ -103,7 +103,7 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
 
   ) %>%
   hc_title(text = "Populations by County and Year") %>%
-  hc_subtitle(text = '<a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank">Source: <b>Office of Economic and Demographic Research</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank"><b>Office of Economic and Demographic Research</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -196,7 +196,7 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
 
   ) %>%
   hc_title(text = "Licensed Drivers by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank">Source: <b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank"><b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -252,6 +252,7 @@ leaflet() %>%
 # Economy
 
 ## Gross Domestic Product
+
 ```{r}
 df_gdp <- read.csv("~/GitHub/amr_2024/data/GDP.csv")
 # Create a Highchart object with data labels and stack totals
@@ -325,7 +326,7 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
     
   ) %>%
   hc_title(text = "Gross Domestic Product by County and Year") %>%
-  hc_subtitle(text = '<a href="https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=" target="_blank">Source: <b>Bureau of Economic Analysis</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=" target="_blank"><b>Bureau of Economic Analysis</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -346,7 +347,7 @@ df_emp <- read.csv("~/GitHub/amr_2024/data/employment.csv")
 # Create highchart
 highchart() %>%
   hc_title(text = "Employment (Jobs) and Unemployment Rate (%) by Month", align = 'left', style = list(fontFamily = 'Roboto Condensed', color = '#333333', fill = '#333333', fontSize = '18px', fontWeight = 'bold')) %>%
-  hc_subtitle(text = '<a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank">Source: <b>Bureau of Labor Statistics</b></a>', align = 'left', style = list(fontFamily = 'Roboto Condensed')) %>%
+  hc_subtitle(text = 'Source: <a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank"><b>Bureau of Labor Statistics</b></a>', align = 'left', style = list(fontFamily = 'Roboto Condensed')) %>%
   hc_xAxis(categories = df_emp$Date, crosshair = TRUE) %>%
   hc_yAxis_multiples(
     list(title = list(text = "Employment"), opposite = FALSE,     
