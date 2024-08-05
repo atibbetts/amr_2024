@@ -433,8 +433,13 @@ df_lottr <- read.csv("~/GitHub/amr_2024/data/tourism.csv", check.names=FALSE, ro
 df_lottr <- df_lottr %>%
   mutate(Visitors = ifelse(is.na(Visitors), "-", as.character(Visitors))) %>%
   mutate(Visitors = ifelse(Visitors == "-", "-", format(as.numeric(Visitors), big.mark = ",")))
+datatable(          
+  caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    df_lottr,options = c(table_options(), list(pageLength = 4)))
 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 4)))
+
 ```
 
 # Safe and Secure Travel
