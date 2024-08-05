@@ -92,7 +92,7 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
           return num.toFixed(2) + unit;
         }
         else if (this.value == 0){
-          return 0;
+          return this.value;
         }
         else{
           return num.toFixed(0) + unit;
@@ -160,7 +160,7 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
           return num.toFixed(2) + unit;
         }
         else if (order == 0){
-          return 0;
+          return this.total;
         }
         else {
           return num.toFixed(0) + unit;
@@ -185,7 +185,7 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
         return num.toFixed(2) + unit;
       }
       else if (this.value == 0){
-        return 0;
+        return this.value;
       }
       else{
         return num.toFixed(0) + unit;
@@ -216,9 +216,6 @@ The following map highlights areas designated as medically underserved in 2019 a
 Source: [N/A - Need to include](https://www.google.com/)
 
 ```{r}
-
-
-
 # Load your GeoJSON file
 geojson_data <- st_read("~/GitHub/amr_2024/data/underserved.geojson", quiet = TRUE)  %>% 
   st_transform(crs = 4326)
@@ -295,7 +292,7 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
           return '$' + num.toFixed(2) + unit;
         }
         else if (order == 0){
-          return 0;
+          return this.total;
         }
         else {
           return '$' + num.toFixed(0) + unit;
@@ -312,10 +309,10 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
       var unit = units[order];
       var num = this.value / Math.pow(1000, order);
       if (order >= 2){
-        return '$' + num.toFixed(2) + unit;
+        return '$' + num.toFixed(0) + unit;
       }
       else if (this.value == 0){
-        return 0;
+        return this.value;
       }
       else{
         return '$' + num.toFixed(0) + unit;
@@ -361,7 +358,7 @@ highchart() %>%
               return num.toFixed(2) + unit;
             }
             else if (this.value == 0){
-              return 0;
+              return this.value;
             }
             else{
               return num.toFixed(0) + unit;
@@ -470,15 +467,55 @@ hchart(df_tot_crash, "column", hcaes(x = year, y = crashes, group = county)) %>%
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
+      
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(1) + unit;
+        }
+      }"))
+      
+      
+    #   formatter = JS(paste0("function() {
+    #   return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+    # }"))
+    
+    
     ),
-    title = list(text = "Total"),
-    min = 0
+    title = list(text = "Number of Crashes"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Total Crashes by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -489,9 +526,9 @@ hchart(df_tot_crash, "column", hcaes(x = year, y = crashes, group = county)) %>%
 
 ## Fatal and Serious Injury Crash Map
 
-[Signal 4 Analytics](https://signal4analytics.com/)
-
 The following data is showing fatal and serious injury crashes from 2023.
+
+Source: [Signal 4 Analytics](https://signal4analytics.com/)
 
 ```{r, message=FALSE}
 
@@ -551,14 +588,49 @@ hchart(df_tot_fat, "column", hcaes(x = year, y = crashes, group = county)) %>%
   )) %>%
   hc_yAxis(
     stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      style = list(fontWeight = 'bold', color = 'gray'
-      ),
-      title = list(text = "Total"),
-      min = 0
-    )) %>%
+      enabled = TRUE, # Enable stack totals, 
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(0) + unit;
+        }
+      }")),
+      # style = list(fontWeight = 'bold', color = 'gray'),
+      
+      labels = list(
+        formatter = JS("function() {
+          var units = ['', 'K', 'M', 'B'];
+          var order = Math.floor(Math.log(this.value) / Math.log(1000));
+          var unit = units[order];
+          var num = this.value / Math.pow(1000, order);
+          if (order >= 2){
+            return num.toFixed(2) + unit;
+          }
+          else if (this.value == 0){
+            return this.value;
+          }
+          else{
+            return num.toFixed(0) + unit;
+          }
+    
+        }"
+        )
+      )
+    ),
+    title = list(text = "Number of Fatalities"),
+    min = 0
+    ) %>%
   hc_title(text = "Total Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -582,23 +654,74 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.y;
+        }
+        else {
+          return num.toFixed(1) + unit;
+        }
+      }"))
+
+  #     formatter = JS("function() {
+  # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
+      enabled = TRUE, # Enable stack totals, 
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(1) + unit;
+        }
+      }"))
+      # style = list(fontWeight = 'bold', color = 'gray'),
+      
+    ),
+    title = list(text = "Number of Injuries"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
     }")
-      ),
-    title = list(text = "Total"),
-    min = 0
-    )) %>%
+    )
+    
+    ) %>%
   hc_title(text = "Total Injuries by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -633,11 +756,11 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')
     ),
-    title = list(text = "Population"),
+    title = list(text = "Rate (Per 100 MVM of Vehicle Travel)"),
     min = 0
   ) %>%
   hc_title(text = "Florida Crash Rates by Severity and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/crashreports/crash_facts_2022.pdf" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b><br>Rate is determined per 100 million vehicle miles of travel annually.</a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/pdf/crashreports/crash_facts_2022.pdf" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a> <br>Rate is determined per 100 million vehicle miles of travel annually.') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -647,8 +770,6 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
 ```
 
 ## Pedestrian and Bicyclist Fatalities
-
-This plot shows fatality data
 
 ::: {layout="[ [1,1] ]"}
 ```{r}
@@ -682,7 +803,7 @@ hchart(df_filtered, "column", hcaes(x = Year, y = PedFatal, group = County)) %>%
     min = 0
   ) %>%
   hc_title(text = "Pedestrian Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -712,7 +833,7 @@ hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>
     min = 0
   ) %>%
   hc_title(text = "Bicyclist Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -741,14 +862,15 @@ hchart(df_tot_imp, "column", hcaes(x = year, y = crashes, group = county)) %>%
   )) %>%
   hc_yAxis(
     stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      style = list(fontWeight = 'bold', color = 'gray'
-      ),
-      title = list(text = "Total"),
-      min = 0
-    )) %>%
-  hc_title(text = "Total Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+      enabled = TRUE#, # Enable stack totals
+      # style = list(fontWeight = 'bold', color = 'gray'
+      # ),
+    ), 
+    title = list(text = "Numbre of Impaired Driving Crashes"),
+    min = 0
+    ) %>%
+  hc_title(text = "Total Impaired Driving Crashes by County and Year") %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
