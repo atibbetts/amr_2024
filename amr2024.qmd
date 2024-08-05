@@ -58,10 +58,10 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
     #stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      
-  #     formatter = JS("function() {
-  # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
-  
+
+      #     formatter = JS("function() {
+      # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+
       formatter = JS("function() {
         var units = ['', 'K', 'M', 'B'];
         var order = Math.floor(Math.log(this.y) / Math.log(1000));
@@ -72,7 +72,7 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
         }
         return num.toFixed(0) + unit;
       }")
-  
+
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -82,7 +82,7 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
     ),
     title = list(text = "Population"),
     min = 0,
-   labels = list(
+    labels = list(
       formatter = JS("function() {
         var units = ['', 'K', 'M', 'B'];
         var order = Math.floor(Math.log(this.value) / Math.log(1000));
@@ -97,10 +97,10 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
         else{
           return num.toFixed(0) + unit;
         }
-        
+
       }")
     )
-    
+
   ) %>%
   hc_title(text = "Populations by County and Year") %>%
   hc_subtitle(text = '<a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank">Source: <b>Office of Economic and Demographic Research</b></a>') %>%
@@ -130,10 +130,21 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' aaa';}")
-      
+
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        return num.toFixed(0) + unit;
+      }"))
+
+      #     formatter = JS("function() {
+      # return Highcharts.numberFormat(this.y / 1e3, 1) + ' aaa';}")
+
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -141,13 +152,29 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
       enabled = TRUE, # Enable stack totals
 
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' ddd';
-    }"))
-      
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return 0;
+        }
+        else {
+          return num.toFixed(0) + unit;
+        }
+      }"))
+
+      #   formatter = JS(paste0("function() {
+      #   return Highcharts.numberFormat(this.total / 1e3, 1) + ' ddd';
+      # }"))
+
     ),
     title = list(text = "Licensed Drivers"),
-    min = 0
-    
+    min = 0,
+
     labels = list(
       formatter = JS("function() {
       var units = ['', 'K', 'M', 'B'];
@@ -163,10 +190,10 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
       else{
         return num.toFixed(0) + unit;
       }
-      
+
     }")
     )
-    
+
   ) %>%
   hc_title(text = "Licensed Drivers by County and Year") %>%
   hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank">Source: <b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
@@ -186,7 +213,11 @@ Accessing affordable and nutritious food was a challenge for nearly 800,000 pers
 
 The following map highlights areas designated as medically underserved in 2019 and areas without reliable access to healthy foods in 2015 (the latest date statistics are available).
 
+Source: [N/A - Need to include](https://www.google.com/)
+
 ```{r}
+
+
 
 # Load your GeoJSON file
 geojson_data <- st_read("~/GitHub/amr_2024/data/underserved.geojson", quiet = TRUE)  %>% 
@@ -210,20 +241,17 @@ leaflet() %>%
             opacity = 1.0,
             title = "Metric") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 ```
 
 # Economy
 
 ## Gross Domestic Product
-
-[Bureau of Economic Analysis](https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=)
-
 ```{r}
 df_gdp <- read.csv("~/GitHub/amr_2024/data/GDP.csv")
 # Create a Highchart object with data labels and stack totals
@@ -233,9 +261,24 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+      
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
-    }")) # Use the custom formatter for data labels
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+
+      
+    #   formatter = JS(paste0("function() {
+    #   return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
+    # }"))
+    
+    # Use the custom formatter for data labels
     )
   )) %>%
   hc_yAxis(
@@ -243,13 +286,46 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return 0;
+        }
+        else {
+          return '$' + num.toFixed(0) + unit;
+        }
+      }"))
     ),
     title = list(text = "GDP"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return 0;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Gross Domestic Product by County and Year") %>%
+  hc_subtitle(text = '<a href="https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=" target="_blank">Source: <b>Bureau of Economic Analysis</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -269,12 +345,35 @@ df_emp <- read.csv("~/GitHub/amr_2024/data/employment.csv")
 
 # Create highchart
 highchart() %>%
-  hc_title(text = "Employment (Jobs) and Unemployment Rate (%) by Month") %>%
-  hc_subtitle(text = '<a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank">Source: <b>Bureau of Labor Statistics</b></a>') %>%
+  hc_title(text = "Employment (Jobs) and Unemployment Rate (%) by Month", align = 'left', style = list(fontFamily = 'Roboto Condensed', color = '#333333', fill = '#333333', fontSize = '18px', fontWeight = 'bold')) %>%
+  hc_subtitle(text = '<a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank">Source: <b>Bureau of Labor Statistics</b></a>', align = 'left', style = list(fontFamily = 'Roboto Condensed')) %>%
   hc_xAxis(categories = df_emp$Date, crosshair = TRUE) %>%
   hc_yAxis_multiples(
-    list(title = list(text = "Employment"), opposite = FALSE),
-    list(title = list(text = "Unemployment Rate"), opposite = TRUE)
+    list(title = list(text = "Employment"), opposite = FALSE,     
+         labels = list(
+           formatter = JS("function() {
+            var units = ['', 'K', 'M', 'B'];
+            var order = Math.floor(Math.log(this.value) / Math.log(1000));
+            var unit = units[order];
+            var num = this.value / Math.pow(1000, order);
+            if (order >= 2){
+              return num.toFixed(2) + unit;
+            }
+            else if (this.value == 0){
+              return 0;
+            }
+            else{
+              return num.toFixed(0) + unit;
+            }
+      
+          }")
+         )),
+    list(title = list(text = "Unemployment Rate"), opposite = TRUE, 
+         labels = list(
+         formatter = JS("function() {
+            return this.value + '%';
+         }"))
+     )
   ) %>%
   hc_add_series(name = "Employment", type = "column", data = df_emp$Employment) %>%
   hc_add_series(name = "Unemployment Rate", type = "spline", data = df_emp$Unemployment.Rate, yAxis = 1) %>%
@@ -300,7 +399,7 @@ table_options <- function() {
           dt.page.len(-1);
           dt.ajax.reload();}"
         )
-        ),
+      ),
       list(
         extend = "collection",
         text = 'Show Less',
@@ -309,8 +408,8 @@ table_options <- function() {
           dt.page.len(10);
           dt.ajax.reload();}"
         )
-        )
-        ),
+      )
+    ),
     deferRender = TRUE,
     searching = FALSE,
     editable = TRUE,
@@ -322,7 +421,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/tourism.csv", check.names=FALSE, row.names=1) 
 datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
@@ -403,12 +502,12 @@ leaflet(data = df_fatalserious) %>%
                    fillOpacity = 0.8) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-)%>%
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  )%>%
   addLegend(df_fatalserious,
             position = "bottomright",
             pal = pal, values = ord,
@@ -438,10 +537,10 @@ hchart(df_tot_fat, "column", hcaes(x = year, y = crashes, group = county)) %>%
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray'
-    ),
-    title = list(text = "Total"),
-    min = 0
-  )) %>%
+      ),
+      title = list(text = "Total"),
+      min = 0
+    )) %>%
   hc_title(text = "Total Fatalities by County and Year") %>%
   hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
@@ -478,10 +577,10 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
       formatter = JS(paste0("function() {
       return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
     }")
-    ),
+      ),
     title = list(text = "Total"),
     min = 0
-  )) %>%
+    )) %>%
   hc_title(text = "Total Injuries by County and Year") %>%
   hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
@@ -628,10 +727,10 @@ hchart(df_tot_imp, "column", hcaes(x = year, y = crashes, group = county)) %>%
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray'
-    ),
-    title = list(text = "Total"),
-    min = 0
-  )) %>%
+      ),
+      title = list(text = "Total"),
+      min = 0
+    )) %>%
   hc_title(text = "Total Fatalities by County and Year") %>%
   hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
@@ -779,7 +878,7 @@ hchart(df_cruise, "column", hcaes(x = year, y = passengers)) %>%
       enabled = TRUE,
       formatter = JS("function() {
   return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
-  ))) %>%
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
@@ -920,7 +1019,7 @@ hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
       enabled = TRUE,
       formatter = JS("function() {
   return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-  ))) %>%
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
@@ -974,12 +1073,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(lottr), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'lightgreen', 'yellow', 'orange', 'red', 'black'),
@@ -1005,7 +1104,7 @@ table_options <- function() {
           dt.page.len(-1);
           dt.ajax.reload();}"
         )
-        ),
+      ),
       list(
         extend = "collection",
         text = 'Show Less',
@@ -1014,8 +1113,8 @@ table_options <- function() {
           dt.page.len(10);
           dt.ajax.reload();}"
         )
-        )
-        ),
+      )
+    ),
     deferRender = TRUE,
     searching = FALSE,
     editable = TRUE,
@@ -1027,7 +1126,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/LOTTR.csv", check.names=FALSE, row.names=1) 
 datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
@@ -1067,12 +1166,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(tttr), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'lightgreen', 'yellow', 'orange', 'red', 'black'),
@@ -1119,12 +1218,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(LOS_Peak_H), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>% 
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>% 
   addLegend("topright", 
             colors = pal(unique(geojson_data$LOS_Peak_H)), 
             labels = unique(geojson_data$LOS_Peak_H),
@@ -1249,10 +1348,10 @@ hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray'
-    ),
-    title = list(text = "Minutes"),
-    min = 0
-  )) %>%
+      ),
+      title = list(text = "Minutes"),
+      min = 0
+    )) %>%
   hc_title(text = "2023 Incident Clearance Duration") %>%
   hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Quarter")) %>%
@@ -1310,9 +1409,9 @@ hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
     pie = list(
       allowPointSelect = TRUE,
       cursor = 'pointer',
-    dataLabels = list(
-      enabled = TRUE, format = '{point.name} {point.percentage:.0f}%'
-    ),
+      dataLabels = list(
+        enabled = TRUE, format = '{point.name} {point.percentage:.0f}%'
+      ),
       dataLabels = list(
         list(enabled = TRUE, format = '{point.name}'),
         list(enabled = TRUE, format = '{point.percentage:.0f}%', style = list(fontSize = '0.9em'))
@@ -1360,12 +1459,12 @@ leaflet(data = df_pnr) %>%
             title = "Location",
             opacity = 1) %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 
 ```
 
@@ -1395,12 +1494,12 @@ leaflet() %>%
             opacity = 1.0,
             title = "Agency") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
+    )
   )
-)
 ```
 
 ## Bicyclist Level of Traffic Stress
@@ -1417,9 +1516,9 @@ geojson_data <- st_read("~/GitHub/amr_2024/data/LTS_Bike_Ped.geojson", quiet = T
 # Create a custom color generating function
 generateColor <- function(value) {
   ifelse(value == '1', 'darkgreen',
-                ifelse(value == '2', 'yellow',
-                       ifelse(value == '3', 'orange',
-                              ifelse(value == '4', 'red', 'gray'))))
+         ifelse(value == '2', 'yellow',
+                ifelse(value == '3', 'orange',
+                       ifelse(value == '4', 'red', 'gray'))))
 }
 
 # Apply the custom color function to your data
@@ -1432,12 +1531,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Bike_LTS), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'yellow', 'orange', 'red'),
@@ -1460,9 +1559,9 @@ geojson_data <- geojson_data %>% mutate(Ped_LTS = replace(Ped_LTS, Ped_LTS == " 
 # Create a custom color generating function
 generateColor <- function(value) {
   ifelse(value == '1', 'darkgreen',
-                ifelse(value == '2', 'yellow',
-                       ifelse(value == '3', 'orange',
-                              ifelse(value == '4', 'red', 'gray'))))
+         ifelse(value == '2', 'yellow',
+                ifelse(value == '3', 'orange',
+                       ifelse(value == '4', 'red', 'gray'))))
 }
 
 # Apply the custom color function to your data
@@ -1475,12 +1574,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Ped_LTS), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'yellow', 'orange', 'red'),
@@ -1518,12 +1617,12 @@ leaflet() %>%
             opacity = 1.0,
             title = "Description") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -82.055651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -82.055651], 9); }")
+    )
   )
-)
 ```
 
 ## Emissions
@@ -1559,12 +1658,12 @@ leaflet() %>%
             opacity = 1.0,
             title = "Scale") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 ```
 
 ## Pedestrian Connectivity
@@ -1594,12 +1693,12 @@ leaflet() %>%
             opacity = 1.0,
             title = "Roadway Side") %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 
 ```
 
@@ -1629,7 +1728,7 @@ table_options <- function() {
           dt.page.len(-1);
           dt.ajax.reload();}"
         )
-        ),
+      ),
       list(
         extend = "collection",
         text = 'Show Less',
@@ -1638,8 +1737,8 @@ table_options <- function() {
           dt.page.len(10);
           dt.ajax.reload();}"
         )
-        )
-        ),
+      )
+    ),
     deferRender = TRUE,
     searching = FALSE,
     editable = TRUE,
@@ -1651,7 +1750,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_pavement <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
 datatable(df_pavement,options = c(table_options(), list(pageLength = 11)))
@@ -1672,7 +1771,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/bridgeconditions.csv", check.names=FALSE, row.names=1) 
 datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
@@ -1734,7 +1833,7 @@ hchart(df_cost_con, "column", hcaes(x = year, y = dollars)) %>%
       enabled = TRUE,
       formatter = JS("function() {
   return '$'+Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-  ))) %>%
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
@@ -1847,7 +1946,7 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
       enabled = TRUE,
       formatter = JS("function() {
   return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
-  ))) %>%
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
@@ -1884,7 +1983,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_pm1 <- read.csv("~/GitHub/amr_2024/data/pm1_safety.csv", check.names=FALSE) 
 colnames(df_pm1) <- c('Year','Fatalities (total)','Fatalities per 100 million VMT','Serious Injuries','Serious Injuries per 100 million VMT','Non-motorized Fatalities and Serious Injuries') 
@@ -1923,12 +2022,12 @@ leaflet(data = df_bridge) %>%
                    fillOpacity = 0.8) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-)%>%
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  )%>%
   addLegend(df_bridge,
             position = "bottomright",
             pal = pal, values = ord,
@@ -1952,7 +2051,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_nhs <- read.csv("~/GitHub/amr_2024/data/nhs_bridges.csv", check.names=FALSE, row.names=1) 
 colnames(df_nhs) <- c('Year','Good Condition','Poor Condition') 
@@ -1993,7 +2092,7 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_targets <- read.csv("~/GitHub/amr_2024/data/state_targets.csv", check.names=FALSE, row.names=1) 
 colnames(df_targets) <- c('Performance Measure','2023 Target','2025 Target') 
@@ -2016,16 +2115,16 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 
 df_sysperf <- read.csv("~/GitHub/amr_2024/data/pm3_sysperf.csv", check.names=FALSE, row.names=1) 
 colnames(df_sysperf) <- c('Performance Measure','% of Person Miles Traveled on the Interstate that are Reliable',
                           '% of Person Miles Traveled on the Non-Interstate NHS Reliable','Truck Travel Time Reliability (TTTR) Index') 
 datatable(df_sysperf,
-  caption = htmltools::tags$caption(
-    style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="https://performance-data-integration-space-fdot.hub.arcgis.com/pages/mpo-performance-resources" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
-    options = c(table_options(), list(pageLength = 8)))
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="https://performance-data-integration-space-fdot.hub.arcgis.com/pages/mpo-performance-resources" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
+          options = c(table_options(), list(pageLength = 8)))
 
 ```
