@@ -410,11 +410,17 @@ table_options <- function() {
         )
       )
     ),
+    rowCallback = DT::JS(
+        "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
-    searching = FALSE,
+    searching = TRUE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
+    lengthChange = FALSE,
+    paginate = FALSE
     ,
     initComplete = JS(
       "function(settings, json) {",
@@ -424,7 +430,11 @@ table_options <- function() {
   )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/tourism.csv", check.names=FALSE, row.names=1) 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+df_lottr <- df_lottr %>%
+  mutate(Visitors = ifelse(is.na(Visitors), "-", as.character(Visitors))) %>%
+  mutate(Visitors = ifelse(Visitors == "-", "-", format(as.numeric(Visitors), big.mark = ",")))
+
+datatable(df_lottr,options = c(table_options(), list(pageLength = 4)))
 ```
 
 # Safe and Secure Travel
