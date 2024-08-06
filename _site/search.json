@@ -130,21 +130,21 @@
     "href": "amr2024.html#travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "5.1 Travel Time Reliability",
-    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023\n\nLOTTR MapTTR Segment Table"
+    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023.\nSource: Level of Travel Time Reliability (LOTTR)\n\nLOTTR MapTTR Segment Table"
   },
   {
     "objectID": "amr2024.html#truck-travel-time-reliability",
     "href": "amr2024.html#truck-travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "5.2 Truck Travel Time Reliability",
-    "text": "5.2 Truck Travel Time Reliability\nTruck Travel Time Reliability (TTTR)\n\nTruck TTR MapTruck TTR Segment Table"
+    "text": "5.2 Truck Travel Time Reliability\nSource: Truck Travel Time Reliability (TTTR)\n\nTruck TTR MapTruck TTR Segment Table"
   },
   {
     "objectID": "amr2024.html#level-of-service",
     "href": "amr2024.html#level-of-service",
     "title": "Annual Mobility Report 2024",
     "section": "5.3 Level of Service",
-    "text": "5.3 Level of Service\nFDOT District Two, Jacksonville Urban Office"
+    "text": "5.3 Level of Service\nSource: FDOT District Two, Jacksonville Urban Office"
   },
   {
     "objectID": "amr2024.html#average-vehicle-delay",
@@ -165,49 +165,49 @@
     "href": "amr2024.html#incident-clearance-times",
     "title": "Annual Mobility Report 2024",
     "section": "5.6 Incident Clearance Times",
-    "text": "5.6 Incident Clearance Times\n2023 Data"
+    "text": "5.6 Incident Clearance Times"
   },
   {
     "objectID": "amr2024.html#incident-event-types",
     "href": "amr2024.html#incident-event-types",
     "title": "Annual Mobility Report 2024",
     "section": "5.7 Incident Event Types",
-    "text": "5.7 Incident Event Types\n2023 Data"
+    "text": "5.7 Incident Event Types"
   },
   {
     "objectID": "amr2024.html#transit-accessibility",
     "href": "amr2024.html#transit-accessibility",
     "title": "Annual Mobility Report 2024",
     "section": "6.1 Transit Accessibility",
-    "text": "6.1 Transit Accessibility\nJTA Park n’ Ride Locations"
+    "text": "6.1 Transit Accessibility\nSource: JTA Park n’ Ride Locations"
   },
   {
     "objectID": "amr2024.html#transit-routes",
     "href": "amr2024.html#transit-routes",
     "title": "Annual Mobility Report 2024",
     "section": "6.2 Transit Routes",
-    "text": "6.2 Transit Routes\nFlorida Transit Data Exchange"
+    "text": "6.2 Transit Routes\nSource: Florida Transit Data Exchange"
   },
   {
     "objectID": "amr2024.html#bicyclist-level-of-traffic-stress",
     "href": "amr2024.html#bicyclist-level-of-traffic-stress",
     "title": "Annual Mobility Report 2024",
     "section": "6.3 Bicyclist Level of Traffic Stress",
-    "text": "6.3 Bicyclist Level of Traffic Stress\nFDOT LOS Ped/Bike"
+    "text": "6.3 Bicyclist Level of Traffic Stress\nSource: FDOT LOS Ped/Bike"
   },
   {
     "objectID": "amr2024.html#pedestrian-level-of-traffic-stress",
     "href": "amr2024.html#pedestrian-level-of-traffic-stress",
     "title": "Annual Mobility Report 2024",
     "section": "6.4 Pedestrian Level of Traffic Stress",
-    "text": "6.4 Pedestrian Level of Traffic Stress\nFDOT LOS Ped/Bike"
+    "text": "6.4 Pedestrian Level of Traffic Stress\nSource: FDOT LOS Ped/Bike"
   },
   {
     "objectID": "amr2024.html#impacts-of-investments-on-the-natural-environment",
     "href": "amr2024.html#impacts-of-investments-on-the-natural-environment",
     "title": "Annual Mobility Report 2024",
     "section": "6.5 Impacts of Investments on the Natural Environment",
-    "text": "6.5 Impacts of Investments on the Natural Environment\nEnvironmental Screening Tool\nFDOT 5 Year Work Program Meta Data"
+    "text": "6.5 Impacts of Investments on the Natural Environment\nSource: Environmental Screening Tool and FDOT 5 Year Work Program Meta Data"
   },
   {
     "objectID": "amr2024.html#emissions",
@@ -228,7 +228,7 @@
     "href": "amr2024.html#pedestrian-connectivity",
     "title": "Annual Mobility Report 2024",
     "section": "6.8 Pedestrian Connectivity",
-    "text": "6.8 Pedestrian Connectivity\nFDOT Sidewalks and Gaps TDA"
+    "text": "6.8 Pedestrian Connectivity\nSource: FDOT Sidewalks and Gaps TDA"
   },
   {
     "objectID": "amr2024.html#pavement-condition-on-primary-freight-corridors",

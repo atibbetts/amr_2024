@@ -1309,7 +1309,7 @@ hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
     
   ) %>%
   hc_title(text = "Air Cargo Weight (lbs) by Year") %>%
-  hc_subtitle(text = '<a href="https://www.faa.gov/sites/faa.gov/files/2023-08/CY2022-All-Cargo-airports.pdf" target="_blank">Source: <b>Federal Aviation Administration</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.faa.gov/sites/faa.gov/files/2023-08/CY2022-All-Cargo-airports.pdf" target="_blank"><b>Federal Aviation Administration</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1322,9 +1322,11 @@ hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
 
 ## Travel Time Reliability
 
-[Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).
+Level of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).
 
-The map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023
+The map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023.
+
+Source: [Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/)
 
 ::: {.panel-tabset .nav-pills}
 ### LOTTR Map
@@ -1400,7 +1402,8 @@ table_options <- function() {
     searching = FALSE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
+    lengthChange = FALSE, 
+    paginate = FALSE
     ,
     initComplete = JS(
       "function(settings, json) {",
@@ -1417,7 +1420,7 @@ datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
 
 ## Truck Travel Time Reliability
 
-[Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/)
+Source: [Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/)
 
 ::: {.panel-tabset .nav-pills}
 ### Truck TTR Map
@@ -1471,7 +1474,7 @@ datatable(df_tttr,options = c(table_options(), list(pageLength = 5)))
 
 ## Level of Service
 
-[FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/)
+Source: [FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/)
 
 ```{r}
 
@@ -1528,7 +1531,7 @@ hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -1536,14 +1539,34 @@ hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "VHD"),
-    min = 0
+    title = list(text = "Vehicle Hours of Delay"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "State Highway System Vehicle Hours of Delay by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank"><b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1565,7 +1588,7 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -1573,14 +1596,34 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "VHD"),
-    min = 0
+    title = list(text = "Vehicle Hours of Delay"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "National Highway System Vehicle Hours of Delay by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank"><b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1609,8 +1652,6 @@ line_string <- "type: 'line',width: 250, height: 30, lineWidth: 2, highlightColo
 
 ## Incident Clearance Times
 
-2023 Data
-
 ```{r}
 df_inc_all <- read.csv("~/GitHub/amr_2024/data/incident_clearance_all.csv")
 
@@ -1635,7 +1676,7 @@ hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
       min = 0
     )) %>%
   hc_title(text = "2023 Incident Clearance Duration") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Quarter")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y} Mins</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1659,7 +1700,7 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1, 1) + ' Mins' ;}")
+  return Highcharts.numberFormat(this.y / 1, 1) + ' Min' ;}")
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -1667,8 +1708,8 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
     min = 0
   ) %>%
   hc_title(text = "2023 Open Roads and Roadway Clearance Durations by Quarter") %>%
-  hc_subtitle(text = "Source: <a href='https://sunguide.info/'>FDOT SunGuide</a>") %>%
-  hc_xAxis(title = list(text = "Item")) %>%
+  hc_subtitle(text = 'Source: <a href="https://sunguide.info/" target="_blank"><b>FDOT SunGuide</b></a>') %>%
+  hc_xAxis(title = list(text = "Duration Type")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
   hc_add_theme(hc_theme_smpl()) %>%
@@ -1678,14 +1719,17 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
 
 ## Incident Event Types
 
-2023 Data
+
+
 
 ```{r}
 df_events <- read.csv("~/GitHub/amr_2024/data/event_types_all.csv")
 
 hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
-  hc_title(text = "2023 Incident Event Totals") %>%
-  hc_subtitle(text = "Source: <a href='https://sunguide.info/'>FDOT SunGuide</a>") %>%
+  
+  hc_title(text = "2023 Incident Event Totals", align = 'left', style = list(fontFamily = 'Roboto Condensed', color = '#333333', fill = '#333333', fontSize = '18px', fontWeight = 'bold')) %>%
+  hc_subtitle(text = 'Source: <a href="https://sunguide.info/" target="_blank"><b>FDOT SunGuide</b></a>', align = 'left', style = list(fontFamily = 'Roboto Condensed')) %>%
+  
   hc_tooltip(pointFormat = '{point.name}: <b>{point.y}</b>') %>%
   hc_plotOptions(
     pie = list(
@@ -1708,7 +1752,7 @@ hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
 
 ## Transit Accessibility
 
-[JTA Park n' Ride Locations](https://www.jtafla.com/ride-jta/how-to-ride/park-n-ride/)
+Source: [JTA Park n' Ride Locations](https://www.jtafla.com/ride-jta/how-to-ride/park-n-ride/)
 
 ```{r, message=FALSE}
 
@@ -1752,7 +1796,7 @@ leaflet(data = df_pnr) %>%
 
 ## Transit Routes
 
-[Florida Transit Data Exchange](https://ftis.org/Posts.aspx)
+Source: [Florida Transit Data Exchange](https://ftis.org/Posts.aspx)
 
 ```{r}
 
@@ -1786,7 +1830,7 @@ leaflet() %>%
 
 ## Bicyclist Level of Traffic Stress
 
-[FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
 
 ```{r}
 
@@ -1829,7 +1873,7 @@ leaflet() %>%
 
 ## Pedestrian Level of Traffic Stress
 
-[FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
 
 ```{r}
 
@@ -1872,7 +1916,7 @@ leaflet() %>%
 
 ## Impacts of Investments on the Natural Environment
 
-[Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#)\
+Source: [Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#) and 
 [FDOT 5 Year Work Program Meta Data](https://fgdl.org/meta/FDOT_WP_2023.xml)
 
 ```{r}
@@ -1910,9 +1954,57 @@ leaflet() %>%
 ## Emissions
 
 ```{r}
+
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+      ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
+      )
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
+
 df_c02 <- read.csv("~/GitHub/amr_2024/data/C02DamageCosts.csv", check.names=FALSE, row.names=1) 
-datatable(df_c02,options = c(table_options(), list(pageLength = 4)))
+datatable(
+  caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+  df_c02,options = c(table_options(), list(pageLength = 4)))
 ```
+
+
+
 
 ## Trail Connectivity
 
@@ -1925,15 +2017,17 @@ geojson_data <- st_read("~/GitHub/amr_2024/data/nftpo_trails.geojson", quiet = T
   st_transform(crs = 4326)
 
 # Create a custom color generating function
+custom_palette <- c("#FF33A1", "#2ea338")
+
 # Continuous palette
-pal <- colorFactor(palette = "PiYG", domain = geojson_data$Scale)
+pal <- colorFactor(palette = custom_palette, domain = geojson_data$Scale)
 
 # Create the Leaflet map
 leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
-  addPolylines(data = geojson_data, color = ~pal(Scale), popup = ~paste(Scale), opacity = 0.8)%>%
+  addPolylines(data = geojson_data, color = ~pal(Scale), popup = ~paste(Scale), opacity = 1.0)%>%
   addLegend("topright", 
             colors = pal(unique(geojson_data$Scale)), 
             labels = unique(geojson_data$Scale),
@@ -1950,7 +2044,7 @@ leaflet() %>%
 
 ## Pedestrian Connectivity
 
-[FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76)
+Source: [FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76)
 
 ```{r, message=FALSE}
 # Load your GeoJSON file
