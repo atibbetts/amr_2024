@@ -130,21 +130,21 @@
     "href": "amr2024.html#travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "5.1 Travel Time Reliability",
-    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023.\nSource: N/A - Need to include\n\nLOTTR MapTTR Segment Table"
+    "text": "5.1 Travel Time Reliability\nLevel of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).\nThe map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023.\nSource: Level of Travel Time Reliability (LOTTR)\n\nLOTTR MapTTR Segment Table"
   },
   {
     "objectID": "amr2024.html#truck-travel-time-reliability",
     "href": "amr2024.html#truck-travel-time-reliability",
     "title": "Annual Mobility Report 2024",
     "section": "5.2 Truck Travel Time Reliability",
-    "text": "5.2 Truck Travel Time Reliability\nTruck Travel Time Reliability (TTTR)\n\nTruck TTR MapTruck TTR Segment Table"
+    "text": "5.2 Truck Travel Time Reliability\nSource: Truck Travel Time Reliability (TTTR)\n\nTruck TTR MapTruck TTR Segment Table"
   },
   {
     "objectID": "amr2024.html#level-of-service",
     "href": "amr2024.html#level-of-service",
     "title": "Annual Mobility Report 2024",
     "section": "5.3 Level of Service",
-    "text": "5.3 Level of Service\nFDOT District Two, Jacksonville Urban Office"
+    "text": "5.3 Level of Service\nSource: FDOT District Two, Jacksonville Urban Office"
   },
   {
     "objectID": "amr2024.html#average-vehicle-delay",
@@ -165,7 +165,7 @@
     "href": "amr2024.html#incident-clearance-times",
     "title": "Annual Mobility Report 2024",
     "section": "5.6 Incident Clearance Times",
-    "text": "5.6 Incident Clearance Times\n2023 Data"
+    "text": "5.6 Incident Clearance Times"
   },
   {
     "objectID": "amr2024.html#incident-event-types",
