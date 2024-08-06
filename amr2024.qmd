@@ -1954,7 +1954,6 @@ leaflet() %>%
 ## Emissions
 
 ```{r}
-
 table_options <- function() {
   list(
     dom = 'Bfrtip',
@@ -2083,8 +2082,51 @@ leaflet() %>%
 ## Pavement Condition on Primary Freight Corridors
 
 ```{r}
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+      ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
+      )
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
+
 df_pfc <- read.csv("~/GitHub/amr_2024/data/PrimaryFreightCorridorsPoorPavement.csv", check.names=FALSE, row.names=1) 
-datatable(df_pfc,options = c(table_options(), list(pageLength = 6)))
+datatable( caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    df_pfc,options = c(table_options(), list(pageLength = 6)))
 ```
 
 ## Pavement Conditions
@@ -2115,11 +2157,17 @@ table_options <- function() {
         )
       )
     ),
+    rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = FALSE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
+    lengthChange = FALSE, 
+    paginate = FALSE
     ,
     initComplete = JS(
       "function(settings, json) {",
@@ -2129,7 +2177,10 @@ table_options <- function() {
   )
 }
 df_pavement <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
-datatable(df_pavement,options = c(table_options(), list(pageLength = 11)))
+datatable(caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    df_pavement,options = c(table_options(), list(pageLength = 8)))
 ```
 
 ## Bridge Conditions
@@ -2137,6 +2188,11 @@ datatable(df_pavement,options = c(table_options(), list(pageLength = 11)))
 ```{r}
 table_options <- function() {
   list(
+    rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = TRUE,
     scroller = TRUE,
@@ -2150,7 +2206,10 @@ table_options <- function() {
   )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/bridgeconditions.csv", check.names=FALSE, row.names=1) 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+datatable(caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    df_lottr,options = c(table_options(), list(pageLength = 6)))
 ```
 
 ## Transit Vehicles
@@ -2183,7 +2242,7 @@ hchart(df_transit_age, "column", hcaes(x = Agency, y = Age, group = Year)) %>%
     min = 0
   ) %>%
   hc_title(text = "Average Transit Vehicle Age by Agency and Year") %>%
-  hc_subtitle(text = '<a href="https://www.transit.dot.gov/ntd/ntd-data?field_data_categories_target_id%5B2516%5D=2516&field_product_type_target_id=All&year=all&combine&page=0" target="_blank">Source: <b>Federal Transit Administration</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.transit.dot.gov/ntd/ntd-data?field_data_categories_target_id%5B2516%5D=2516&field_product_type_target_id=All&year=all&combine&page=0" target="_blank"><b>Federal Transit Administration</b></a>') %>%
   hc_xAxis(title = list(text = "Agency")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -2207,18 +2266,52 @@ hchart(df_cost_con, "column", hcaes(x = year, y = dollars)) %>%
   hc_plotOptions(column = list(
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$'+Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-    ))) %>%
+      
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+      
+  #     formatter = JS("function() {
+  # return '$'+Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  
+    )
+  )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cost of Congestion by Year") %>%
-  hc_subtitle(text = '<a href="https://static.tti.tamu.edu/tti.tamu.edu/documents/mobility-report-2023.pdf" target="_blank">Source: <b>Texas A&M Transportation Institute</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://static.tti.tamu.edu/tti.tamu.edu/documents/mobility-report-2023.pdf" target="_blank"><b>Texas A&M Transportation Institute</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -2243,23 +2336,75 @@ hchart(df_cost_fatal, "column", hcaes(x = year, y = cost, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$' + Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+      
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 3) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+      
+  #     formatter = JS("function() {
+  # return '$' + Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+  
+  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
+
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.total / 1e9, 1) + ' Bil';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return '$' + num.toFixed(0) + unit;
+        }
+      }"))
+      
+    #   formatter = JS(paste0("function() {
+    #   return '$' + Highcharts.numberFormat(this.total / 1e9, 1) + ' Bil';
+    # }"))
+    
     ),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order == 3){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cost of Fatal Crashes by Year") %>%
-  hc_subtitle(text = '<a href="https://signal4analytics.com/" target="_blank">Source: <b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://signal4analytics.com/" target="_blank"><b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -2281,23 +2426,77 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+      
+      
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 3) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+            
+  #     formatter = JS("function() {
+  # return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  
+  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
+      
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(0) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return '$' + num.toFixed(0) + unit;
+        }
+      }"))
+      
+    #   formatter = JS(paste0("function() {
+    #   return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    # }"))
+    
+    
     ),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order == 3){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cost of Serious Injury Crashes by Year") %>%
-  hc_subtitle(text = '<a href="https://signal4analytics.com/" target="_blank">Source: <b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://signal4analytics.com/" target="_blank"><b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -2320,18 +2519,52 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
   hc_plotOptions(column = list(
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+      
+       formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 3) {
+          return '$' + num.toFixed(1) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+      
+  #     formatter = JS("function() {
+  # return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+  
+  
     ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 3){
+        return '$' + num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Benefit in Dollars by Mode") %>%
-  hc_subtitle(text = '<a href="http://edr.state.fl.us/content/returnoninvestment/ROI_Transportation.pdf" target="_blank">Source: <b>Florida Department of Transportation Office of Economic & Demographic Research</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="http://edr.state.fl.us/content/returnoninvestment/ROI_Transportation.pdf" target="_blank"><b>Florida Department of Transportation Office of Economic & Demographic Research</b></a>') %>%
   hc_xAxis(title = list(text = "Mode")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
