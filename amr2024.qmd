@@ -756,7 +756,7 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')
     ),
-    title = list(text = "Rate (Per 100 MVM of Vehicle Travel)"),
+    title = list(text = "Rate (Per 100 MVM of Travel)"),
     min = 0
   ) %>%
   hc_title(text = "Florida Crash Rates by Severity and Year") %>%
@@ -2577,11 +2577,16 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
 
 ## PM1 Safety (All Public Roads)
 
-[Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm1-safety-fact-sheet-(feb23).pdf)
+
 
 ```{r}
 table_options <- function() {
   list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = TRUE,
     scroller = TRUE,
@@ -2595,13 +2600,17 @@ table_options <- function() {
   )
 }
 df_pm1 <- read.csv("~/GitHub/amr_2024/data/pm1_safety.csv", check.names=FALSE) 
+df_pm1 <- df_pm1[-1,] # Removes row saying Target 
 colnames(df_pm1) <- c('Year','Fatalities (total)','Fatalities per 100 million VMT','Serious Injuries','Serious Injuries per 100 million VMT','Non-motorized Fatalities and Serious Injuries') 
-datatable(df_pm1,options = c(table_options(), list(pageLength = 7)))
+datatable(caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm1-safety-fact-sheet-(feb23).pdf" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
+    df_pm1,options = c(table_options(), list(pageLength = 6)))
 ```
 
 ## PM2 Bridge and Pavement
 
-[Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf) [Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
+Source: [Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf) and [Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
 
 ::: {.panel-tabset .nav-pills}
 ### Bridge Condition Map
@@ -2664,7 +2673,7 @@ table_options <- function() {
 }
 df_nhs <- read.csv("~/GitHub/amr_2024/data/nhs_bridges.csv", check.names=FALSE, row.names=1) 
 colnames(df_nhs) <- c('Year','Good Condition','Poor Condition') 
-datatable(df_nhs,options = c(table_options(), list(pageLength = 6)))
+datatable(df_nhs,options = c(table_options(), list(pageLength = 5)))
 ```
 :::
 
@@ -2672,17 +2681,64 @@ datatable(df_nhs,options = c(table_options(), list(pageLength = 6)))
 ### Interstate Pavement
 
 ```{r}
+table_options <- function() {
+  list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
+
 df_inter_pave <- read.csv("~/GitHub/amr_2024/data/inter_pavements.csv", check.names=FALSE, row.names=1) 
 colnames(df_inter_pave) <- c('Year','Good Condition','Poor Condition') 
-datatable(df_inter_pave,options = c(table_options(), list(pageLength = 5)))
+datatable(df_inter_pave,options = c(table_options(), list(pageLength = 5)), 
+          caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>'))
+    )
 ```
 
 ### Non-Interstate Pavement
 
 ```{r}
+table_options <- function() {
+  list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
 df_noninter_pave <- read.csv("~/GitHub/amr_2024/data/noninter_pavements.csv", check.names=FALSE, row.names=1) 
 colnames(df_noninter_pave) <- c('Year','Good Condition','Poor Condition') 
-datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)))
+datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)), 
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>'))
+          )
 ```
 :::
 
@@ -2691,11 +2747,16 @@ datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)))
 ```{r}
 table_options <- function() {
   list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = TRUE,
-    editable = TRUE,
     scroller = TRUE,
     lengthChange = FALSE,
+    paginate=FALSE,
     initComplete = JS(
       "function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
@@ -2704,8 +2765,13 @@ table_options <- function() {
   )
 }
 df_targets <- read.csv("~/GitHub/amr_2024/data/state_targets.csv", check.names=FALSE, row.names=1) 
+df_targets <- df_targets[-1,]
 colnames(df_targets) <- c('Performance Measure','2023 Target','2025 Target') 
-datatable(df_targets,options = c(table_options(), list(pageLength = 9)))
+datatable(df_targets,options = c(table_options(), list(pageLength = 7)), 
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>'))
+          )
 
 ```
 
