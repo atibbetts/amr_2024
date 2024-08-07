@@ -213,7 +213,7 @@ Accessing affordable and nutritious food was a challenge for nearly 800,000 pers
 
 The following map highlights areas designated as medically underserved in 2019 and areas without reliable access to healthy foods in 2015 (the latest date statistics are available).
 
-Source: [N/A - Need to include](https://www.google.com/)
+Source: [HRSA Map Tool](https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdata.hrsa.gov%2Fmaps%2Fmap-tool%2F%3Ftl%3DMUA%26gt%3DState%26cd%3D12%26dp%3DALL&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438011339%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=GOmr%2Ft3UJ572M%2FefYGnBSW44tPzSRlMrNLPzs7rev2k%3D&reserved=0) and [HRSA MUA Find](https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdata.hrsa.gov%2Ftools%2Fshortage-area%2Fmua-find&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438017410%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=TAAJWjYzcuPHHq3Jjt0o1KdONHm%2Fr37pE9Mc8y8aDiY%3D&reserved=0)
 
 ```{r}
 # Load your GeoJSON file
@@ -450,7 +450,7 @@ df_lottr <- df_lottr %>%
 datatable(          
   caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    htmltools::HTML('Source: <a href="https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.floridashistoriccoast.com%2Fabout%2Findustry-resources%2Ftourism-facts-figures%2Feconomic-impact-reports%2F&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438023211%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=aF7ifOVu3ZgOCiYQzMH9qC9Q9k9L1%2BgCNsELebbSpNo%3D&reserved=0" target="_blank"><b>St. Augustine Ponte Vedra</b></a> (PDF located <a href="https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fs3.us-east-1.amazonaws.com%2Fst-augustine-2019%2Fimages%2FSAPVB-doc-images%2FFloridas-Historic-Coast-July-2021-June-2022-Economic-Impact-Report-LOS-Detail.pdf%3Fv%3D1669640377&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438029281%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=C6uR8XRmvTP0aozQ3B%2BW6h86GN7vnID9cBQaXCxZZR4%3D&reserved=0">here</a>) and <b><a href="https://www.visitjacksonville.com/about/research-information/">Visit Jacksonville</b></a>')),
     df_lottr,options = c(table_options(), list(pageLength = 4)))
 
 
@@ -787,23 +787,23 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
 ## Pedestrian and Bicyclist Fatalities
 Crash data was compiled from several sources including the FDOT safety office, Signal Four Analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Department of Highway Safety and Motor Vehicles, there was a total of 31,964 crashes that occurred over the four North Florida TPO counties (specify year 2022?). Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.  
 
-Number of Fatalities 
+**Number of Fatalities** 
 
 The number of fatalities is a crucial benchmark of progress when assessing the target zero initiative. According to the Florida Highway Safety and Motor Vehicles dashboard, there were 238 fatalities within the region during 2023.  
 
-Rate of Fatalities 
+**Rate of Fatalities** 
 
 The rate of fatalities is the ratio of the total number of fatalities to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rate of fatalities was analyzed. According to the FDOT sourcebook, the rate of fatalities was 1.41 in 2022. This number has been steadily decreasing since 2020. 
 
-Number of Injuries 
+**Number of Injuries** 
 
 The Florida Highway Safety and Motor Vehicle dashboard lists the total number of injuries as 13,400 within the region during 2023.  
 
-Rate of Injuries 
+**Rate of Injuries** 
 
 The rate of injuries is the ratio of the total number of injuries to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rate of injuries was analyzed. According to the FDOT sourcebook, the rate of serious injuries was 4.66 in 2022 for the region. 
 
-Number of Non-motorized Fatalities and Injuries 
+**Number of Non-motorized Fatalities and Injuries** 
 
 According to the Florida Highway Safety and Motor Vehicles dashboard, the number of non-motorized fatalities and injuries was 1,041 in 2023. Below is a graphic of the total pedestrian and bicycle fatalities year by year. 
 
@@ -1686,6 +1686,8 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
 
 ## Travel Speeds
 
+Source: [NPMRDE RITIS Data](https://npmrds.ritis.org/analytics/)
+
 ```{r}
 df_travel_speeds <- read.csv("~/GitHub/amr_2024/data/travel_speeds2.csv")
 colnames(df_travel_speeds) <- c("County", "Travel Speeds by Year")
@@ -2060,7 +2062,7 @@ df_c02 <- read.csv("~/GitHub/amr_2024/data/C02DamageCosts.csv", check.names=FALS
 datatable(
   caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    htmltools::HTML('Source: <a href="https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references" target="_blank"><b>US EPA</b></a> and <a href="https://www.transportation.gov/sites/dot.gov/files/2023-12/Benefit%20Cost%20Analysis%20Guidance%202024%20Update.pdf"><b>US DOT</b></a>')),
   df_c02,options = c(table_options(), list(pageLength = 4)))
 ```
 
@@ -2193,7 +2195,7 @@ table_options <- function() {
 df_pfc <- read.csv("~/GitHub/amr_2024/data/PrimaryFreightCorridorsPoorPavement.csv", check.names=FALSE, row.names=1) 
 datatable( caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>')),
     df_pfc,options = c(table_options(), list(pageLength = 6)))
 ```
 
@@ -2248,7 +2250,7 @@ table_options <- function() {
 df_pavement <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
 datatable(caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>')),
     df_pavement,options = c(table_options(), list(pageLength = 8)))
 ```
 
@@ -2277,7 +2279,7 @@ table_options <- function() {
 df_lottr <- read.csv("~/GitHub/amr_2024/data/bridgeconditions.csv", check.names=FALSE, row.names=1) 
 datatable(caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>')),
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/bridge" target="_blank"><b>FDOT Source Book, PM2-Bridge</b></a>')),
     df_lottr,options = c(table_options(), list(pageLength = 6)))
 ```
 
@@ -2776,7 +2778,7 @@ colnames(df_inter_pave) <- c('Year','Good Condition','Poor Condition')
 datatable(df_inter_pave,options = c(table_options(), list(pageLength = 5)), 
           caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>'))
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>'))
     )
 ```
 
@@ -2807,7 +2809,7 @@ colnames(df_noninter_pave) <- c('Year','Good Condition','Poor Condition')
 datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)), 
           caption = htmltools::tags$caption(
             style = 'caption-side: top; text-align: left;',
-            htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>'))
+            htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>'))
           )
 ```
 :::
@@ -2840,7 +2842,7 @@ colnames(df_targets) <- c('Performance Measure','2023 Target','2025 Target')
 datatable(df_targets,options = c(table_options(), list(pageLength = 7)), 
           caption = htmltools::tags$caption(
             style = 'caption-side: top; text-align: left;',
-            htmltools::HTML('Source: <a href="www.google.com" target="_blank"><b>N/A - Need to include</b></a>'))
+            htmltools::HTML('Source: <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/ho_summary-of-targets-in-fl_230714_v4.pdf" target="_blank"><b>FDOT Forecasting & Trends Office</b></a>'))
           )
 
 ```
