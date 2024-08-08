@@ -39,7 +39,7 @@ Understanding the trends and conditions occurring in the North Florida will allo
 
 North Florida’s population grew by 10.2%, or 173,000 persons, between 2019 and 2023. This growth outpaced the growth statewide (6.3%). Growth in population places a higher demand for mobility. North Florida’s strong growth outpacing population gains statewide is anticipated to continue through 2024.
 
-The population grew by 0.5% nationally from 2022 to 2023. North Florida grew by 2.7% outpacing the nation and Florida at 1.58%.  
+The population grew by 0.5% nationally from 2022 to 2023. North Florida grew by 2.7% outpacing the nation and Florida at 1.58%.
 
 There is no benchmark for population growth. Increases impact the demand for mobility.
 
@@ -58,8 +58,21 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
     #stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+
+      #     formatter = JS("function() {
+      # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        return num.toFixed(0) + unit;
+      }")
+
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -68,10 +81,29 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
       style = list(fontWeight = 'bold', color = 'gray')
     ),
     title = list(text = "Population"),
-    min = 0
+    min = 0,
+    labels = list(
+      formatter = JS("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.value) / Math.log(1000));
+        var unit = units[order];
+        var num = this.value / Math.pow(1000, order);
+        if (order >= 2){
+          return num.toFixed(2) + unit;
+        }
+        else if (this.value == 0){
+          return this.value;
+        }
+        else{
+          return num.toFixed(0) + unit;
+        }
+
+      }")
+    )
+
   ) %>%
   hc_title(text = "Populations by County and Year") %>%
-  hc_subtitle(text = '<a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank">Source: <b>Office of Economic and Demographic Research</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="http://www.edr.state.fl.us/Content/population-demographics/data/index-floridaproducts.cfm" target="_blank"><b>Office of Economic and Demographic Research</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -79,7 +111,6 @@ hchart(df_pop, "column", hcaes(x = county, y = population, group = year)) %>%
   hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
-
 
 ## Licensed Drivers
 
@@ -90,10 +121,8 @@ There is no benchmark for licensed drivers. Increases impact the demand for mobi
 ```{r}
 # Load data
 df_drivers <- read.csv("~/GitHub/amr_2024/data/drivers.csv")
-
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
-
 # Create a Highchart object with data labels and stack totals
 hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
   hc_colors(custom_colors) %>%
@@ -101,23 +130,73 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        return num.toFixed(0) + unit;
+      }"))
+
+      #     formatter = JS("function() {
+      # return Highcharts.numberFormat(this.y / 1e3, 1) + ' aaa';}")
+
     ) # Enable data labels
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
+
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(0) + unit;
+        }
+      }"))
+
+      #   formatter = JS(paste0("function() {
+      #   return Highcharts.numberFormat(this.total / 1e3, 1) + ' ddd';
+      # }"))
+
     ),
     title = list(text = "Licensed Drivers"),
-    min = 0
+    min = 0,
+
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+
   ) %>%
   hc_title(text = "Licensed Drivers by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank">Source: <b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/pdf/driver-vehiclereports/2023annuallicenseddriverreport.pdf" target="_blank"><b>Florida Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -125,16 +204,18 @@ hchart(df_drivers, "column", hcaes(x = year, y = drivers, group = county)) %>%
   hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
+
 ## Underserved Populations
 
-Transportation barriers are the third leading cause of missing a medical appointment for older adults across the country. Medically Underserved Areas/Populations are areas or populations designated by the U.S. Department of Health Resources and Services Administration as having too few primary care providers, high infant mortality, high poverty or a high elderly population. Nearly 370,000 persons in North Florida live in medically underserved areas. There are no benchmarks for population in  underserved areas. It is desirable to ensure the population is adequately served.
+Transportation barriers are the third leading cause of missing a medical appointment for older adults across the country. Medically Underserved Areas/Populations are areas or populations designated by the U.S. Department of Health Resources and Services Administration as having too few primary care providers, high infant mortality, high poverty or a high elderly population. Nearly 370,000 persons in North Florida live in medically underserved areas. There are no benchmarks for population in underserved areas. It is desirable to ensure the population is adequately served.
 
 Accessing affordable and nutritious food was a challenge for nearly 800,000 persons in North Florida in 2015 (the latest date statistics are available). The US Economic Research Service of the Department of Agriculture identifies populations whose food security is at risk if they live in low-income areas and do not have a grocery store within 1 mile in an urban area and 10 miles in a rural area. There are no benchmarks for population living with food uncertainty. It is desirable to ensure the population is adequately served.
 
 The following map highlights areas designated as medically underserved in 2019 and areas without reliable access to healthy foods in 2015 (the latest date statistics are available).
 
-```{r}
+Source: [HRSA Map Tool](https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdata.hrsa.gov%2Fmaps%2Fmap-tool%2F%3Ftl%3DMUA%26gt%3DState%26cd%3D12%26dp%3DALL&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438011339%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=GOmr%2Ft3UJ572M%2FefYGnBSW44tPzSRlMrNLPzs7rev2k%3D&reserved=0) and [HRSA MUA Find](https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdata.hrsa.gov%2Ftools%2Fshortage-area%2Fmua-find&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438017410%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=TAAJWjYzcuPHHq3Jjt0o1KdONHm%2Fr37pE9Mc8y8aDiY%3D&reserved=0)
 
+```{r}
 # Load your GeoJSON file
 geojson_data <- st_read("~/GitHub/amr_2024/data/underserved.geojson", quiet = TRUE)  %>% 
   st_transform(crs = 4326)
@@ -157,19 +238,23 @@ leaflet() %>%
             opacity = 1.0,
             title = "Metric") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 ```
 
 # Economy
 
 ## Gross Domestic Product
+The Gross Domestic Product (GDP) in North Florida continues to show strong growth. GDP is a leading indicator of the amount of travel expected within the region. 
 
-[Bureau of Economic Analysis](https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=)
+There are no benchmarks for gross domestic product. 
+
+Increases are preferred and annual monitoring is conducted.
+
 
 ```{r}
 df_gdp <- read.csv("~/GitHub/amr_2024/data/GDP.csv")
@@ -180,9 +265,24 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+      
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
-    }")) # Use the custom formatter for data labels
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+
+      
+    #   formatter = JS(paste0("function() {
+    #   return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
+    # }"))
+    
+    # Use the custom formatter for data labels
     )
   )) %>%
   hc_yAxis(
@@ -190,13 +290,46 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return '$' + num.toFixed(0) + unit;
+        }
+      }"))
     ),
     title = list(text = "GDP"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return '$' + num.toFixed(0) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Gross Domestic Product by County and Year") %>%
+  hc_subtitle(text = 'Source: <a href="https://apps.bea.gov/itable/?ReqID=70&step=1#eyJhcHBpZCI6NzAsInN0ZXBzIjpbMSwyOSwyNSwzMSwyNiwyNywzMF0sImRhdGEiOltbIlRhYmxlSWQiLCI1MzMiXSxbIk1ham9yX0FyZWEiLCI0Il0sWyJTdGF0ZSIsWyIxMjAwMCJdXSxbIkFyZWEiLFsiMTIwMTkiLCIxMjAzMSIsIjEyMDg5IiwiMTIxMDkiXV0sWyJTdGF0aXN0aWMiLFsiLTEiXV0sWyJVbml0X29mX21lYXN1cmUiLCJMZXZlbHMiXSxbIlllYXIiLFsiLTEiXV0sWyJZZWFyQmVnaW4iLCItMSJdLFsiWWVhcl9FbmQiLCItMSJdXX0=" target="_blank"><b>Bureau of Economic Analysis</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -207,8 +340,9 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
 ```
 
 ## Employment
+Unemployment rates are near all time lows and are strong indicators of a healthy economy and continued growth in travel demand.
 
-``` {r}
+```{r}
 
 # Data
 # Load data
@@ -216,12 +350,35 @@ df_emp <- read.csv("~/GitHub/amr_2024/data/employment.csv")
 
 # Create highchart
 highchart() %>%
-  hc_title(text = "Employment (Jobs) and Unemployment Rate (%) by Month") %>%
-  hc_subtitle(text = '<a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank">Source: <b>Bureau of Labor Statistics</b></a>') %>%
+  hc_title(text = "Employment (Jobs) and Unemployment Rate (%) by Month", align = 'left', style = list(fontFamily = 'Roboto Condensed', color = '#333333', fill = '#333333', fontSize = '18px', fontWeight = 'bold')) %>%
+  hc_subtitle(text = 'Source: <a href="https://data.bls.gov/timeseries/LAUMT122726000000006?amp%253bdata_tool=XGtable&output_view=data&include_graphs=true" target="_blank"><b>Bureau of Labor Statistics</b></a>', align = 'left', style = list(fontFamily = 'Roboto Condensed')) %>%
   hc_xAxis(categories = df_emp$Date, crosshair = TRUE) %>%
   hc_yAxis_multiples(
-    list(title = list(text = "Employment"), opposite = FALSE),
-    list(title = list(text = "Unemployment Rate"), opposite = TRUE)
+    list(title = list(text = "Employment"), opposite = FALSE,     
+         labels = list(
+           formatter = JS("function() {
+            var units = ['', 'K', 'M', 'B'];
+            var order = Math.floor(Math.log(this.value) / Math.log(1000));
+            var unit = units[order];
+            var num = this.value / Math.pow(1000, order);
+            if (order >= 2){
+              return num.toFixed(2) + unit;
+            }
+            else if (this.value == 0){
+              return this.value;
+            }
+            else{
+              return num.toFixed(0) + unit;
+            }
+      
+          }")
+         )),
+    list(title = list(text = "Unemployment Rate"), opposite = TRUE, 
+         labels = list(
+         formatter = JS("function() {
+            return this.value + '%';
+         }"))
+     )
   ) %>%
   hc_add_series(name = "Employment", type = "column", data = df_emp$Employment) %>%
   hc_add_series(name = "Unemployment Rate", type = "spline", data = df_emp$Unemployment.Rate, yAxis = 1) %>%
@@ -231,6 +388,15 @@ highchart() %>%
 ```
 
 ## Tourism
+The Moving Ahead for Progress in the 21st Century Act ("MAP-21") transportation legislation included tourism as one of the metropolitan planning factors.
+
+Tourism plays a major role in the state of Florida. According to the North Florida TPO’s Tourism Mobility Study published in 2022, nearly 26 million visitors traveled to the region in 2022. Attractions include (but are not limited to) the St. Johns River, Jacksonville Beach, Neptune Beach, Atlantic Beach, and Black Rock Beach. Other destinations include wildlife sightseeing, camping, golfing and hiking/biking trails. The City of Jacksonville has more than 80,000 acres of parks. Sporting events are frequented in the area as the region is home to several minor league sports teams and home of the Jacksonville Jaguars of the National Football League. There are many annual events that occur in the North Florida TPO region which include (but are not limited to) the World Of Nations Celebration, the Gate River Run (USA 15K Championship Race), The Players Championship, the Jacksonville Jazz Festival, The Kingfish Tournament, and the Florida/Georgia college football game.  
+
+The goal is to increase the number of multi-modal projects in high tourism areas and provide transportation connectivity to tourists within the region. A summary of the visitors per year in each county is provided in Table 13.  
+
+Including visitors from within the region, St. Augustine hosts nearly 6 million visitors each year.
+
+
 
 ```{r}
 table_options <- function() {
@@ -247,7 +413,7 @@ table_options <- function() {
           dt.page.len(-1);
           dt.ajax.reload();}"
         )
-        ),
+      ),
       list(
         extend = "collection",
         text = 'Show Less',
@@ -256,28 +422,43 @@ table_options <- function() {
           dt.page.len(10);
           dt.ajax.reload();}"
         )
-        )
-        ),
+      )
+    ),
+    rowCallback = DT::JS(
+        "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
-    searching = FALSE,
+    searching = TRUE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
+    lengthChange = FALSE,
+    paginate = FALSE
     ,
     initComplete = JS(
       "function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/tourism.csv", check.names=FALSE, row.names=1) 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+df_lottr <- df_lottr %>%
+  mutate(Visitors = ifelse(is.na(Visitors), "-", as.character(Visitors))) %>%
+  mutate(Visitors = ifelse(Visitors == "-", "-", format(as.numeric(Visitors), big.mark = ",")))
+datatable(          
+  caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.floridashistoriccoast.com%2Fabout%2Findustry-resources%2Ftourism-facts-figures%2Feconomic-impact-reports%2F&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438023211%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=aF7ifOVu3ZgOCiYQzMH9qC9Q9k9L1%2BgCNsELebbSpNo%3D&reserved=0" target="_blank"><b>St. Augustine Ponte Vedra</b></a> (PDF located <a href="https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fs3.us-east-1.amazonaws.com%2Fst-augustine-2019%2Fimages%2FSAPVB-doc-images%2FFloridas-Historic-Coast-July-2021-June-2022-Economic-Impact-Report-LOS-Detail.pdf%3Fv%3D1669640377&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438029281%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=C6uR8XRmvTP0aozQ3B%2BW6h86GN7vnID9cBQaXCxZZR4%3D&reserved=0">here</a>) and <b><a href="https://www.visitjacksonville.com/about/research-information/">Visit Jacksonville</b></a>')),
+    df_lottr,options = c(table_options(), list(pageLength = 4)))
+
+
 ```
 
 # Safe and Secure Travel
 
-Crash data was compiled from several sources including the FDOT safety office, signal four analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Highway Safety and Motor Vehicles, there were a total of 31,964 crashes that occurred over the four North Florida TPO counties. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.
+Crash data was compiled from several sources including the Florida Department of Transportation (FDOT) Safety Office, Signal Four Analytics, and FDOT State Safety Office's historical Crash Analysis Reporting (CAR) database. According to Florida Highway Safety and Motor Vehicles, there were a total of 31,964 crashes that occurred over the four North Florida TPO counties. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.
 
 ## Total Crashes
 
@@ -302,15 +483,55 @@ hchart(df_tot_crash, "column", hcaes(x = year, y = crashes, group = county)) %>%
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
+      
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(1) + unit;
+        }
+      }"))
+      
+      
+    #   formatter = JS(paste0("function() {
+    #   return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
+    # }"))
+    
+    
     ),
-    title = list(text = "Total"),
-    min = 0
+    title = list(text = "Number of Crashes"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Total Crashes by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -319,13 +540,10 @@ hchart(df_tot_crash, "column", hcaes(x = year, y = crashes, group = county)) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
 
-
 ## Fatal and Serious Injury Crash Map
+This map shows the location of fatal crashes and serious injury crashes in 2023.
 
-[Signal 4 Analytics](https://signal4analytics.com/)
-
-The following data is showing fatal and serious injury crashes from 2023.
-
+Source: [Signal Four Analytics](https://signal4analytics.com/)
 
 ```{r, message=FALSE}
 
@@ -352,12 +570,12 @@ leaflet(data = df_fatalserious) %>%
                    fillOpacity = 0.8) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-)%>%
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  )%>%
   addLegend(df_fatalserious,
             position = "bottomright",
             pal = pal, values = ord,
@@ -385,14 +603,49 @@ hchart(df_tot_fat, "column", hcaes(x = year, y = crashes, group = county)) %>%
   )) %>%
   hc_yAxis(
     stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      style = list(fontWeight = 'bold', color = 'gray'
+      enabled = TRUE, # Enable stack totals, 
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(0) + unit;
+        }
+      }")),
+      # style = list(fontWeight = 'bold', color = 'gray'),
+      
+      labels = list(
+        formatter = JS("function() {
+          var units = ['', 'K', 'M', 'B'];
+          var order = Math.floor(Math.log(this.value) / Math.log(1000));
+          var unit = units[order];
+          var num = this.value / Math.pow(1000, order);
+          if (order >= 2){
+            return num.toFixed(2) + unit;
+          }
+          else if (this.value == 0){
+            return this.value;
+          }
+          else{
+            return num.toFixed(0) + unit;
+          }
+    
+        }"
+        )
+      )
     ),
-    title = list(text = "Total"),
+    title = list(text = "Number of Fatalities"),
     min = 0
-  )) %>%
+    ) %>%
   hc_title(text = "Total Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -416,23 +669,74 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.y;
+        }
+        else {
+          return num.toFixed(1) + unit;
+        }
+      }"))
+
+  #     formatter = JS("function() {
+  # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
+  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
+      enabled = TRUE, # Enable stack totals, 
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e3, 1) + ' K';
-    }")
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return num.toFixed(1) + unit;
+        }
+      }"))
+      # style = list(fontWeight = 'bold', color = 'gray'),
+      
     ),
-    title = list(text = "Total"),
-    min = 0
-  )) %>%
+    title = list(text = "Number of Injuries"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
+    ) %>%
   hc_title(text = "Total Injuries by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -467,11 +771,11 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')
     ),
-    title = list(text = "Population"),
+    title = list(text = "Rate (Per 100 MVM of Travel)"),
     min = 0
   ) %>%
   hc_title(text = "Florida Crash Rates by Severity and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/pdf/crashreports/crash_facts_2022.pdf" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b><br>Rate is determined per 100 million vehicle miles of travel annually.</a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/pdf/crashreports/crash_facts_2022.pdf" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a> <br>Rate is determined per 100 million vehicle miles of travel annually.') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -481,11 +785,31 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
 ```
 
 ## Pedestrian and Bicyclist Fatalities
+Crash data was compiled from several sources including the FDOT safety office, Signal Four Analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Department of Highway Safety and Motor Vehicles, there was a total of 31,964 crashes that occurred over the four North Florida TPO counties (specify year 2022?). Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.  
 
-This plot shows fatality data
+**Number of Fatalities** 
+
+The number of fatalities is a crucial benchmark of progress when assessing the target zero initiative. According to the Florida Highway Safety and Motor Vehicles dashboard, there were 238 fatalities within the region during 2023.  
+
+**Rate of Fatalities** 
+
+The rate of fatalities is the ratio of the total number of fatalities to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rate of fatalities was analyzed. According to the FDOT sourcebook, the rate of fatalities was 1.41 in 2022. This number has been steadily decreasing since 2020. 
+
+**Number of Injuries** 
+
+The Florida Highway Safety and Motor Vehicle dashboard lists the total number of injuries as 13,400 within the region during 2023.  
+
+**Rate of Injuries** 
+
+The rate of injuries is the ratio of the total number of injuries to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rate of injuries was analyzed. According to the FDOT sourcebook, the rate of serious injuries was 4.66 in 2022 for the region. 
+
+**Number of Non-motorized Fatalities and Injuries** 
+
+According to the Florida Highway Safety and Motor Vehicles dashboard, the number of non-motorized fatalities and injuries was 1,041 in 2023. Below is a graphic of the total pedestrian and bicycle fatalities year by year. 
+
+The pedestrian fatalities have been climbing over the past five years and the bicycle fatalities have been decreasing from the 2019 and 2020 statistics. 
 
 ::: {layout="[ [1,1] ]"}
-
 ```{r}
 df_bike_ped <- read.csv("~/GitHub/amr_2024/data/NF_Bike_Ped_fatalcrashes_19_23.csv")
 
@@ -517,7 +841,7 @@ hchart(df_filtered, "column", hcaes(x = Year, y = PedFatal, group = County)) %>%
     min = 0
   ) %>%
   hc_title(text = "Pedestrian Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -547,7 +871,7 @@ hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>
     min = 0
   ) %>%
   hc_title(text = "Bicyclist Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -556,7 +880,6 @@ hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
 :::
-
 
 ## Impaired Driving
 
@@ -577,14 +900,15 @@ hchart(df_tot_imp, "column", hcaes(x = year, y = crashes, group = county)) %>%
   )) %>%
   hc_yAxis(
     stackLabels = list(
-      enabled = TRUE, # Enable stack totals
-      style = list(fontWeight = 'bold', color = 'gray'
-    ),
-    title = list(text = "Total"),
+      enabled = TRUE#, # Enable stack totals
+      # style = list(fontWeight = 'bold', color = 'gray'
+      # ),
+    ), 
+    title = list(text = "Numbre of Impaired Driving Crashes"),
     min = 0
-  )) %>%
-  hc_title(text = "Total Fatalities by County and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+    ) %>%
+  hc_title(text = "Total Impaired Driving Crashes by County and Year") %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -594,11 +918,11 @@ hchart(df_tot_imp, "column", hcaes(x = year, y = crashes, group = county)) %>%
 ```
 
 # Quantity of Travel
+Vehicle-miles traveled considers the Annual Average Daily Traffic (AADT) and the roadway segment length. There is not a set benchmark or goal for vehicle miles traveled, however reducing this number can help with congestion issues along the roadway network. The FDOT sourcebook contains information for the North Florida TPO region. According to the data, 32.2 million vehicle miles traveled was estimated for 2022 on all SHS facilities. The trend in VMT is shown in the charts below. 
 
 ## Vehicles Miles Traveled
 
 ::: {layout="[ [1,1] ]"}
-
 ```{r}
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
@@ -613,7 +937,7 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalSHSVMT, group = County)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -621,14 +945,14 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalSHSVMT, group = County)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "VMT"),
+    title = list(text = "Vehicle Miles Traveled"),
     min = 0
   ) %>%
   hc_title(text = "State Highway System Vehicle Miles Traveled by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank"><b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -649,7 +973,7 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -657,14 +981,14 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "VMT"),
+    title = list(text = "Vehicle Miles Traveled"),
     min = 0
   ) %>%
   hc_title(text = "National Highway System Vehicle Miles Traveled by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank"><b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -673,10 +997,11 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 
 ```
-
 :::
 
 ## Transit Ridership
+Transit ridership has declined in the wake of the COVID-19 pandemic. The JTA keeps track of these metrics and levels continue to remain stagnant over the past few years. Autonomous vehicle implementation is close to happening within the region and JTA expects this will help increase transit ridership. Services that are included within JTA’s scope consist of the St. Johns River Ferry, ReadiRide (on-call transportation service), Clay Flex, St. Johns Express, Clay Express, and Nassau Express. The 2022 ridership data related to these services are shown in table below. On-time performance was only tracked for the St. Johns River Ferry during 2022 and this came in at 98%. 
+ 
 
 ```{r}
 df_transit <- read.csv("~/GitHub/amr_2024/data/transit_ridership.csv")
@@ -692,7 +1017,7 @@ hchart(df_transit, "column", hcaes(x = Year, y = Totals, group = Agency)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -700,14 +1025,34 @@ hchart(df_transit, "column", hcaes(x = Year, y = Totals, group = Agency)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
     title = list(text = "Ridership Count"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Transit Ridership by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/transit/passenger-trips#" target="_blank">Source: <b>FDOT Sourcebook Transit Ridership</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/transit/passenger-trips#" target="_blank"><b>FDOT Sourcebook Transit Ridership</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -719,7 +1064,6 @@ hchart(df_transit, "column", hcaes(x = Year, y = Totals, group = Agency)) %>%
 ## Sea Travel and Freight
 
 ::: {layout="[ [1,1] ]"}
-
 ```{r}
 df_cruise <- read.csv("~/GitHub/amr_2024/data/cruise_passengers.csv")
 
@@ -732,17 +1076,37 @@ hchart(df_cruise, "column", hcaes(x = year, y = passengers)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
-  ))) %>%
+  return Highcharts.numberFormat(this.y / 1e3, 1) + 'K';}")
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')),
-    title = list(text = "Passengers"),
-    min = 0
+    title = list(text = "Cruise Passengers"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cruise Passengers by Year") %>%
-  hc_subtitle(text = '<a href="https://www.jaxport.com/media/statistics/" target="_blank">Source: <b>Jacksonville Port Authority</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.jaxport.com/media/statistics/" target="_blank"><b>Jacksonville Port Authority</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -773,14 +1137,34 @@ hchart(df_ton_ship, "column", hcaes(x = year, y = tons, group = port)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "Tons"),
-    min = 0
+    title = list(text = "Tons Shipped"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Tonnage Shipped by Port and Year") %>%
-  hc_subtitle(text = '<a href="https://www.jaxport.com/media/statistics/" target="_blank">Source: <b>Jacksonville Port Authority</b></a><a href="https://www.portoffernandina.org/_files/ugd/e5fb15_182f6f5831d34269a9dedf674412ea63.pdf" target="_blank"> and <b>Ocean Highway and Port Authority</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.jaxport.com/media/statistics/" target="_blank"><b>Jacksonville Port Authority</b></a> and <a href="https://www.portoffernandina.org/_files/ugd/e5fb15_182f6f5831d34269a9dedf674412ea63.pdf" target="_blank"><b>Ocean Highway and Port Authority</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -788,7 +1172,6 @@ hchart(df_ton_ship, "column", hcaes(x = year, y = tons, group = port)) %>%
   hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
-
 :::
 
 ```{r}
@@ -805,16 +1188,59 @@ hchart(df_item_ship, "column", hcaes(x = item, y = count, group = year)) %>%
     #stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
+      
+
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil' ;}")
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.y) / Math.log(1000));
+      var unit = units[order];
+      var num = this.y / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.y == 0){
+        return this.y;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+      
+      
+          
+  #     formatter = JS("function() {
+  # return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil' ;}")
+  # 
+  
     ) # Enable data labels
   )) %>%
   hc_yAxis(
-    title = list(text = "Total"),
-    min = 0
+    title = list(text = "Items Shipped"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Automobiles and Containers Shipped by Year") %>%
-  hc_subtitle(text = '<a href="https://www.jaxport.com/media/statistics/" target="_blank">Source: <b>Jacksonville Port Authority</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.jaxport.com/media/statistics/" target="_blank"><b>Jacksonville Port Authority</b></a>') %>%
   hc_xAxis(title = list(text = "Item")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -850,10 +1276,30 @@ hchart(df_air_pass, "column", hcaes(x = Month, y = Count, group = Type)) %>%
       style = list(fontWeight = 'bold', color = 'gray')
     ),
     title = list(text = "Passengers"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Air Passengers by Month and Year") %>%
-  hc_subtitle(text = '<a href="https://www.flyjacksonville.com/PDFs/enplanements.pdf" target="_blank">Source: <b>Jacksonville Aviation Authority</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flyjacksonville.com/PDFs/enplanements.pdf" target="_blank"><b>Jacksonville Aviation Authority</b></a>') %>%
   hc_xAxis(title = list(text = "Month")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -874,17 +1320,37 @@ hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-  ))) %>%
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')),
-    title = list(text = "Pounds"),
-    min = 0
+    title = list(text = "Air Cargo Weight (Pounds)"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(0) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Air Cargo Weight (lbs) by Year") %>%
-  hc_subtitle(text = '<a href="https://www.faa.gov/sites/faa.gov/files/2023-08/CY2022-All-Cargo-airports.pdf" target="_blank">Source: <b>Federal Aviation Administration</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.faa.gov/sites/faa.gov/files/2023-08/CY2022-All-Cargo-airports.pdf" target="_blank"><b>Federal Aviation Administration</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -897,12 +1363,13 @@ hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
 
 ## Travel Time Reliability
 
-[Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).
+Level of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).
 
-The map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023
+The map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023.
+
+Source: [Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/)
 
 ::: {.panel-tabset .nav-pills}
-
 ### LOTTR Map
 
 ```{r}
@@ -930,12 +1397,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(lottr), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'lightgreen', 'yellow', 'orange', 'red', 'black'),
@@ -945,6 +1412,11 @@ leaflet() %>%
 ```
 
 ### TTR Segment Table
+The data for travel time reliability was collected through the FDOT Sourcebook. The inputs included in this stem from historic data from vehicle probes, permanent and temporary count sites, HERE travel time data and FDOT’s roadway characteristics inventory. The top corridors within the region were analyzed which include I-10, I-95, I-295, SR-10, SR-13, SR-21, SR-200, US-1, US-17, and US-90.  
+
+The 2022 LOTTR data is reported for the months of October, November and December, and takes the maximum value calculated throughout the period. The 2019 – 2021 LOTTR data was taken from the TPOs 2023 Annual Mobility Report. 
+
+More detailed analysis of the travel time reliability was performed on the most congested corridors within the region. This index is the ratio of the 80th-percentile travel time and the median travel time. For a 10-minute trip with a level of travel time reliability of 2.5 you have an 80% chance of arriving within 25-minutes. The larger the level of travel time reliability the more variable the travel times are along each corridor. Table 8 summarizes the LOTTR values and the corresponding critical segment. 
 
 ```{r}
 table_options <- function() {
@@ -961,7 +1433,7 @@ table_options <- function() {
           dt.page.len(-1);
           dt.ajax.reload();}"
         )
-        ),
+      ),
       list(
         extend = "collection",
         text = 'Show Less',
@@ -970,34 +1442,33 @@ table_options <- function() {
           dt.page.len(10);
           dt.ajax.reload();}"
         )
-        )
-        ),
+      )
+    ),
     deferRender = TRUE,
     searching = FALSE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
+    lengthChange = FALSE, 
+    paginate = FALSE
     ,
     initComplete = JS(
       "function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/LOTTR.csv", check.names=FALSE, row.names=1) 
 datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
 
 ```
-
 :::
 
 ## Truck Travel Time Reliability
 
-[Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/) 
+Source: [Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/)
 
 ::: {.panel-tabset .nav-pills}
-
 ### Truck TTR Map
 
 ```{r}
@@ -1025,12 +1496,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(tttr), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'lightgreen', 'yellow', 'orange', 'red', 'black'),
@@ -1045,12 +1516,14 @@ leaflet() %>%
 df_tttr <- read.csv("~/GitHub/amr_2024/data/TTTR.csv", check.names=FALSE, row.names=1) 
 datatable(df_tttr,options = c(table_options(), list(pageLength = 5)))
 ```
-
 :::
 
 ## Level of Service
+Level of Service (LOS) is a rating system of A to F with A being the best – low volume of free-flowing traffic with no delays – and F being the worst – low speeds, volume exceeds capacity with stop-and-go traffic. The FDOT District 2 Level of Service Report was reviewed. The LOS can be evaluated for daily, peak hour or peak period. The number of rural miles meeting generally acceptable operating conditions over the total number of rural road miles can be used to calculate the percent of miles meeting LOS criteria. Standards for LOS on state highways are in the FDOT Multimodal Quality/Level of Service Handbook published in 2023. The service volumes are split up into roadway classification and give specific input for rural areas. The handbook can be found at https://www.fdot.gov/planning/systems/systems-management/systems-management-documents. 
 
-[FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/)
+Table 9 lists the segments that are currently operating at LOS E or LOS F. A level of service map is also provided in Figure 22. 
+
+Source: [FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/)
 
 ```{r}
 
@@ -1078,12 +1551,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(LOS_Peak_H), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>% 
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>% 
   addLegend("topright", 
             colors = pal(unique(geojson_data$LOS_Peak_H)), 
             labels = unique(geojson_data$LOS_Peak_H),
@@ -1092,9 +1565,9 @@ leaflet() %>%
 ```
 
 ## Average Vehicle Delay
+Vehicle delay is typically reported annually in vehicle-hours per day and is calculated by the sum of the daily delay. The FDOT sourcebook shows data provided from HERE technologies and can be summarized for the region, by county, and by functional classification of the roadway. For all highway systems in the North Florida TPO region, the daily vehicle hours of delay increased from 2021 to 2022, but is still far below pre-COVID-19 delay. 
 
 ::: {layout="[ [1,1] ]"}
-
 ```{r}
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
@@ -1108,7 +1581,7 @@ hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -1116,14 +1589,34 @@ hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "VHD"),
-    min = 0
+    title = list(text = "Vehicle Hours of Delay"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "State Highway System Vehicle Hours of Delay by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank"><b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1145,7 +1638,7 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  return Highcharts.numberFormat(this.y / 1e6, 1) + 'M';}")
     )
   )) %>%
   hc_yAxis(
@@ -1153,14 +1646,34 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
       formatter = JS(paste0("function() {
-      return Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+      return Highcharts.numberFormat(this.total / 1e6, 1) + 'M';
     }"))
     ),
-    title = list(text = "VHD"),
-    min = 0
+    title = list(text = "Vehicle Hours of Delay"),
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "National Highway System Vehicle Hours of Delay by County and Year") %>%
-  hc_subtitle(text = '<a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank">Source: <b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank"><b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1169,10 +1682,11 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 
 ```
-
 :::
 
 ## Travel Speeds
+
+Source: [NPMRDE RITIS Data](https://npmrds.ritis.org/analytics/)
 
 ```{r}
 df_travel_speeds <- read.csv("~/GitHub/amr_2024/data/travel_speeds2.csv")
@@ -1184,23 +1698,11 @@ colDefs <- list(list(className = 'dt-center',
 
 line_string <- "type: 'line',width: 250, height: 30, lineWidth: 2, highlightColor: 'orange', tooltipFormat: '{{offset:levels}} : {{y}} MPH', tooltipValueLookups: { levels: { '0': '2016', '1': '2017', '2': '2018', '3': '2019', '4': '2020', '5': '2021' }}"  
 
-sl_line <- JS(sprintf("function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', {%s})}", line_string)) 
 
-spark_table <- datatable(data.table(df_travel_speeds), 
-  rownames = FALSE, 
-  options = list(columnDefs = colDefs, 
-  fnDrawCallback = sl_line,
-  lengthChange = FALSE))
-
-spark_table$dependencies <- append(spark_table$dependencies, htmlwidgets:::getDependency("sparkline"))
-
-spark_table 
 
 ```
 
 ## Incident Clearance Times
-
-2023 Data 
 
 ```{r}
 df_inc_all <- read.csv("~/GitHub/amr_2024/data/incident_clearance_all.csv")
@@ -1221,12 +1723,12 @@ hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray'
-    ),
-    title = list(text = "Minutes"),
-    min = 0
-  )) %>%
+      ),
+      title = list(text = "Minutes"),
+      min = 0
+    )) %>%
   hc_title(text = "2023 Incident Clearance Duration") %>%
-  hc_subtitle(text = '<a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank">Source: <b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
   hc_xAxis(title = list(text = "Quarter")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y} Mins</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1250,7 +1752,7 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1, 1) + ' Mins' ;}")
+  return Highcharts.numberFormat(this.y / 1, 1) + ' Min' ;}")
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -1258,8 +1760,8 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
     min = 0
   ) %>%
   hc_title(text = "2023 Open Roads and Roadway Clearance Durations by Quarter") %>%
-  hc_subtitle(text = "Source: <a href='https://sunguide.info/'>FDOT SunGuide</a>") %>%
-  hc_xAxis(title = list(text = "Item")) %>%
+  hc_subtitle(text = 'Source: <a href="https://sunguide.info/" target="_blank"><b>FDOT SunGuide</b></a>') %>%
+  hc_xAxis(title = list(text = "Duration Type")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
   hc_add_theme(hc_theme_smpl()) %>%
@@ -1269,22 +1771,25 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
 
 ## Incident Event Types
 
-2023 Data
+
+
 
 ```{r}
 df_events <- read.csv("~/GitHub/amr_2024/data/event_types_all.csv")
 
 hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
-  hc_title(text = "2023 Incident Event Totals") %>%
-  hc_subtitle(text = "Source: <a href='https://sunguide.info/'>FDOT SunGuide</a>") %>%
+  
+  hc_title(text = "2023 Incident Event Totals", align = 'left', style = list(fontFamily = 'Roboto Condensed', color = '#333333', fill = '#333333', fontSize = '18px', fontWeight = 'bold')) %>%
+  hc_subtitle(text = 'Source: <a href="https://sunguide.info/" target="_blank"><b>FDOT SunGuide</b></a>', align = 'left', style = list(fontFamily = 'Roboto Condensed')) %>%
+  
   hc_tooltip(pointFormat = '{point.name}: <b>{point.y}</b>') %>%
   hc_plotOptions(
     pie = list(
       allowPointSelect = TRUE,
       cursor = 'pointer',
-    dataLabels = list(
-      enabled = TRUE, format = '{point.name} {point.percentage:.0f}%'
-    ),
+      dataLabels = list(
+        enabled = TRUE, format = '{point.name} {point.percentage:.0f}%'
+      ),
       dataLabels = list(
         list(enabled = TRUE, format = '{point.name}'),
         list(enabled = TRUE, format = '{point.percentage:.0f}%', style = list(fontSize = '0.9em'))
@@ -1299,7 +1804,7 @@ hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
 
 ## Transit Accessibility
 
-[JTA Park n' Ride Locations](https://www.jtafla.com/ride-jta/how-to-ride/park-n-ride/)
+Source: [JTA Park n' Ride Locations](https://www.jtafla.com/ride-jta/how-to-ride/park-n-ride/)
 
 ```{r, message=FALSE}
 
@@ -1332,18 +1837,18 @@ leaflet(data = df_pnr) %>%
             title = "Location",
             opacity = 1) %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 
 ```
 
 ## Transit Routes
 
-[Florida Transit Data Exchange](https://ftis.org/Posts.aspx)
+Source: [Florida Transit Data Exchange](https://ftis.org/Posts.aspx)
 
 ```{r}
 
@@ -1367,17 +1872,17 @@ leaflet() %>%
             opacity = 1.0,
             title = "Agency") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
+    )
   )
-)
 ```
 
 ## Bicyclist Level of Traffic Stress
 
-[FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
 
 ```{r}
 
@@ -1389,9 +1894,9 @@ geojson_data <- st_read("~/GitHub/amr_2024/data/LTS_Bike_Ped.geojson", quiet = T
 # Create a custom color generating function
 generateColor <- function(value) {
   ifelse(value == '1', 'darkgreen',
-                ifelse(value == '2', 'yellow',
-                       ifelse(value == '3', 'orange',
-                              ifelse(value == '4', 'red', 'gray'))))
+         ifelse(value == '2', 'yellow',
+                ifelse(value == '3', 'orange',
+                       ifelse(value == '4', 'red', 'gray'))))
 }
 
 # Apply the custom color function to your data
@@ -1404,12 +1909,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Bike_LTS), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'yellow', 'orange', 'red'),
@@ -1420,7 +1925,7 @@ leaflet() %>%
 
 ## Pedestrian Level of Traffic Stress
 
-[FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
 
 ```{r}
 
@@ -1432,9 +1937,9 @@ geojson_data <- geojson_data %>% mutate(Ped_LTS = replace(Ped_LTS, Ped_LTS == " 
 # Create a custom color generating function
 generateColor <- function(value) {
   ifelse(value == '1', 'darkgreen',
-                ifelse(value == '2', 'yellow',
-                       ifelse(value == '3', 'orange',
-                              ifelse(value == '4', 'red', 'gray'))))
+         ifelse(value == '2', 'yellow',
+                ifelse(value == '3', 'orange',
+                       ifelse(value == '4', 'red', 'gray'))))
 }
 
 # Apply the custom color function to your data
@@ -1447,12 +1952,12 @@ leaflet() %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Ped_LTS), opacity = 0.8)%>%
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-) %>%
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  ) %>%
   addLegend(
     position = "bottomright",
     colors = c('darkgreen', 'yellow', 'orange', 'red'),
@@ -1462,8 +1967,9 @@ leaflet() %>%
 ```
 
 ## Impacts of Investments on the Natural Environment
+Florida’s Efficient Transportation Decision Making (ETDM) process is a procedure used to look into transportation projects and consider their environmental impacts. The stakeholders involved are usually the MPOs in the surrounding area. The ETDM manual can be found on the FDOT webpage at https://www.fdot.gov/environment/pubs/etdm/etdmmanual.shtm. 
 
-[Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#)  
+Source: [Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#) and 
 [FDOT 5 Year Work Program Meta Data](https://fgdl.org/meta/FDOT_WP_2023.xml)
 
 ```{r}
@@ -1490,22 +1996,82 @@ leaflet() %>%
             opacity = 1.0,
             title = "Description") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -82.055651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -82.055651], 9); }")
+    )
   )
-)
 ```
 
 ## Emissions
+Common air pollutants from transportation modes that negatively affect humans are sulfur oxides, nitrogen oxides, and fine particulate matter. The FDOT is working on alternative vehicle types to help reduce the amount of emissions present. Travel delay reduction can also help alleviate emissions. The cost of emissions is related to the amount of congestion, as congestion increases vehicle delay. 
+
+The U.S. Department of Transportation (USDOT) lists the damage costs for emissions per metric ton within the Benefit-Cost Analysis Guidance for Discretionary Grant Programs. To calculate the total damage costs of these emissions, the emission factor per vehicle miles traveled was taken from the United States Environmental Protection Agency, and this number was applied to the total vehicle miles traveled within the North Florida TPO region. The amount of emissions per mile is estimated to be: 
+
+$$ 3.91 × 10^{-4}\hspace{5 mm} \frac{metric\hspace{1 mm}tons\hspace{1 mm}of\hspace{1 mm}CO2}{mile}$$
+
+Source: United State Environmental Protection Agency Greenhouse Gases Equivalencies Calculator – Calculations and References. Retrieved 1/30/24. 
+
+The emissions factors displayed in this report also account for electric vehicles. 
+
+FDOT estimates 47,105,851 vehicle miles were traveled in 2021. Based on this and the emissions factor, a total of 18,418 metric tons of CO2 was emitted during 2021 within the North Florida TPO region. 
 
 ```{r}
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+      ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
+      )
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
+
 df_c02 <- read.csv("~/GitHub/amr_2024/data/C02DamageCosts.csv", check.names=FALSE, row.names=1) 
-datatable(df_c02,options = c(table_options(), list(pageLength = 4)))
+datatable(
+  caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references" target="_blank"><b>US EPA</b></a> and <a href="https://www.transportation.gov/sites/dot.gov/files/2023-12/Benefit%20Cost%20Analysis%20Guidance%202024%20Update.pdf"><b>US DOT</b></a>')),
+  df_c02,options = c(table_options(), list(pageLength = 4)))
 ```
 
+
+
+
 ## Trail Connectivity
+The North Florida TPO published the Northeast Florida Regional Multi-Use Trail Master Plan in 2019 which addresses the regional trail network and how funding could be applied to projects to expand the multi-use paths within the region. Funding opportunities such as Shared Use Network (SUN) Trail Funding were considered. Existing trails within the region total approximately 121 miles. A trail network of approximately 570 miles is proposed. Maps were taken from the Multi-Use Trail Master Plan. The map below shoes the existing and proposed trails identified within the North Florida TPO network. 
+
 
 Source: [NFTPO Regional Multi-use Trail Master Plan](https://northfloridatpo.com/uploads/Studies/2018-19-Regional-Multi-use-Trail-Master-Plan-Final21.pdf)
 
@@ -1516,32 +2082,38 @@ geojson_data <- st_read("~/GitHub/amr_2024/data/nftpo_trails.geojson", quiet = T
   st_transform(crs = 4326)
 
 # Create a custom color generating function
+custom_palette <- c("#FF33A1", "#2ea338")
+
 # Continuous palette
-pal <- colorFactor(palette = "PiYG", domain = geojson_data$Scale)
+pal <- colorFactor(palette = custom_palette, domain = geojson_data$Scale)
 
 # Create the Leaflet map
 leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addProviderTiles(providers$CartoDB.Positron) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9)%>%
-  addPolylines(data = geojson_data, color = ~pal(Scale), popup = ~paste(Scale), opacity = 0.8)%>%
+  addPolylines(data = geojson_data, color = ~pal(Scale), popup = ~paste(Scale), opacity = 1.0)%>%
   addLegend("topright", 
             colors = pal(unique(geojson_data$Scale)), 
             labels = unique(geojson_data$Scale),
             opacity = 1.0,
             title = "Scale") %>% 
   addEasyButton(
-  easyButton(
-    icon = 'glyphicon glyphicon-home',
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = 'glyphicon glyphicon-home',
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 ```
 
 ## Pedestrian Connectivity
+The FDOT aims to provide 100% coverage of the state highway system for bicycles and pedestrians where appropriate. Based on the FDOT roadway characteristics inventory, the average pedestrian facility coverage over the four counties within the North Florida TPO area is 65.62% for 2022. Year over year, the total pedestrian coverage within the North Florida TPO region generally increases, resulting in increased sidewalk mileage.  
 
-[FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76)
+A map of the FDOT sidewalks and gaps in the region is provided below. 
+
+
+Source: [FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76)
 
 ```{r, message=FALSE}
 # Load your GeoJSON file
@@ -1566,25 +2138,18 @@ leaflet() %>%
             opacity = 1.0,
             title = "Roadway Side") %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
   )
-)
 
 ```
 
 # Preservation and Maintanence
 
 ## Pavement Condition on Primary Freight Corridors
-
-```{r}
-df_pfc <- read.csv("~/GitHub/amr_2024/data/PrimaryFreightCorridorsPoorPavement.csv", check.names=FALSE, row.names=1) 
-datatable(df_pfc,options = c(table_options(), list(pageLength = 6)))
-```
-
-## Pavement Conditions
 
 ```{r}
 table_options <- function() {
@@ -1601,7 +2166,7 @@ table_options <- function() {
           dt.page.len(-1);
           dt.ajax.reload();}"
         )
-        ),
+      ),
       list(
         extend = "collection",
         text = 'Show Less',
@@ -1610,23 +2175,83 @@ table_options <- function() {
           dt.page.len(10);
           dt.ajax.reload();}"
         )
-        )
-        ),
+      )
+    ),
     deferRender = TRUE,
-    searching = FALSE,
+    searching = TRUE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE
+    lengthChange = FALSE,
+    paginate = FALSE
     ,
     initComplete = JS(
       "function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
+  )
+}
+
+df_pfc <- read.csv("~/GitHub/amr_2024/data/PrimaryFreightCorridorsPoorPavement.csv", check.names=FALSE, row.names=1) 
+datatable( caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>')),
+    df_pfc,options = c(table_options(), list(pageLength = 6)))
+```
+
+## Pavement Conditions
+This section deals with preserving and maintaining bridge and pavement conditions in the region. Pavement condition is summarized for Interstate and non-Interstate facilities that are on the National Highway System (NHS). The % is based on the lane-miles of facilities. Bridges are summarized by NHS and non-NHS facilities. The percent is calculated based on the bridge deck area. Goals are set by FDOT for how much of each category is in good condition and how much is in poor condition. Table 10 summarizes the pavement conditions. Table 11 summarizes the bridge conditions. The figures below also compare the yearly breakdown to the target goals. 
+
+```{r}
+table_options <- function() {
+  list(
+    dom = 'Bfrtip',
+    #Bfrtip
+    buttons = list(
+      c('copy', 'csv', 'excel', 'pdf', 'print'),
+      list(
+        extend = "collection",
+        text = 'Show All',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(-1);
+          dt.ajax.reload();}"
+        )
+      ),
+      list(
+        extend = "collection",
+        text = 'Show Less',
+        action = DT::JS(
+          "function ( e, dt, node, config ) {
+          dt.page.len(10);
+          dt.ajax.reload();}"
+        )
       )
+    ),
+    rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
+    deferRender = TRUE,
+    searching = FALSE,
+    editable = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE, 
+    paginate = FALSE
+    ,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
 }
 df_pavement <- read.csv("~/GitHub/amr_2024/data/preserveandmaintain.csv", check.names=FALSE, row.names=1) 
-datatable(df_pavement,options = c(table_options(), list(pageLength = 11)))
+datatable(caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>')),
+    df_pavement,options = c(table_options(), list(pageLength = 8)))
 ```
 
 ## Bridge Conditions
@@ -1634,6 +2259,11 @@ datatable(df_pavement,options = c(table_options(), list(pageLength = 11)))
 ```{r}
 table_options <- function() {
   list(
+    rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = TRUE,
     scroller = TRUE,
@@ -1644,10 +2274,13 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/bridgeconditions.csv", check.names=FALSE, row.names=1) 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+datatable(caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/bridge" target="_blank"><b>FDOT Source Book, PM2-Bridge</b></a>')),
+    df_lottr,options = c(table_options(), list(pageLength = 6)))
 ```
 
 ## Transit Vehicles
@@ -1680,7 +2313,7 @@ hchart(df_transit_age, "column", hcaes(x = Agency, y = Age, group = Year)) %>%
     min = 0
   ) %>%
   hc_title(text = "Average Transit Vehicle Age by Agency and Year") %>%
-  hc_subtitle(text = '<a href="https://www.transit.dot.gov/ntd/ntd-data?field_data_categories_target_id%5B2516%5D=2516&field_product_type_target_id=All&year=all&combine&page=0" target="_blank">Source: <b>Federal Transit Administration</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://www.transit.dot.gov/ntd/ntd-data?field_data_categories_target_id%5B2516%5D=2516&field_product_type_target_id=All&year=all&combine&page=0" target="_blank"><b>Federal Transit Administration</b></a>') %>%
   hc_xAxis(title = list(text = "Agency")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1704,18 +2337,52 @@ hchart(df_cost_con, "column", hcaes(x = year, y = dollars)) %>%
   hc_plotOptions(column = list(
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$'+Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-  ))) %>%
+      
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+      
+  #     formatter = JS("function() {
+  # return '$'+Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  
+    )
+  )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 2){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cost of Congestion by Year") %>%
-  hc_subtitle(text = '<a href="https://static.tti.tamu.edu/tti.tamu.edu/documents/mobility-report-2023.pdf" target="_blank">Source: <b>Texas A&M Transportation Institute</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://static.tti.tamu.edu/tti.tamu.edu/documents/mobility-report-2023.pdf" target="_blank"><b>Texas A&M Transportation Institute</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1727,7 +2394,6 @@ hchart(df_cost_con, "column", hcaes(x = year, y = dollars)) %>%
 ## Cost of Crashes
 
 ::: {layout="[ [1,1] ]"}
-
 ```{r}
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
@@ -1741,23 +2407,75 @@ hchart(df_cost_fatal, "column", hcaes(x = year, y = cost, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$' + Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+      
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 3) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+      
+  #     formatter = JS("function() {
+  # return '$' + Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+  
+  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
+
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.total / 1e9, 1) + ' Bil';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return '$' + num.toFixed(0) + unit;
+        }
+      }"))
+      
+    #   formatter = JS(paste0("function() {
+    #   return '$' + Highcharts.numberFormat(this.total / 1e9, 1) + ' Bil';
+    # }"))
+    
     ),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order == 3){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cost of Fatal Crashes by Year") %>%
-  hc_subtitle(text = '<a href="https://signal4analytics.com/" target="_blank">Source: <b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://signal4analytics.com/" target="_blank"><b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1779,23 +2497,77 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+      
+      
+      formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 3) {
+          return '$' + num.toFixed(2) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+            
+  #     formatter = JS("function() {
+  # return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
+  
+  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
       #style = list(fontWeight = 'bold', color = 'gray',
+      
       formatter = JS(paste0("function() {
-      return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    }"))
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.total) / Math.log(1000));
+        var unit = units[order];
+        var num = this.total / Math.pow(1000, order);
+        if (order >= 2) {
+          return '$' + num.toFixed(0) + unit;
+        }
+        else if (order == 0){
+          return this.total;
+        }
+        else {
+          return '$' + num.toFixed(0) + unit;
+        }
+      }"))
+      
+    #   formatter = JS(paste0("function() {
+    #   return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
+    # }"))
+    
+    
     ),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order == 3){
+        return '$' + num.toFixed(2) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Cost of Serious Injury Crashes by Year") %>%
-  hc_subtitle(text = '<a href="https://signal4analytics.com/" target="_blank">Source: <b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://signal4analytics.com/" target="_blank"><b>Signal Four Analytics</b></a> and <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/roadway/fdm/2024/2024fdm122varexcept.pdf?sfvrsn=23e25c46_1" target="_blank"><b>FDOT Design Manual</b></a>') %>%
   hc_xAxis(title = list(text = "Year")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1803,7 +2575,6 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
   hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
-
 :::
 
 ## Return on Investment
@@ -1819,18 +2590,52 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
   hc_plotOptions(column = list(
     dataLabels = list(
       enabled = TRUE,
-      formatter = JS("function() {
-  return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
-  ))) %>%
+      
+       formatter = JS(paste0("function() {
+        var units = ['', 'K', 'M', 'B'];
+        var order = Math.floor(Math.log(this.y) / Math.log(1000));
+        var unit = units[order];
+        var num = this.y / Math.pow(1000, order);
+        if (order >= 3) {
+          return '$' + num.toFixed(1) + unit;
+        }
+        return '$' + num.toFixed(0) + unit;
+      }"))
+      
+  #     formatter = JS("function() {
+  # return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
+  
+  
+    ))) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = FALSE, # Enable stack totals
       style = list(fontWeight = 'bold', color = 'gray')),
     title = list(text = "Cost (Dollars)"),
-    min = 0
+    min = 0, 
+    
+    labels = list(
+      formatter = JS("function() {
+      var units = ['', 'K', 'M', 'B'];
+      var order = Math.floor(Math.log(this.value) / Math.log(1000));
+      var unit = units[order];
+      var num = this.value / Math.pow(1000, order);
+      if (order >= 3){
+        return '$' + num.toFixed(1) + unit;
+      }
+      else if (this.value == 0){
+        return this.value;
+      }
+      else{
+        return '$' + num.toFixed(0) + unit;
+      }
+
+    }")
+    )
+    
   ) %>%
   hc_title(text = "Benefit in Dollars by Mode") %>%
-  hc_subtitle(text = '<a href="http://edr.state.fl.us/content/returnoninvestment/ROI_Transportation.pdf" target="_blank">Source: <b>Florida Department of Transportation Office of Economic & Demographic Research</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="http://edr.state.fl.us/content/returnoninvestment/ROI_Transportation.pdf" target="_blank"><b>Florida Department of Transportation Office of Economic & Demographic Research</b></a>') %>%
   hc_xAxis(title = list(text = "Mode")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
@@ -1843,11 +2648,16 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
 
 ## PM1 Safety (All Public Roads)
 
-[Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm1-safety-fact-sheet-(feb23).pdf)
+
 
 ```{r}
 table_options <- function() {
   list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = TRUE,
     scroller = TRUE,
@@ -1858,21 +2668,24 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_pm1 <- read.csv("~/GitHub/amr_2024/data/pm1_safety.csv", check.names=FALSE) 
+df_pm1 <- df_pm1[-1,] # Removes row saying Target 
 colnames(df_pm1) <- c('Year','Fatalities (total)','Fatalities per 100 million VMT','Serious Injuries','Serious Injuries per 100 million VMT','Non-motorized Fatalities and Serious Injuries') 
-datatable(df_pm1,options = c(table_options(), list(pageLength = 7)))
+datatable(caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm1-safety-fact-sheet-(feb23).pdf" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
+    df_pm1,options = c(table_options(), list(pageLength = 6)))
 ```
 
 ## PM2 Bridge and Pavement
 
-[Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf)
-[Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
+Source: [Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf) and [Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
 
 ::: {.panel-tabset .nav-pills}
-
 ### Bridge Condition Map
+The map below shows the locations and conditions of the bridges within the North Florida TPO region. According to the FDOT roadway characteristics inventory, there are a total of 909 bridges in the region. 
 
 ```{r, message=FALSE}
 
@@ -1899,12 +2712,12 @@ leaflet(data = df_bridge) %>%
                    fillOpacity = 0.8) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
   addEasyButton(
-  easyButton(
-    icon = "glyphicon-home",
-    title = "Zoom to Jacksonville",
-    onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
-  )
-)%>%
+    easyButton(
+      icon = "glyphicon-home",
+      title = "Zoom to Jacksonville",
+      onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
+    )
+  )%>%
   addLegend(df_bridge,
             position = "bottomright",
             pal = pal, values = ord,
@@ -1913,7 +2726,7 @@ leaflet(data = df_bridge) %>%
 
 ```
 
-### NHS Bridge Decks  
+### NHS Bridge Decks
 
 ```{r}
 table_options <- function() {
@@ -1928,33 +2741,77 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_nhs <- read.csv("~/GitHub/amr_2024/data/nhs_bridges.csv", check.names=FALSE, row.names=1) 
 colnames(df_nhs) <- c('Year','Good Condition','Poor Condition') 
-datatable(df_nhs,options = c(table_options(), list(pageLength = 6)))
+datatable(df_nhs,options = c(table_options(), list(pageLength = 5)))
 ```
-
 :::
 
 ::: {layout="[ [1,1] ]"}
-
-### Interstate Pavement  
+### Interstate Pavement
 
 ```{r}
+table_options <- function() {
+  list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
+
 df_inter_pave <- read.csv("~/GitHub/amr_2024/data/inter_pavements.csv", check.names=FALSE, row.names=1) 
 colnames(df_inter_pave) <- c('Year','Good Condition','Poor Condition') 
-datatable(df_inter_pave,options = c(table_options(), list(pageLength = 5)))
+datatable(df_inter_pave,options = c(table_options(), list(pageLength = 5)), 
+          caption = htmltools::tags$caption(
+    style = 'caption-side: top; text-align: left;',
+    htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>'))
+    )
 ```
 
-### Non-Interstate Pavement  
+### Non-Interstate Pavement
 
 ```{r}
+table_options <- function() {
+  list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = FALSE,
+    paginate=FALSE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+  )
+}
 df_noninter_pave <- read.csv("~/GitHub/amr_2024/data/noninter_pavements.csv", check.names=FALSE, row.names=1) 
 colnames(df_noninter_pave) <- c('Year','Good Condition','Poor Condition') 
-datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)))
+datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)), 
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>'))
+          )
 ```
-
 :::
 
 ### State Targets
@@ -1962,21 +2819,31 @@ datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)))
 ```{r}
 table_options <- function() {
   list(
+     rowCallback = DT::JS(
+      "function(row, data, index) {
+        $('td:eq(0)', row).html(index + 1);
+      }"
+    ),
     deferRender = TRUE,
     searching = TRUE,
-    editable = TRUE,
     scroller = TRUE,
     lengthChange = FALSE,
+    paginate=FALSE,
     initComplete = JS(
       "function(settings, json) {",
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 df_targets <- read.csv("~/GitHub/amr_2024/data/state_targets.csv", check.names=FALSE, row.names=1) 
+df_targets <- df_targets[-1,]
 colnames(df_targets) <- c('Performance Measure','2023 Target','2025 Target') 
-datatable(df_targets,options = c(table_options(), list(pageLength = 9)))
+datatable(df_targets,options = c(table_options(), list(pageLength = 7)), 
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/ho_summary-of-targets-in-fl_230714_v4.pdf" target="_blank"><b>FDOT Forecasting & Trends Office</b></a>'))
+          )
 
 ```
 
@@ -1995,16 +2862,16 @@ table_options <- function() {
       "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
       "}"
     )
-      )
+  )
 }
 
 df_sysperf <- read.csv("~/GitHub/amr_2024/data/pm3_sysperf.csv", check.names=FALSE, row.names=1) 
 colnames(df_sysperf) <- c('Performance Measure','% of Person Miles Traveled on the Interstate that are Reliable',
                           '% of Person Miles Traveled on the Non-Interstate NHS Reliable','Truck Travel Time Reliability (TTTR) Index') 
 datatable(df_sysperf,
-  caption = htmltools::tags$caption(
-    style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="https://performance-data-integration-space-fdot.hub.arcgis.com/pages/mpo-performance-resources" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
-    options = c(table_options(), list(pageLength = 8)))
+          caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="https://performance-data-integration-space-fdot.hub.arcgis.com/pages/mpo-performance-resources" target="_blank"><b>Florida Department of Transportation Forecasting and Trends Office</b></a>')),
+          options = c(table_options(), list(pageLength = 8)))
 
 ```

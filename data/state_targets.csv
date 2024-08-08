@@ -1,0 +1,9 @@
+﻿Index,Perf_Meas,Target_2023,Target_2025
+0,Bridge,,
+1,% of NHS bridges (by deck area) in GOOD condition,50%,50%
+2,% of NHS bridges (by deck area) in POOR condition,10%,10%
+3,Pavement,,
+4,% of Interstate pavements in GOOD condition,60%,60%
+5,% of Interstate pavements in POOR condition,5%,5%
+6,% of non-Interstate pavements in GOOD condition,40%,40%
+7,% of non-Interstate pavements in POOR condition,5%,5%

@@ -1,0 +1,21 @@
+﻿index,year,county,count,severity,rate,cost
+1,2019,Clay,76,serious injury,888030,67490280
+3,2020,Clay,71,serious injury,888030,63050130
+5,2021,Clay,66,serious injury,888030,58609980
+7,2022,Clay,70,serious injury,888030,62162100
+9,2023,Clay,65,serious injury,888030,57721950
+11,2019,Duval,582,serious injury,888030,516833460
+13,2020,Duval,540,serious injury,888030,479536200
+15,2021,Duval,631,serious injury,888030,560346930
+17,2022,Duval,580,serious injury,888030,515057400
+19,2023,Duval,568,serious injury,888030,504401040
+21,2019,Nassau,108,serious injury,888030,95907240
+23,2020,Nassau,56,serious injury,888030,49729680
+25,2021,Nassau,71,serious injury,888030,63050130
+27,2022,Nassau,78,serious injury,888030,69266340
+29,2023,Nassau,71,serious injury,888030,63050130
+31,2019,St. Johns,106,serious injury,888030,94131180
+33,2020,St. Johns,153,serious injury,888030,135868590
+35,2021,St. Johns,154,serious injury,888030,136756620
+37,2022,St. Johns,127,serious injury,888030,112779810
+39,2023,St. Johns,132,serious injury,888030,117219960
