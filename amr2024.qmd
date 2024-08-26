@@ -31,7 +31,7 @@ library(htmlwidgets)
 library(data.table)
 ```
 
-Understanding the trends and conditions occurring in the North Florida will allow planners and engineers to prioritize resources more effectively as part of the North Florida Transportation Planning Organization’s (TPO) Congestion Management Process. The data presented are an essential part of making evidence-based decisions for the investment in mobility in North Florida. The data presented focuses on Clay, Duval, Nassau and St. Johns counties for the years 2018-2022 and 2019-2023 when available. This report summarizes trends in the following topics:
+Understanding the trends and conditions occurring in the North Florida will allow planners and engineers to prioritize resources more effectively as part of the North Florida Transportation Planning Organization’s (TPO) Congestion Management Process. The data presented are an essential part of making evidence-based decisions for the investment in mobility in North Florida. The data presented focuses on Clay, Duval, Nassau and St. Johns counties for the years 2018-2022 and 2019-2023 when available.
 
 # People
 
@@ -213,7 +213,7 @@ Accessing affordable and nutritious food was a challenge for nearly 800,000 pers
 
 The following map highlights areas designated as medically underserved in 2019 and areas without reliable access to healthy foods in 2015 (the latest date statistics are available).
 
-Source: [HRSA Map Tool](https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdata.hrsa.gov%2Fmaps%2Fmap-tool%2F%3Ftl%3DMUA%26gt%3DState%26cd%3D12%26dp%3DALL&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438011339%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=GOmr%2Ft3UJ572M%2FefYGnBSW44tPzSRlMrNLPzs7rev2k%3D&reserved=0) and [HRSA MUA Find](https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdata.hrsa.gov%2Ftools%2Fshortage-area%2Fmua-find&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438017410%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=TAAJWjYzcuPHHq3Jjt0o1KdONHm%2Fr37pE9Mc8y8aDiY%3D&reserved=0)
+Source: [HRSA Map Tool](https://data.hrsa.gov/maps/map-tool/?tl=MUA&gt=State&cd=12&dp=ALL){target="_blank"}
 
 ```{r}
 # Load your GeoJSON file
@@ -239,7 +239,7 @@ leaflet() %>%
             title = "Metric") %>% 
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -277,12 +277,6 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
         return '$' + num.toFixed(0) + unit;
       }"))
 
-      
-    #   formatter = JS(paste0("function() {
-    #   return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';
-    # }"))
-    
-    # Use the custom formatter for data labels
     )
   )) %>%
   hc_yAxis(
@@ -340,6 +334,7 @@ hchart(df_gdp, "column", hcaes(x = Year, y = Total, group = County)) %>%
 ```
 
 ## Employment
+
 Unemployment rates are near all time lows and are strong indicators of a healthy economy and continued growth in travel demand.
 
 ```{r}
@@ -388,6 +383,7 @@ highchart() %>%
 ```
 
 ## Tourism
+
 The Moving Ahead for Progress in the 21st Century Act ("MAP-21") transportation legislation included tourism as one of the metropolitan planning factors.
 
 Tourism plays a major role in the state of Florida. According to the North Florida TPO’s Tourism Mobility Study published in 2022, nearly 26 million visitors traveled to the region in 2022. Attractions include (but are not limited to) the St. Johns River, Jacksonville Beach, Neptune Beach, Atlantic Beach, and Black Rock Beach. Other destinations include wildlife sightseeing, camping, golfing and hiking/biking trails. The City of Jacksonville has more than 80,000 acres of parks. Sporting events are frequented in the area as the region is home to several minor league sports teams and home of the Jacksonville Jaguars of the National Football League. There are many annual events that occur in the North Florida TPO region which include (but are not limited to) the World Of Nations Celebration, the Gate River Run (USA 15K Championship Race), The Players Championship, the Jacksonville Jazz Festival, The Kingfish Tournament, and the Florida/Georgia college football game.  
@@ -397,43 +393,14 @@ The goal is to increase the number of multi-modal projects in high tourism areas
 Including visitors from within the region, St. Augustine hosts nearly 6 million visitors each year.
 
 
-
 ```{r}
 table_options <- function() {
   list(
-    dom = 'Bfrtip',
-    #Bfrtip
-    buttons = list(
-      c('copy', 'csv', 'excel', 'pdf', 'print'),
-      list(
-        extend = "collection",
-        text = 'Show All',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(-1);
-          dt.ajax.reload();}"
-        )
-      ),
-      list(
-        extend = "collection",
-        text = 'Show Less',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(10);
-          dt.ajax.reload();}"
-        )
-      )
-    ),
-    rowCallback = DT::JS(
-        "function(row, data, index) {
-        $('td:eq(0)', row).html(index + 1);
-      }"
-    ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     editable = TRUE,
     scroller = TRUE,
-    lengthChange = FALSE,
+    lengthChange = TRUE,
     paginate = FALSE
     ,
     initComplete = JS(
@@ -444,23 +411,24 @@ table_options <- function() {
   )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/tourism.csv", check.names=FALSE, row.names=1) 
-df_lottr <- df_lottr %>%
-  mutate(Visitors = ifelse(is.na(Visitors), "-", as.character(Visitors))) %>%
-  mutate(Visitors = ifelse(Visitors == "-", "-", format(as.numeric(Visitors), big.mark = ",")))
+
 datatable(          
   caption = htmltools::tags$caption(
     style = 'caption-side: top; text-align: left;',
-    htmltools::HTML('Source: <a href="https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.floridashistoriccoast.com%2Fabout%2Findustry-resources%2Ftourism-facts-figures%2Feconomic-impact-reports%2F&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438023211%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=aF7ifOVu3ZgOCiYQzMH9qC9Q9k9L1%2BgCNsELebbSpNo%3D&reserved=0" target="_blank"><b>St. Augustine Ponte Vedra</b></a> (PDF located <a href="https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fs3.us-east-1.amazonaws.com%2Fst-augustine-2019%2Fimages%2FSAPVB-doc-images%2FFloridas-Historic-Coast-July-2021-June-2022-Economic-Impact-Report-LOS-Detail.pdf%3Fv%3D1669640377&data=05%7C02%7CThomas.Zhao%40kimley-horn.com%7Cc2d23948d5ad4b827e7508dcb703c523%7C7e220d300b5947e58a81a4a9d9afbdc4%7C0%7C0%7C638586477438029281%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=C6uR8XRmvTP0aozQ3B%2BW6h86GN7vnID9cBQaXCxZZR4%3D&reserved=0">here</a>) and <b><a href="https://www.visitjacksonville.com/about/research-information/">Visit Jacksonville</b></a>')),
-    df_lottr,options = c(table_options(), list(pageLength = 4)))
-
+    htmltools::HTML('Source: <a href="https://www.floridashistoriccoast.com/about/industry-resources/tourism-facts-figures/economic-impact-reports/" target="_blank"><b>St. Augustine Ponte Vedra</b></a> (<a href="https://s3.us-east-1.amazonaws.com/st-augustine-2019/images/SAPVB-doc-images/Floridas-Historic-Coast-July-2021-June-2022-Economic-Impact-Report-LOS-Detail.pdf?v=1669640377"  target="_blank">PDF Link</a>) and <b><a href="https://www.visitjacksonville.com/about/research-information/" target="_blank">Visit Jacksonville</b></a>')),
+df_lottr,options = c(table_options(), list(pageLength = 4)))
 
 ```
 
 # Safe and Secure Travel
 
-Crash data was compiled from several sources including the Florida Department of Transportation (FDOT) Safety Office, Signal Four Analytics, and FDOT State Safety Office's historical Crash Analysis Reporting (CAR) database. According to Florida Highway Safety and Motor Vehicles, there were a total of 31,964 crashes that occurred over the four North Florida TPO counties. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.
+Crash data was compiled from several sources including the Florida Department of Transportation (FDOT) Safety Office, Signal Four Analytics, and FDOT State Safety Office's historical Crash Analysis Reporting (CAR) database. According to Florida Highway Safety and Motor Vehicles, there were a total of 31,542 crashes that occurred over the four North Florida TPO counties in 2023. Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.
 
 ## Total Crashes
+
+Total crashes in 2023 decreased 1.3% over 2022.
+
+The target is to have zero injuries or fatalities resulting from crashes.
 
 ```{r}
 df_tot_crash <- read.csv("~/GitHub/amr_2024/data/total_crashes.csv")
@@ -541,9 +509,10 @@ hchart(df_tot_crash, "column", hcaes(x = year, y = crashes, group = county)) %>%
 ```
 
 ## Fatal and Serious Injury Crash Map
+
 This map shows the location of fatal crashes and serious injury crashes in 2023.
 
-Source: [Signal Four Analytics](https://signal4analytics.com/)
+Source: [Signal Four Analytics](https://signal4analytics.com/){target="_blank"}
 
 ```{r, message=FALSE}
 
@@ -571,7 +540,7 @@ leaflet(data = df_fatalserious) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
   addEasyButton(
     easyButton(
-      icon = "glyphicon-home",
+      icon = "fa-map-marker",
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -585,6 +554,8 @@ leaflet(data = df_fatalserious) %>%
 ```
 
 ## Fatalities
+
+The number of fatalities is a crucial benchmark of progress when assessing the target zero initiative. According to the Florida Highway Safety and Motor Vehicles dashboard, there were 238 fatalities within the region during 2023.  
 
 ```{r}
 df_tot_fat <- read.csv("~/GitHub/amr_2024/data/total_fatalities.csv")
@@ -656,6 +627,8 @@ hchart(df_tot_fat, "column", hcaes(x = year, y = crashes, group = county)) %>%
 
 ## Injury Crashes
 
+The Florida Highway Safety and Motor Vehicle dashboard lists the total number of injuries as 13,440 within the region during 2023.  
+
 ```{r}
 df_tot_inj <- read.csv("~/GitHub/amr_2024/data/total_injuries.csv")
 
@@ -685,10 +658,6 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
           return num.toFixed(1) + unit;
         }
       }"))
-
-  #     formatter = JS("function() {
-  # return Highcharts.numberFormat(this.y / 1e3, 1) + ' K';}")
-  
     )
   )) %>%
   hc_yAxis(
@@ -709,8 +678,6 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
           return num.toFixed(1) + unit;
         }
       }"))
-      # style = list(fontWeight = 'bold', color = 'gray'),
-      
     ),
     title = list(text = "Number of Injuries"),
     min = 0, 
@@ -730,10 +697,8 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
       else{
         return num.toFixed(0) + unit;
       }
-
     }")
     )
-    
     ) %>%
   hc_title(text = "Total Injuries by County and Year") %>%
   hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
@@ -746,6 +711,8 @@ hchart(df_tot_inj, "column", hcaes(x = year, y = crashes, group = county)) %>%
 ```
 
 ## Crash Rates
+
+The rate of crashes is the ratio of the total number of crashes to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rates were analyzed. In 2022, the rate of fatalities was 1.56, the rate of injuries was 110.7, and the rate of all crashes was 174.6. In each case, the rate has gone down since 2021 but is higher than the rate in 2020.
 
 ```{r}
 
@@ -785,29 +752,10 @@ hchart(df_crash_rates, "column", hcaes(x = Severity, y = Rate, group = Year)) %>
 ```
 
 ## Pedestrian and Bicyclist Fatalities
-Crash data was compiled from several sources including the FDOT safety office, Signal Four Analytics, and FDOT State Safety Office historical Crash Analysis Reporting (CAR) database. According to the Florida Department of Highway Safety and Motor Vehicles, there was a total of 31,964 crashes that occurred over the four North Florida TPO counties (specify year 2022?). Duval County accounted for a majority of these crashes due to the county population and extent of roadways present.  
 
-**Number of Fatalities** 
+According to the Florida Highway Safety and Motor Vehicles dashboard, the number of non-motorized fatalities for the region was 72 in 2023. 62 fatalities were pedestrians and 10 were cyclists.
 
-The number of fatalities is a crucial benchmark of progress when assessing the target zero initiative. According to the Florida Highway Safety and Motor Vehicles dashboard, there were 238 fatalities within the region during 2023.  
-
-**Rate of Fatalities** 
-
-The rate of fatalities is the ratio of the total number of fatalities to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rate of fatalities was analyzed. According to the FDOT sourcebook, the rate of fatalities was 1.41 in 2022. This number has been steadily decreasing since 2020. 
-
-**Number of Injuries** 
-
-The Florida Highway Safety and Motor Vehicle dashboard lists the total number of injuries as 13,400 within the region during 2023.  
-
-**Rate of Injuries** 
-
-The rate of injuries is the ratio of the total number of injuries to the number of vehicle miles traveled (VMT) expressed in 100 million VMT. Since VMT data is not available for 2023, the 2022 rate of injuries was analyzed. According to the FDOT sourcebook, the rate of serious injuries was 4.66 in 2022 for the region. 
-
-**Number of Non-motorized Fatalities and Injuries** 
-
-According to the Florida Highway Safety and Motor Vehicles dashboard, the number of non-motorized fatalities and injuries was 1,041 in 2023. Below is a graphic of the total pedestrian and bicycle fatalities year by year. 
-
-The pedestrian fatalities have been climbing over the past five years and the bicycle fatalities have been decreasing from the 2019 and 2020 statistics. 
+The pedestrian fatalities have been climbing over the past five years but the bicycle fatalities have been decreasing since 2020 and are also less than in 2019.
 
 ::: {layout="[ [1,1] ]"}
 ```{r}
@@ -868,7 +816,8 @@ hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>
       style = list(fontWeight = 'bold', color = 'gray')
     ),
     title = list(text = "Bicyclist Fatalities"),
-    min = 0
+    min = 0,
+    max = 80
   ) %>%
   hc_title(text = "Bicyclist Fatalities by County and Year") %>%
   hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
@@ -882,6 +831,16 @@ hchart(df_filtered, "column", hcaes(x = Year, y = BikeFatal, group = County)) %>
 :::
 
 ## Impaired Driving
+
+Impaired driving was a contributing cause in about 53% of all crash fatalities in 2023, which is just over half of all crashes.
+
+Additionally,
+
++ 8.5% of crashes involving drivers who were tested for alcohol only result in fatalities
++ 72.5% of crashes involving drugs only result in fatalities
++ 91.3% of crashes involving drugs and alcohol result in fatalities
+
+The goal is to have zero injuries or fatalities resulting from crashes.
 
 ```{r}
 df_tot_imp <- read.csv("~/GitHub/amr_2024/data/total_impaired.csv")
@@ -918,11 +877,13 @@ hchart(df_tot_imp, "column", hcaes(x = year, y = crashes, group = county)) %>%
 ```
 
 # Quantity of Travel
-Vehicle-miles traveled considers the Annual Average Daily Traffic (AADT) and the roadway segment length. There is not a set benchmark or goal for vehicle miles traveled, however reducing this number can help with congestion issues along the roadway network. The FDOT sourcebook contains information for the North Florida TPO region. According to the data, 32.2 million vehicle miles traveled was estimated for 2022 on all SHS facilities. The trend in VMT is shown in the charts below. 
 
-## Vehicles Miles Traveled
+## Vehicle Miles Traveled
+
+Vehicle-miles traveled considers the Annual Average Daily Traffic (AADT) and the roadway segment length. There is not a set benchmark or goal for vehicle miles traveled. Reducing this number can help with congestion issues along the roadway network. 32.2 million vehicle miles traveled was estimated for 2022.
 
 ::: {layout="[ [1,1] ]"}
+
 ```{r}
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
@@ -985,7 +946,8 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
     }"))
     ),
     title = list(text = "Vehicle Miles Traveled"),
-    min = 0
+    min = 0,
+    max = 40000000
   ) %>%
   hc_title(text = "National Highway System Vehicle Miles Traveled by County and Year") %>%
   hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/vehicle-miles-traveled#" target="_blank"><b>FDOT Sourcebook Vehicle Miles Traveled</b></a>') %>%
@@ -1000,7 +962,8 @@ hchart(df_vmt, "column", hcaes(x = Year, y = TotalNHSVMT, group = County)) %>%
 :::
 
 ## Transit Ridership
-Transit ridership has declined in the wake of the COVID-19 pandemic. The JTA keeps track of these metrics and levels continue to remain stagnant over the past few years. Autonomous vehicle implementation is close to happening within the region and JTA expects this will help increase transit ridership. Services that are included within JTA’s scope consist of the St. Johns River Ferry, ReadiRide (on-call transportation service), Clay Flex, St. Johns Express, Clay Express, and Nassau Express. The 2022 ridership data related to these services are shown in table below. On-time performance was only tracked for the St. Johns River Ferry during 2022 and this came in at 98%. 
+
+Transit ridership has declined in the wake of the COVID-19 pandemic. The JTA keeps track of these metrics and levels continue to remain stagnant over the past few years. Services that are included within JTA’s scope consist of the St. Johns River Ferry, ReadiRide (on-call transportation service), Clay Flex, St. Johns Express, Clay Express, and Nassau Express. The 2022 ridership data related to these services are shown in table below. On-time performance was only tracked for the St. Johns River Ferry during 2022 and this came in at 98%. 
  
 
 ```{r}
@@ -1063,7 +1026,18 @@ hchart(df_transit, "column", hcaes(x = Year, y = Totals, group = Agency)) %>%
 
 ## Sea Travel and Freight
 
+No cruise ships called on JAXPORT in 2021 due to the COVID-19 pandemic. Carnival Cruise Lines returned to service and made its first vessel call in March 2022. The services peaked in 2016 at 390 thousand passengers. In 2023, cruise passenger levels seems to have returned to pre-pandemic levels.
+
+There is no defined benchmark for this measure. Increases are preferred and annual monitoring is conducted.
+
+JAXPORT's terminals shipped more tons of cargo in fiscal year 2023 than 2022. The Port of Fernandina shipping is slightly less in 2023. Overall shipping tonnage has remained steady over the last 3 years.
+
+There is no defined benchmark for this measure. Increases are preferred and annual monitoring is conducted.
+
 ::: {layout="[ [1,1] ]"}
+
+### Cruise Passengers
+
 ```{r}
 df_cruise <- read.csv("~/GitHub/amr_2024/data/cruise_passengers.csv")
 
@@ -1114,6 +1088,8 @@ hchart(df_cruise, "column", hcaes(x = year, y = passengers)) %>%
   hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
+
+### Tons Shipped
 
 ```{r}
 df_ton_ship <- read.csv("~/GitHub/amr_2024/data/tons_shipped.csv")
@@ -1173,6 +1149,13 @@ hchart(df_ton_ship, "column", hcaes(x = year, y = tons, group = port)) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
 :::
+
+### Automobiles and Containers Shipped
+
+JAXPORT is maintaining its position as the container port in Florida and one of the top 10 in the nation. JAXPORT is working to provide an alternative to other constrained ports for container shipments and expand its market share in breakbulk cargo through harbor deepening, berth enhancements and new handling equipment investments.  
+Container shipments at the Port of Fernandina peaked in 2021 but have risen slightly in 2023 compared to 2022. Automobile shipments in 2023 were at their lowest in the last 5 year period.  
+
+There is no defined benchmark for this measure. Increases are preferred and annual monitoring is conducted.  
 
 ```{r}
 # Load data
@@ -1239,7 +1222,7 @@ hchart(df_item_ship, "column", hcaes(x = item, y = count, group = year)) %>%
     )
     
   ) %>%
-  hc_title(text = "Automobiles and Containers Shipped by Year") %>%
+  hc_title(text = "Containers and Automobiles Shipped by Year") %>%
   hc_subtitle(text = 'Source: <a href="https://www.jaxport.com/media/statistics/" target="_blank"><b>Jacksonville Port Authority</b></a>') %>%
   hc_xAxis(title = list(text = "Item")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
@@ -1250,6 +1233,14 @@ hchart(df_item_ship, "column", hcaes(x = item, y = count, group = year)) %>%
 ```
 
 ## Air Travel and Freight
+
+### Air Passengers
+
+In 2021 passengers traveling at Jacksonville International Airport increase by 27% when compared to 2020 as the recovery from the COVID-19 pandemic began.  Monthly passengers have returned to pre-pandemic levels. 
+
+There is no defined benchmark for aviation passengers served. Increases are preferred and annual monitoring is conducted.
+
+Fiscal years begin October 1 and end September 30 of each year.
 
 ```{r}
 
@@ -1308,6 +1299,13 @@ hchart(df_air_pass, "column", hcaes(x = Month, y = Count, group = Type)) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
 
+
+### Air Cargo
+
+Air cargo shipments grew about 7% in 2021 compared to 2020 but fell about 3% in 2022 compared to 2021.
+
+There is no defined benchmark for this measure. Increases are preferred and annual monitoring is conducted.  
+
 ```{r}
 df_cargo <- read.csv("~/GitHub/amr_2024/data/air_cargo.csv")
 
@@ -1363,11 +1361,13 @@ hchart(df_cargo, "column", hcaes(x = year, y = weight)) %>%
 
 ## Travel Time Reliability
 
-Level of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day on the State Highway System (SHS).
+Level of Travel Time Reliability (LOTTR) is defined as the ratio of the longer travel times (80th percentile) to a “normal” travel time (50th percentile). LOTTR assesses the consistency, or dependability, of travel times from day to day or across different times of the day. For a 10-minute trip with a level of travel time reliability of 2.5 you have an 80% chance of arriving within 25-minutes. The larger the level of travel time reliability the more variable the travel times are along each corridor.
+
+The goal is for 95% of the vehicle-miles traveled within a corridor or system be reliable (level of travel time reliability of 1.50 or less) along a corridor of on Strategic Intermodal System facilities in North Florida. 
 
 The map shows the critical Level of Travel Time Reliability of the four time periods (AM Peak, Mid Day, PM Peak, and Weekends) in 2023.
 
-Source: [Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/)
+Source: [Level of Travel Time Reliability (LOTTR)](https://npmrds.ritis.org/){target="_blank"}
 
 ::: {.panel-tabset .nav-pills}
 ### LOTTR Map
@@ -1398,7 +1398,7 @@ leaflet() %>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(lottr), opacity = 0.8)%>%
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -1412,38 +1412,14 @@ leaflet() %>%
 ```
 
 ### TTR Segment Table
-The data for travel time reliability was collected through the FDOT Sourcebook. The inputs included in this stem from historic data from vehicle probes, permanent and temporary count sites, HERE travel time data and FDOT’s roadway characteristics inventory. The top corridors within the region were analyzed which include I-10, I-95, I-295, SR-10, SR-13, SR-21, SR-200, US-1, US-17, and US-90.  
+
+The travel time reliability data in this table stems from historic data from vehicle probes, permanent and temporary count sites, HERE travel time data and FDOT’s roadway characteristics inventory. The top corridors within the region were analyzed which include I-10, I-95, I-295, SR-10, SR-13, SR-21, SR-200, US-1, US-17, and US-90.  
 
 The 2022 LOTTR data is reported for the months of October, November and December, and takes the maximum value calculated throughout the period. The 2019 – 2021 LOTTR data was taken from the TPOs 2023 Annual Mobility Report. 
-
-More detailed analysis of the travel time reliability was performed on the most congested corridors within the region. This index is the ratio of the 80th-percentile travel time and the median travel time. For a 10-minute trip with a level of travel time reliability of 2.5 you have an 80% chance of arriving within 25-minutes. The larger the level of travel time reliability the more variable the travel times are along each corridor. Table 8 summarizes the LOTTR values and the corresponding critical segment. 
 
 ```{r}
 table_options <- function() {
   list(
-    dom = 'Bfrtip',
-    #Bfrtip
-    buttons = list(
-      c('copy', 'csv', 'excel', 'pdf', 'print'),
-      list(
-        extend = "collection",
-        text = 'Show All',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(-1);
-          dt.ajax.reload();}"
-        )
-      ),
-      list(
-        extend = "collection",
-        text = 'Show Less',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(10);
-          dt.ajax.reload();}"
-        )
-      )
-    ),
     deferRender = TRUE,
     searching = FALSE,
     editable = TRUE,
@@ -1459,14 +1435,20 @@ table_options <- function() {
   )
 }
 df_lottr <- read.csv("~/GitHub/amr_2024/data/LOTTR.csv", check.names=FALSE, row.names=1) 
-datatable(df_lottr,options = c(table_options(), list(pageLength = 11)))
+datatable(df_lottr,caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="https://fdotsourcebook.com" target="_blank"><b>FDOT Sourcebook</b></a>')),options = c(table_options(), list(pageLength = 11)))
 
 ```
 :::
 
 ## Truck Travel Time Reliability
 
-Source: [Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/)
+This index is the ratio of the 95th-percentile travel time and the median travel time. The larger the Truck Travel Time Reliability index, the more variable the travel times are along each corridor. For a trip lasting 10 minutes with a truck travel time reliability of 1.2 you have a 95% chance of arriving within 12 minutes. 
+
+The truck travel time reliability index should maintain or decline each year. 
+
+Source: [Truck Travel Time Reliability (TTTR)](https://npmrds.ritis.org/){target="_blank"}
 
 ::: {.panel-tabset .nav-pills}
 ### Truck TTR Map
@@ -1497,7 +1479,7 @@ leaflet() %>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(tttr), opacity = 0.8)%>%
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -1512,18 +1494,35 @@ leaflet() %>%
 
 ### Truck TTR Segment Table
 
+Travel time reliability was obtained from the NPMRDS, AADT from Highway Performance Monitoring System (HPMS), and occupancy factors provided by the FHWA. The goal is to maintain a TTTR ratio of under 2.0. For the North Florida TPO, the observed TTTR was 1.49 in 2022. This table shows the TTTR on major freight corridors within the TPO boundary.
+
 ```{r}
+table_options <- function() {
+  list(
+    deferRender = TRUE,
+    searching = TRUE,
+    scroller = TRUE,
+    lengthChange = TRUE,
+    paginate=TRUE,
+    initComplete = JS(
+      "function(settings, json) {",
+      "$(this.api().table().header()).css({'background-color': '#517fb9', 'color': '#fff'});",
+      "}"
+    )
+      )
+}
 df_tttr <- read.csv("~/GitHub/amr_2024/data/TTTR.csv", check.names=FALSE, row.names=1) 
-datatable(df_tttr,options = c(table_options(), list(pageLength = 5)))
+datatable(df_tttr,caption = htmltools::tags$caption(
+            style = 'caption-side: top; text-align: left;',
+            htmltools::HTML('Source: <a href="https://npmrds.ritis.org/analytics/" target="_blank"><b>NPMRDS RITIS Data</b></a>')),options = c(table_options(), list(pageLength = 7)))
 ```
 :::
 
 ## Level of Service
-Level of Service (LOS) is a rating system of A to F with A being the best – low volume of free-flowing traffic with no delays – and F being the worst – low speeds, volume exceeds capacity with stop-and-go traffic. The FDOT District 2 Level of Service Report was reviewed. The LOS can be evaluated for daily, peak hour or peak period. The number of rural miles meeting generally acceptable operating conditions over the total number of rural road miles can be used to calculate the percent of miles meeting LOS criteria. Standards for LOS on state highways are in the FDOT Multimodal Quality/Level of Service Handbook published in 2023. The service volumes are split up into roadway classification and give specific input for rural areas. The handbook can be found at https://www.fdot.gov/planning/systems/systems-management/systems-management-documents. 
 
-Table 9 lists the segments that are currently operating at LOS E or LOS F. A level of service map is also provided in Figure 22. 
+Level of Service (LOS) is a rating system of A to F with A being the best – low volume of free-flowing traffic with no delays – and F being the worst – low speeds, volume exceeds capacity with stop-and-go traffic. The FDOT District 2 Level of Service Report was reviewed. The LOS can be evaluated for daily, peak hour or peak period. The number of rural miles meeting generally acceptable operating conditions over the total number of rural road miles can be used to calculate the percent of miles meeting LOS criteria. Standards for LOS on state highways are in the [FDOT Multimodal Quality/Level of Service Handbook](https://www.fdot.gov/planning/systems/systems-management/systems-management-documents){target="_blank"} published in 2023. The service volumes are split up into roadway classification and give specific input for rural areas.
 
-Source: [FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/)
+Source: [FDOT District Two, Jacksonville Urban Office](https://fdot-d2-los.hdrgateway.com/){target="_blank"}
 
 ```{r}
 
@@ -1552,7 +1551,7 @@ leaflet() %>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(LOS_Peak_H), opacity = 0.8)%>%
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -1565,9 +1564,11 @@ leaflet() %>%
 ```
 
 ## Average Vehicle Delay
-Vehicle delay is typically reported annually in vehicle-hours per day and is calculated by the sum of the daily delay. The FDOT sourcebook shows data provided from HERE technologies and can be summarized for the region, by county, and by functional classification of the roadway. For all highway systems in the North Florida TPO region, the daily vehicle hours of delay increased from 2021 to 2022, but is still far below pre-COVID-19 delay. 
+
+Vehicle delay is typically reported annually in vehicle-hours per day and is calculated by the sum of the daily delay. The FDOT sourcebook shows data provided from HERE technologies and can be summarized for the region, by county, and by functional classification of the roadway. For all highway systems in the North Florida TPO region, the daily vehicle hours of delay increased from 2020 to 2022, but is still below pre-pandemic levels. 
 
 ::: {layout="[ [1,1] ]"}
+
 ```{r}
 # Define your custom colors
 custom_colors <- c("#A7E6FF","#3ABEF9","#3572EF","#050C9C")
@@ -1594,7 +1595,6 @@ hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
     ),
     title = list(text = "Vehicle Hours of Delay"),
     min = 0, 
-    
     labels = list(
       formatter = JS("function() {
       var units = ['', 'K', 'M', 'B'];
@@ -1610,10 +1610,8 @@ hchart(df_vhd, "column", hcaes(x = year, y = SHS_year, group = county)) %>%
       else{
         return num.toFixed(0) + unit;
       }
-
     }")
     )
-    
   ) %>%
   hc_title(text = "State Highway System Vehicle Hours of Delay by County and Year") %>%
   hc_subtitle(text = 'Source: <a href="https://fdotsourcebook.com/performance-measures/auto/delay#" target="_blank"><b>FDOT Sourcebook Vehicle Hours of Delay</b></a>') %>%
@@ -1651,7 +1649,7 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
     ),
     title = list(text = "Vehicle Hours of Delay"),
     min = 0, 
-    
+    max = 20000000,
     labels = list(
       formatter = JS("function() {
       var units = ['', 'K', 'M', 'B'];
@@ -1686,7 +1684,11 @@ hchart(df_vhd, "column", hcaes(x = year, y = NHS_year, group = county)) %>%
 
 ## Travel Speeds
 
-Source: [NPMRDE RITIS Data](https://npmrds.ritis.org/analytics/)
+The FDOT provides average peak hour travel speed by roadway segment for the state highway system. This data can be summarized for the region, by county, and by roadway functional classification. The average speed is reported annually in miles per hour and is calculated by averaging the average peak hour travel speed. Average speeds increased from 2020 to 2021 as a result of lower demand (vehicle miles traveled). 
+
+The average travel speed should maintain or increase from year to year. The following table shows the trends for each county. The year and speed value is shown on hover.
+
+Source: [NPMRDS RITIS Data](https://npmrds.ritis.org/analytics/){target="_blank"}
 
 ```{r}
 df_travel_speeds <- read.csv("~/GitHub/amr_2024/data/travel_speeds2.csv")
@@ -1698,17 +1700,45 @@ colDefs <- list(list(className = 'dt-center',
 
 line_string <- "type: 'line',width: 250, height: 30, lineWidth: 2, highlightColor: 'orange', tooltipFormat: '{{offset:levels}} : {{y}} MPH', tooltipValueLookups: { levels: { '0': '2016', '1': '2017', '2': '2018', '3': '2019', '4': '2020', '5': '2021' }}"  
 
+sl_line <- JS(sprintf("function (oSettings, json) { $('.spark:not(:has(canvas))').sparkline('html', {%s})}", line_string)) 
 
+spark_table <- datatable(data.table(df_travel_speeds), 
+  rownames = FALSE, 
+  options = list(columnDefs = colDefs, 
+  fnDrawCallback = sl_line,
+  lengthChange = FALSE,
+  deferRender = TRUE,
+  searching = FALSE,
+  scroller = TRUE,
+  paginate=FALSE))
+
+spark_table$dependencies <- append(spark_table$dependencies, htmlwidgets:::getDependency("sparkline"))
+
+spark_table 
 
 ```
 
 ## Incident Clearance Times
 
+The Florida Department of Transportation, law enforcement, emergency personnel and the local coroner’s office can be engaged in incidents. During some incidents, the time to open the road to traffic and restore or clear the road to normal traffic conditions can be impacted by the conditions of the crash that are
+beyond FDOT’s or law enforcement’s control. For example:
+
+* Emergency response personnel to respond and treat injured
+persons.
+* Specialized response teams must remove hazardous materials
+before the road can be opened to traffic.
+* The local coroner must investigate the scene if a fatality occurs. The time to open the road to traffic is typically one hour when a fatality occurs.
+* The Florida Department of Transportation and law enforcement agencies work to open the road to traffic and restore the traffic operations as soon
+
+The goals is to maintain or reduce the time to open roads tonormal traffic following an event.
+
+::: {layout="[ [1,1] ]"}
+
 ```{r}
 df_inc_all <- read.csv("~/GitHub/amr_2024/data/incident_clearance_all.csv")
 
 # Define your custom colors
-custom_colors <- c("#FF6B6B","#FFD93D","#6BCB77","#4D96FF")
+custom_colors <- c("#DEF9C4","#9CDBA6","#50B498","#468585")
 
 # Create a Highchart object with data labels and stack totals
 hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
@@ -1716,7 +1746,9 @@ hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
   hc_plotOptions(bar = list(
     stacking = "normal",
     dataLabels = list(
-      enabled = TRUE
+      enabled = TRUE,
+      formatter = JS("function() {
+  return Highcharts.numberFormat(this.y / 1, 1) ;}")
     )
   )) %>%
   hc_yAxis(
@@ -1728,8 +1760,9 @@ hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
       min = 0
     )) %>%
   hc_title(text = "2023 Incident Clearance Duration") %>%
-  hc_subtitle(text = 'Source: <a href="https://www.flhsmv.gov/traffic-crash-reports/crash-dashboard/" target="_blank"><b>Florida Department of Highway Safety and Motor Vehicles</b></a>') %>%
+  hc_subtitle(text = 'Source: <a href="https://sunguide.info/" target="_blank"><b>FDOT SunGuide</b></a>') %>%
   hc_xAxis(title = list(text = "Quarter")) %>%
+  hc_yAxis(title = list(text = "Duration (Mins)")) %>%
   hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y} Mins</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
   hc_add_theme(hc_theme_smpl()) %>%
@@ -1740,6 +1773,9 @@ hchart(df_inc_all, "bar", hcaes(x = FY23_Qtr, y = Mins, group = Category)) %>%
 ```{r}
 # Load data
 df_duration <- read.csv("~/GitHub/amr_2024/data/road_duration_all.csv")
+
+df_duration <- df_duration %>%
+  filter(Category == "Roadway Clearance Duration")
 
 # Define your custom colors
 custom_colors <- c("#DEF9C4","#9CDBA6","#50B498","#468585")
@@ -1752,7 +1788,7 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
     dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() {
-  return Highcharts.numberFormat(this.y / 1, 1) + ' Min' ;}")
+  return Highcharts.numberFormat(this.y / 1, 1) ;}")
     ) # Enable data labels
   )) %>%
   hc_yAxis(
@@ -1761,18 +1797,24 @@ hchart(df_duration, "column", hcaes(x = Category, y = Mins, group = FY23_Qtr)) %
   ) %>%
   hc_title(text = "2023 Open Roads and Roadway Clearance Durations by Quarter") %>%
   hc_subtitle(text = 'Source: <a href="https://sunguide.info/" target="_blank"><b>FDOT SunGuide</b></a>') %>%
+  hc_yAxis(title = list(text = "Duration (Mins)")) %>%
   hc_xAxis(title = list(text = "Duration Type")) %>%
-  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y}</b><br/>") %>%
+  hc_tooltip(shared = TRUE, pointFormat = "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y} Mins</b><br/>") %>%
   hc_legend(enabled = TRUE) %>%
   hc_add_theme(hc_theme_smpl()) %>%
   hc_chart(events = list(load = JS("function() { this.xAxis[0].setExtremes(); }"))) %>%
   hc_exporting(enabled = TRUE)  # Enable the exporting button
 ```
 
+:::
+
 ## Incident Event Types
 
+Only 30% of the congestion in our region is caused by recurring delays. Other sources of delays include holiday peaks, incidents, weather, excess delay at signals, weather, and work zones. Transportation Systems Management and Operations (TSM&O) strategies are need to reduce delays caused by non-recurrent factors. 
 
+The number of lane closures or other events, such as abandoned vehicles, debris in the roadway, road work, or crashes, increased in 2022.
 
+There is no target for the number of events that occur.
 
 ```{r}
 df_events <- read.csv("~/GitHub/amr_2024/data/event_types_all.csv")
@@ -1804,7 +1846,11 @@ hchart(df_events, "pie", hcaes(x = Event, y = Total)) %>%
 
 ## Transit Accessibility
 
-Source: [JTA Park n' Ride Locations](https://www.jtafla.com/ride-jta/how-to-ride/park-n-ride/)
+Access to transit is a significant need in underserved communities and a focus for the transit agencies within the region. On a regional basis the availability of populations to transit is low. However, in the urban core of Jacksonville nearly 89% of the populations is within 1/4 mile of a transit stop.  
+
+The target is to provide transit access within 1/4 mile of a bus stop to 95% of the population.
+
+Source: [JTA Park n' Ride Locations](https://www.jtafla.com/ride-jta/how-to-ride/park-n-ride/){target="_blank"}
 
 ```{r, message=FALSE}
 
@@ -1838,7 +1884,7 @@ leaflet(data = df_pnr) %>%
             opacity = 1) %>% 
   addEasyButton(
     easyButton(
-      icon = "glyphicon-home",
+      icon = "fa-map-marker",
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -1848,7 +1894,9 @@ leaflet(data = df_pnr) %>%
 
 ## Transit Routes
 
-Source: [Florida Transit Data Exchange](https://ftis.org/Posts.aspx)
+The Northeast Florida Region has multiple public transportation options to move between counties. The routes in the map below are sorted by transportation service provider. This map is not exhaustive of all available routes, but includes routes where data is publicly available as of 2023.
+
+Source: [Florida Transit Data Exchange](https://ftis.org/Posts.aspx){target="_blank"}
 
 ```{r}
 
@@ -1873,16 +1921,20 @@ leaflet() %>%
             title = "Agency") %>% 
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.132184, -81.855651], 9); }")
     )
   )
 ```
 
-## Bicyclist Level of Traffic Stress
+## Bicycle and Pedestrian Level of Traffic Stress
 
-Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
+The quality of service determines how satisfied travelers are with a particular facility or service. Factors that affect the comfort of pedestrians and bicyclists range from pavement condition, heavy vehicle presence, facilities at intersections, etc. The [FDOT Multimodal Quality/Level of Service Handbook](https://www.fdot.gov/planning/systems/systems-management/systems-management-documents){target="_blank"} published in 2023 shows a flow chart for both pedestrian and bicycle level of traffic stresses.
+
+Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com){target="_blank"}
+
+::: {layout="[ [1,1] ]"}
 
 ```{r}
 
@@ -1910,22 +1962,19 @@ leaflet() %>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Bike_LTS), opacity = 0.8)%>%
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
   ) %>%
   addLegend(
-    position = "bottomright",
+    position = "topright",
     colors = c('darkgreen', 'yellow', 'orange', 'red'),
     labels = c('1', '2', '3', '4'),
     title = "Bicycle Level of<br>Traffic Stress"
   )
 ```
 
-## Pedestrian Level of Traffic Stress
-
-Source: [FDOT LOS Ped/Bike](https://fdot-d2-los-pedbike.hdrgateway.com)
 
 ```{r}
 
@@ -1945,7 +1994,6 @@ generateColor <- function(value) {
 # Apply the custom color function to your data
 geojson_data$colors <- sapply(geojson_data$Ped_LTS, generateColor)
 
-# Create the Leaflet map
 leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addProviderTiles(providers$CartoDB.Positron) %>%
@@ -1953,24 +2001,27 @@ leaflet() %>%
   addPolylines(data = geojson_data, color = ~colors,popup = ~paste(Ped_LTS), opacity = 0.8)%>%
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
   ) %>%
   addLegend(
-    position = "bottomright",
+    position = "topright",
     colors = c('darkgreen', 'yellow', 'orange', 'red'),
     labels = c('1', '2', '3', '4'),
     title = "Pedestrian Level of<br>Traffic Stress"
   )
 ```
 
-## Impacts of Investments on the Natural Environment
-Florida’s Efficient Transportation Decision Making (ETDM) process is a procedure used to look into transportation projects and consider their environmental impacts. The stakeholders involved are usually the MPOs in the surrounding area. The ETDM manual can be found on the FDOT webpage at https://www.fdot.gov/environment/pubs/etdm/etdmmanual.shtm. 
+:::
 
-Source: [Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#) and 
-[FDOT 5 Year Work Program Meta Data](https://fgdl.org/meta/FDOT_WP_2023.xml)
+## Impacts of Investments on the Natural Environment
+
+Florida’s Efficient Transportation Decision Making (ETDM) process is a procedure used to look into transportation projects and consider their environmental impacts. The stakeholders involved are usually the MPOs in the surrounding area. The ETDM manual can be found on the [FDOT webpage.](https://www.fdot.gov/environment/pubs/etdm/etdmmanual.shtm){target="_blank"}
+
+Source: [Environmental Screening Tool](https://etdmpub.fla-etat.org/est/#){target="_blank"} and 
+[FDOT 5 Year Work Program Meta Data](https://fgdl.org/meta/FDOT_WP_2023.xml){target="_blank"}
 
 ```{r}
 # knitr::include_graphics("~/GitHub/amr_2024/data/ETDM.png")
@@ -1981,7 +2032,7 @@ geojson_data <- st_read("~/GitHub/amr_2024/data/fdot_wp.geojson", quiet = TRUE) 
 
 # Create a custom color generating function
 # Continuous palette
-pal <- colorFactor(palette = "viridis", domain = geojson_data$DESCRIPT)
+pal <- colorFactor(palette = "Set1", domain = geojson_data$DESCRIPT)
 labs <- as.list(geojson_data$DESCRIPT)
 
 # Create the Leaflet map
@@ -1997,7 +2048,7 @@ leaflet() %>%
             title = "Description") %>% 
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -82.055651], 9); }")
     )
@@ -2005,46 +2056,20 @@ leaflet() %>%
 ```
 
 ## Emissions
+
 Common air pollutants from transportation modes that negatively affect humans are sulfur oxides, nitrogen oxides, and fine particulate matter. The FDOT is working on alternative vehicle types to help reduce the amount of emissions present. Travel delay reduction can also help alleviate emissions. The cost of emissions is related to the amount of congestion, as congestion increases vehicle delay. 
 
 The U.S. Department of Transportation (USDOT) lists the damage costs for emissions per metric ton within the Benefit-Cost Analysis Guidance for Discretionary Grant Programs. To calculate the total damage costs of these emissions, the emission factor per vehicle miles traveled was taken from the United States Environmental Protection Agency, and this number was applied to the total vehicle miles traveled within the North Florida TPO region. The amount of emissions per mile is estimated to be: 
 
 $$ 3.91 × 10^{-4}\hspace{5 mm} \frac{metric\hspace{1 mm}tons\hspace{1 mm}of\hspace{1 mm}CO2}{mile}$$
 
-Source: United State Environmental Protection Agency Greenhouse Gases Equivalencies Calculator – Calculations and References. Retrieved 1/30/24. 
-
-The emissions factors displayed in this report also account for electric vehicles. 
-
-FDOT estimates 47,105,851 vehicle miles were traveled in 2021. Based on this and the emissions factor, a total of 18,418 metric tons of CO2 was emitted during 2021 within the North Florida TPO region. 
+The emissions factors displayed in this report also account for electric vehicles. Emmissions costs are expected to rise year-over-year. 
 
 ```{r}
 table_options <- function() {
   list(
-    dom = 'Bfrtip',
-    #Bfrtip
-    buttons = list(
-      c('copy', 'csv', 'excel', 'pdf', 'print'),
-      list(
-        extend = "collection",
-        text = 'Show All',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(-1);
-          dt.ajax.reload();}"
-        )
-      ),
-      list(
-        extend = "collection",
-        text = 'Show Less',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(10);
-          dt.ajax.reload();}"
-        )
-      )
-    ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     editable = TRUE,
     scroller = TRUE,
     lengthChange = FALSE,
@@ -2066,14 +2091,11 @@ datatable(
   df_c02,options = c(table_options(), list(pageLength = 4)))
 ```
 
-
-
-
 ## Trail Connectivity
+
 The North Florida TPO published the Northeast Florida Regional Multi-Use Trail Master Plan in 2019 which addresses the regional trail network and how funding could be applied to projects to expand the multi-use paths within the region. Funding opportunities such as Shared Use Network (SUN) Trail Funding were considered. Existing trails within the region total approximately 121 miles. A trail network of approximately 570 miles is proposed. Maps were taken from the Multi-Use Trail Master Plan. The map below shoes the existing and proposed trails identified within the North Florida TPO network. 
 
-
-Source: [NFTPO Regional Multi-use Trail Master Plan](https://northfloridatpo.com/uploads/Studies/2018-19-Regional-Multi-use-Trail-Master-Plan-Final21.pdf)
+Source: [NFTPO Regional Multi-use Trail Master Plan](https://northfloridatpo.com/uploads/Studies/2018-19-Regional-Multi-use-Trail-Master-Plan-Final21.pdf){target="_blank"}
 
 ```{r}
 
@@ -2100,7 +2122,7 @@ leaflet() %>%
             title = "Scale") %>% 
   addEasyButton(
     easyButton(
-      icon = 'glyphicon glyphicon-home',
+      icon = 'fa-map-marker',
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -2108,12 +2130,12 @@ leaflet() %>%
 ```
 
 ## Pedestrian Connectivity
+
 The FDOT aims to provide 100% coverage of the state highway system for bicycles and pedestrians where appropriate. Based on the FDOT roadway characteristics inventory, the average pedestrian facility coverage over the four counties within the North Florida TPO area is 65.62% for 2022. Year over year, the total pedestrian coverage within the North Florida TPO region generally increases, resulting in increased sidewalk mileage.  
 
 A map of the FDOT sidewalks and gaps in the region is provided below. 
 
-
-Source: [FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76)
+Source: [FDOT Sidewalks and Gaps TDA](https://gis-fdot.opendata.arcgis.com/datasets/4c970deb696d451283e8e4b7f4464667_0/explore?location=30.304647%2C-81.573657%2C9.76){target="_blank"}
 
 ```{r, message=FALSE}
 # Load your GeoJSON file
@@ -2139,7 +2161,7 @@ leaflet() %>%
             title = "Roadway Side") %>% 
   addEasyButton(
     easyButton(
-      icon = "glyphicon-home",
+      icon = "fa-map-marker",
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -2151,34 +2173,13 @@ leaflet() %>%
 
 ## Pavement Condition on Primary Freight Corridors
 
+Pavement condition within the study area is evaluated by the FDOT. The areas reviewed include major roads such as interstates and highways with U.S. or state road numbers. FDOT standard for acceptable pavement is set at the 80% mark on the SHS. According to data from the FDOT state materials office, a pavement condition survey program showed that for 2023, District 2 had 72.7% of SHS pavement meeting FDOT standards. The North Florida TPO area has data from as recent as 2022. For 2022, the percentage of interstate pavement in poor condition was 0.2% which is an improvement of 0.1% from the previous year. The percentage of non-interstate NHS pavement in poor condition was 1.6% which was about the same as the previous year. 
+
 ```{r}
 table_options <- function() {
   list(
-    dom = 'Bfrtip',
-    #Bfrtip
-    buttons = list(
-      c('copy', 'csv', 'excel', 'pdf', 'print'),
-      list(
-        extend = "collection",
-        text = 'Show All',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(-1);
-          dt.ajax.reload();}"
-        )
-      ),
-      list(
-        extend = "collection",
-        text = 'Show Less',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(10);
-          dt.ajax.reload();}"
-        )
-      )
-    ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     editable = TRUE,
     scroller = TRUE,
     lengthChange = FALSE,
@@ -2199,35 +2200,11 @@ datatable( caption = htmltools::tags$caption(
     df_pfc,options = c(table_options(), list(pageLength = 6)))
 ```
 
-## Pavement Conditions
-This section deals with preserving and maintaining bridge and pavement conditions in the region. Pavement condition is summarized for Interstate and non-Interstate facilities that are on the National Highway System (NHS). The % is based on the lane-miles of facilities. Bridges are summarized by NHS and non-NHS facilities. The percent is calculated based on the bridge deck area. Goals are set by FDOT for how much of each category is in good condition and how much is in poor condition. Table 10 summarizes the pavement conditions. Table 11 summarizes the bridge conditions. The figures below also compare the yearly breakdown to the target goals. 
+## Yearly Pavement Conditions
 
 ```{r}
 table_options <- function() {
   list(
-    dom = 'Bfrtip',
-    #Bfrtip
-    buttons = list(
-      c('copy', 'csv', 'excel', 'pdf', 'print'),
-      list(
-        extend = "collection",
-        text = 'Show All',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(-1);
-          dt.ajax.reload();}"
-        )
-      ),
-      list(
-        extend = "collection",
-        text = 'Show Less',
-        action = DT::JS(
-          "function ( e, dt, node, config ) {
-          dt.page.len(10);
-          dt.ajax.reload();}"
-        )
-      )
-    ),
     rowCallback = DT::JS(
       "function(row, data, index) {
         $('td:eq(0)', row).html(index + 1);
@@ -2256,6 +2233,8 @@ datatable(caption = htmltools::tags$caption(
 
 ## Bridge Conditions
 
+This section deals with preserving and maintaining bridge and pavement conditions in the region. Pavement condition is summarized for Interstate and non-Interstate facilities that are on the National Highway System (NHS). The % is based on the lane-miles of facilities. Bridges are summarized by NHS and non-NHS facilities. The percent is calculated based on the bridge deck area. Goals are set by FDOT for how much of each category is in good condition and how much is in poor condition. Table 10 summarizes the pavement conditions. 
+
 ```{r}
 table_options <- function() {
   list(
@@ -2265,7 +2244,7 @@ table_options <- function() {
       }"
     ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
@@ -2285,13 +2264,23 @@ datatable(caption = htmltools::tags$caption(
 
 ## Transit Vehicles
 
+Maintaining transit vehicles and systems in a state of good repair is one of the highest priorities for any transit system to ensure safe, dependable and accessible services are provided.
+
+The average age of vehicles operated by the Jacksonville Transportation Authority and Nassau Council on aging increased from 2019 with limited fleet replacement (0.3-year average increase) for each. The Sunshine Bus Company replaced a vehicle and their average age decreased.
+
+The Jacksonville Transportation Authority assumed the operations of Clay Transit in 2018 and those vehicles are shown as part of the Jacksonville Transportation Authority’s fleet beginning in 2018.
+
+The service life for transit vehicles varies by type and is not analyzed as part of this report. Most buses have a service life of 12 years or 250,000 miles. Smaller buses, such as shuttles, have a service life of four to seven years and between 50,000 and 175,000 miles. The people mover vehicles on the Automated Skyway Express in downtown Jacksonville exceed their predicted service life. The vehicles are currently 21 years old. A Skyway Modernization Program is underway.
+
+The Mayport Ferry vessel, the Jean Ribault, has been carrying vehicles and people for 24 years, but is in good state of repair. The Jacksonville Transportation Authority assumed operations of the ferry from the City of Jacksonville in 2016.
+
 ```{r}
 
 # Filter data for PedFatal > 0
 df_transit_age <- read.csv("~/GitHub/amr_2024/data/transit_age.csv")
 
 # Define your custom colors
-custom_colors <- c("#DEF9C4","#D6EFD8","#80AF81","#508D4E","#1A5319")
+custom_colors <- c("#D6EFD1","#C0DFCA","#80AF81","#508D4E","#1A5319")
 
 # Create a Highchart object with data labels and stack totals
 hchart(df_transit_age, "column", hcaes(x = Agency, y = Age, group = Year)) %>%
@@ -2325,6 +2314,12 @@ hchart(df_transit_age, "column", hcaes(x = Agency, y = Age, group = Year)) %>%
 # Economic Impacts
 
 ## Cost of Congestion
+
+The social costs of congestion include direct costs borne by the traveler in fuel consumption, lost travel time, additional vehicle depreciation and maintenance costs. The external costs included, or those not paid directly by the traveler, are from emissions which result in additional health care costs caused from increase cancer rates, loss of earnings associated with them and the associated negative health impacts. The costs of climate change associated with greenhouse gas emissions from carbon dioxide and oxides of nitrogen are also included. Emissions account for <1% of the social costs of congestion.
+
+The social cost of congested increased about 11% in 2022 compared to 2021 and has risen above pre-pandemic levels. 
+
+There is no target for the social cost of congestion but the costs should maintain or decline each year.
 
 ```{r}
 df_cost_con <- read.csv("~/GitHub/amr_2024/data/cost_congestion.csv")
@@ -2393,6 +2388,12 @@ hchart(df_cost_con, "column", hcaes(x = year, y = dollars)) %>%
 
 ## Cost of Crashes
 
+The costs of fatalities, injuries and other crashes burdens the economy in the billions of dollars annually. Lost wages, pain and suffering, medical expenses and property loss are a few of the external costs resulting from crashes.  
+
+The cost of fatal crashes in the region cost $2.81 Billion in 2023 which is an increase over 2022 but less than the totals for 2020 and 2021. The cost of serious injury crashes has decreased since 2021.
+
+The target is to have zero injuries or fatalities resulting from crashes. 
+
 ::: {layout="[ [1,1] ]"}
 ```{r}
 # Define your custom colors
@@ -2445,11 +2446,6 @@ hchart(df_cost_fatal, "column", hcaes(x = year, y = cost, group = county)) %>%
           return '$' + num.toFixed(0) + unit;
         }
       }"))
-      
-    #   formatter = JS(paste0("function() {
-    #   return '$' + Highcharts.numberFormat(this.total / 1e9, 1) + ' Bil';
-    # }"))
-    
     ),
     title = list(text = "Cost (Dollars)"),
     min = 0, 
@@ -2497,8 +2493,6 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
     stacking = "normal",
     dataLabels = list(
       enabled = TRUE,
-      
-      
       formatter = JS(paste0("function() {
         var units = ['', 'K', 'M', 'B'];
         var order = Math.floor(Math.log(this.y) / Math.log(1000));
@@ -2509,18 +2503,11 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
         }
         return '$' + num.toFixed(0) + unit;
       }"))
-            
-  #     formatter = JS("function() {
-  # return '$' + Highcharts.numberFormat(this.y / 1e6, 1) + ' Mil';}")
-  
-  
     )
   )) %>%
   hc_yAxis(
     stackLabels = list(
       enabled = TRUE, # Enable stack totals
-      #style = list(fontWeight = 'bold', color = 'gray',
-      
       formatter = JS(paste0("function() {
         var units = ['', 'K', 'M', 'B'];
         var order = Math.floor(Math.log(this.total) / Math.log(1000));
@@ -2536,16 +2523,10 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
           return '$' + num.toFixed(0) + unit;
         }
       }"))
-      
-    #   formatter = JS(paste0("function() {
-    #   return '$' + Highcharts.numberFormat(this.total / 1e6, 1) + ' Mil';
-    # }"))
-    
-    
     ),
     title = list(text = "Cost (Dollars)"),
     min = 0, 
-    
+    max = 3500000000,
     labels = list(
       formatter = JS("function() {
       var units = ['', 'K', 'M', 'B'];
@@ -2561,7 +2542,6 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
       else{
         return '$' + num.toFixed(0) + unit;
       }
-
     }")
     )
     
@@ -2579,6 +2559,16 @@ hchart(df_cost_injury, "column", hcaes(x = year, y = cost, group = county)) %>%
 
 ## Return on Investment
 
+***Highways***
+
+Based on a study of the macroeconomic impacts of the Florida Department of Transportation’s Annual Work every dollar invested in transportation returns a $4 economic return. The Florida Department of Transportation will invest $1.4 billion in Clay, Duval, Nassau and St. Johns counties in the 2022-2023 Work Program resulting in an economic benefit of $5.8 billion. The 2022-2023 fiscal year work program is the largest investment in history.
+
+***Multimodal***
+
+North Florida’s ports generate 138,500 jobs in Florida and supports nearly $31.1 billion in annual economic output for the region and state. Jacksonville Aviation Authority’s four-airport system contributes more than $6 billion annually to the local economy. The Jacksonville Transportation Authority’s operations generated more than $73.6 million in labor compensation, saved customers more than $23.4 million in transportation costs, and spurred $118.6 million in total added value. The total benefit for transportation investment is $40.4 billion for North Florida.
+
+There are no benchmarks for the economic benefit, but the larger the benefit the better.
+
 ```{r}
 df_roi <- read.csv("~/GitHub/amr_2024/data/roi.csv")
 
@@ -2590,7 +2580,6 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
   hc_plotOptions(column = list(
     dataLabels = list(
       enabled = TRUE,
-      
        formatter = JS(paste0("function() {
         var units = ['', 'K', 'M', 'B'];
         var order = Math.floor(Math.log(this.y) / Math.log(1000));
@@ -2601,11 +2590,6 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
         }
         return '$' + num.toFixed(0) + unit;
       }"))
-      
-  #     formatter = JS("function() {
-  # return '$'+Highcharts.numberFormat(this.y / 1e9, 1) + ' Bil';}")
-  
-  
     ))) %>%
   hc_yAxis(
     stackLabels = list(
@@ -2613,7 +2597,6 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
       style = list(fontWeight = 'bold', color = 'gray')),
     title = list(text = "Cost (Dollars)"),
     min = 0, 
-    
     labels = list(
       formatter = JS("function() {
       var units = ['', 'K', 'M', 'B'];
@@ -2629,10 +2612,8 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
       else{
         return '$' + num.toFixed(0) + unit;
       }
-
     }")
     )
-    
   ) %>%
   hc_title(text = "Benefit in Dollars by Mode") %>%
   hc_subtitle(text = 'Source: <a href="http://edr.state.fl.us/content/returnoninvestment/ROI_Transportation.pdf" target="_blank"><b>Florida Department of Transportation Office of Economic & Demographic Research</b></a>') %>%
@@ -2648,7 +2629,7 @@ hchart(df_roi, "column", hcaes(x = Mode, y = Benefit)) %>%
 
 ## PM1 Safety (All Public Roads)
 
-
+The safety performance measures help to assess fatalities and serious injuries on all public roads regardless of ownership or functional classification. As required by 23 CFR 490, the North Florida TPO adopted targets for number of fatalities, number of serious injuries, fatality rate, serious injury rate and total number of non-motorized fatalities and serious injuries. These targets align with the Florida Department of Transportation’s adopted targets.
 
 ```{r}
 table_options <- function() {
@@ -2659,7 +2640,7 @@ table_options <- function() {
       }"
     ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
@@ -2681,9 +2662,12 @@ datatable(caption = htmltools::tags$caption(
 
 ## PM2 Bridge and Pavement
 
-Source: [Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf) and [Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm)
+Pavement and bridge condition assessment is vital to the continued maintenance of the roadway system. As required by 23 USC 23 CFR 490, the Florida Department of Transportation has adopted initial targets for bridge and pavement conditions. The North Florida TPO adopted the FDOT guidance for performance management of pavement and bridges.
+
+Source: [Florida Department of Transportation Forecasting and Trends Office](https://fdotwww.blob.core.windows.net/sitefinity/docs/default-source/planning/fto/pdis-documents/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf?sfvrsn=fda6ddae_5/pm2-bridge-and-pavement-fact-sheet-(feb23).pdf){target="_blank"} and [Federal Highway Administration National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm){target="_blank"}
 
 ::: {.panel-tabset .nav-pills}
+
 ### Bridge Condition Map
 The map below shows the locations and conditions of the bridges within the North Florida TPO region. According to the FDOT roadway characteristics inventory, there are a total of 909 bridges in the region. 
 
@@ -2713,7 +2697,7 @@ leaflet(data = df_bridge) %>%
   setView(lng = -81.655651, lat = 30.232184, zoom = 9) %>% 
   addEasyButton(
     easyButton(
-      icon = "glyphicon-home",
+      icon = "fa-map-marker",
       title = "Zoom to Jacksonville",
       onClick = JS("function(btn, map){ map.setView([30.232184, -81.655651], 9); }")
     )
@@ -2732,7 +2716,7 @@ leaflet(data = df_bridge) %>%
 table_options <- function() {
   list(
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
@@ -2747,9 +2731,11 @@ df_nhs <- read.csv("~/GitHub/amr_2024/data/nhs_bridges.csv", check.names=FALSE, 
 colnames(df_nhs) <- c('Year','Good Condition','Poor Condition') 
 datatable(df_nhs,options = c(table_options(), list(pageLength = 5)))
 ```
+
 :::
 
 ::: {layout="[ [1,1] ]"}
+
 ### Interstate Pavement
 
 ```{r}
@@ -2761,7 +2747,7 @@ table_options <- function() {
       }"
     ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
@@ -2793,7 +2779,7 @@ table_options <- function() {
       }"
     ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
@@ -2812,6 +2798,7 @@ datatable(df_noninter_pave,options = c(table_options(), list(pageLength = 5)),
             htmltools::HTML('Source: <a href="https://fdotsourcebook.com/federal-measures/pavement" target="_blank"><b>FDOT Source Book, PM2-Pavement</b></a>'))
           )
 ```
+
 :::
 
 ### State Targets
@@ -2825,7 +2812,7 @@ table_options <- function() {
       }"
     ),
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
@@ -2849,11 +2836,13 @@ datatable(df_targets,options = c(table_options(), list(pageLength = 7)),
 
 ## PM3 System Performance
 
+These are measures to assess the performance of the National Highway System (NHS), freight movement on the Interstate System, and Congestion Mitigation and Air Quality Improvement Program. The North Florida TPO has adopted the Florida Department of Transportation performance targets. Reliability refers to a consistent predictable travel time.
+
 ```{r}
 table_options <- function() {
   list(
     deferRender = TRUE,
-    searching = TRUE,
+    searching = FALSE,
     scroller = TRUE,
     lengthChange = FALSE,
     paginate=FALSE,
